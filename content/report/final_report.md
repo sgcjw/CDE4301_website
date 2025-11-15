@@ -1,10 +1,10 @@
 ---
-title: "Development of a Compact Power Distribution System for Unmanned Surface Vehicle (USV)" 
+title: "Development of a Compact PDS for Unmanned Surface Vehicle (USV)" 
 date: 2025-11-14
 lastmod: 2025-11-16
 author: ["Chen Jiawei"]
-description: "This report documents the work done on developing a compact power distribution system for ST Engineering's Unmanned Surface Vehicle (USV)."
-summary: "This report documents the work done on developing a compact power distribution system for ST Engineering's Unmanned Surface Vehicle (USV)."
+description: "This report documents the work done on developing a compact PDS for ST Engineering's Unmanned Surface Vehicle (USV)."
+summary: "This report documents the work done on developing a compact PDS for ST Engineering's Unmanned Surface Vehicle (USV)."
 editPost:
     URL: "https://www.stengg.com/"
     Text: "ST Engineering Company Website"
@@ -26,13 +26,14 @@ I also wish to acknowledge the support provided by the NUS College of Engineerin
 | **Acronym** |        **Definition**         |
 | :---------: | :---------------------------: |
 |   **USV**   |    Unmanned Surface Vessel    |
+|   **PDS**   |    Power Distribution System     |
 |   **PLC**   |    Programmable Logic Controller   |
+|   **MCU**   |    Microcontroller   |
 |   **DC**   |    Direct Current    |
 |   **MTBF**   |    Mean Time Before Failure    |
 |   **MTTR**   |    Mean Time To Repair    |
 |   **CAN**   |    Controller Area Network    |
 |   **PCB**   |     Printed Circuit Board     |
-|   **PDB**   |    Power Distribution Board     |
 |   **PG**   |    Power Good     |
 
 </div>
@@ -41,64 +42,66 @@ I also wish to acknowledge the support provided by the NUS College of Engineerin
 
 ## 1. Summary
 
-This project focuses on developing a compact Power Distribution System for ST Engineering's Unmanned Surface Vehicle. The PDS is a critical component of the vehicle’s electrical system, designed to distribute and control the power to different parts of the vehicle. 
+This project focuses on developing a compact Power Distribution System (PDS) for ST Engineering's Unmanned Surface Vehicle. The PDS is a critical component of the vehicle’s electrical system, designed to distribute and control the power to different parts of the vehicle. 
 
-The new Power Distribution System developed mainly consists of a compact and robust power switching PCB solution with a backplane design for the ease of modularity and integration. The system also includes key features such as power line protection and accurate power status monitoring and reporting, to ensure its critical functionality even when a power line fault has occured.
+The new PDS developed mainly consists of a compact and robust power switching PCB solution with a backplane system for the ease of modularity and integration. The system also includes key features such as power line protection and accurate power status monitoring and reporting, to ensure its functionality even after a power line fault has occured.
 
 ---
 
 ## 2. Background
 
 ### 2.1 Introduction
-Unmanned Surface Vehicle (USV) is defined as a boat or ship that operates on the surface of the water without a crew.
+**Unmanned Surface Vehicles (USVs)** are boats or ships that operate on the water surface without an onboard crew. In recent years, the USV market has grown rapidly, particularly within the Asia-Pacific region.
 
-USV market is a fast growing market recent years in the maritime industry, especially around the Asia Pacific Region. The most common way to classify USV is based on their sizes, where they are divided into 3 different size categories. Among the three, the medium size category USV, with a length of 2 to 24 meters, is the target vehicle of this project
+USVs are commonly classified by size, with three main categories used in the maritime industry. Among these, medium-sized USVs—typically 2 to 24 meters in length—are the target vehicle of this project.
 
-Within the USV market, more than half of the vessel is developed for defence purpose and most of the them fall below the weight of 2000 kg, which often classified as small and medium USV.
+Within the overall USV market, more than half of all vessels are developed for defence applications. Most of these defence-oriented USVs weigh under 2,000 kg, placing them within the small or medium-size categories.
 
 ![USV Market Size and Distribution](USV_Market_1.png)
 ##### Figure 1: USV Market Size and Distribution
 
-To achieve autonomous operation, USV is often equipped with various sensors and equipment which are powered by an engine/batteries and supplied through an on board power distribution system, which is the focus of this project.
+To enable autonomous operation, USVs rely on a suite of sensors and onboard equipment usually powered by engines or batteries. These power sources supply energy through an integrated Power Distribution System — the central focus of this project.
 
 ![Common USV On-board Devices](USV_Market_2.png)
 ##### Figure 2: Common USV On-board Devices
 
 ### 2.2 Existing Solutions
-Most of the USVs nowadays still adapts a similar power distribution system as those used in the conventional boats.
+Most USVs today still adopt PDS design similar to those used in conventional manned vessels. These systems typically rely on traditional marine electrical architectures that were not specifically designed for autonomous or highly integrated operations.
 
-Common components implemented are Transformer, DC convertors, Programmable Logic Controllers (PLCs), relays, fuse and circuit breaker. They are joint together using cables and terminal blocks
+Common components found in such PDS setups include transformers, DC converters, Programmable Logic Controllers (PLCs), relays, fuses, and circuit breakers. These components are interconnected using cables, terminal blocks, and wiring harnesses to form the overall electrical network.
 
-![Conventional Power Distribution System Architecture](conventional.png)
-##### Figure 3: Conventional Marine DC Power Distribution System Architecture
+![Conventional PDS Architecture](conventional.png)
+##### Figure 3: Conventional Marine Direct Current (DC) PDS Architecture
 
 ## 3. Problem Analysis    
-In order to understand further how problems may arised from applying conventional power distribution system in medium sized USV, I have carried out analysis on two signature case studies, the first one is a literature review on a marine power system product (onboard DC grid&trade;) developed by ABB, a key power system provider in the marine industry, as well as a real life product analysis on the power distribution system of ST Engineering’s medium size USVs. 
+To better understand the challenges that may arise when conventional power distribution systems (PDS) are applied to medium-sized USVs, I conducted an analysis of two representative case studies. The first is a literature review of Onboard DC Grid™, a marine power system developed by ABB, one of the leading power system providers in the maritime industry. The second is a real-world examination of the PDS used in ST Engineering’s medium-sized USVs. 
 
 ### 3.1 Onboard DC Grid&trade;
-Onboard DC Grid™ is an advanced DC power distribution system developed by ABB, a leading global technology company renowned for its expertise in electrification, automation, and digital solutions. The system is designed to efficiently manage the generation, storage, and distribution of direct current (DC) power on ships, industrial platforms, and other onboard applications.
+Onboard DC Grid™ is an advanced power distribution system designed to manage the generation, storage, and distribution of direct current (DC) power across onboard applications.
 
 In 2020, ABB has published the report, _Unmanned Surface Vehicles/Vessel (USV) 
 Reliable Power and Propulsion Architecture Characterization_, in response for a Request for Information (RFI) from the US government. In the report, the company introduce this product and highlight some problems on the current USV power architecture 
 
-The primary concern identified in this report regarding the current power distribution solution for USV, is its negative impact on the vehicle's mission success rate. Compared to its application in conventional manned vessel, the conventioanl power distribution system used in USV has same power subsystems' Mean Time Before Failure (MTBF) but much higher Mean Time To Repair (MTTR). This is because unlike manned vehicle, faults happened during the mission of the vehicle cannot be identified and fixed on the spot due to the absence of on-board crew for USV. These faults may not be fatal for the mission at the begining, but may subsequently lead to faults in  parts of the boat that are crtical for its operation. As a result, USV has a shorter overall system MTBF compared to conventioanl vehicle, leading to more frequent failure of mission.
+The primary concern identified in this report regarding the current power distribution solutions used in USVs is their negative impact on mission success rates. Although USVs use many of the same power subsystem components as conventional manned vessels, these components exhibit the same Mean Time Between Failures (MTBF) but a much higher Mean Time To Repair (MTTR). This difference arises because, unlike manned vessels, faults that occur during a USV’s mission cannot be immediately detected, diagnosed, or repaired due to the absence of onboard crew.
+
+While initial faults may not be mission-critical, they can propagate into secondary failures affecting systems essential for the vehicle's operation. Consequently, the overall effective MTBF of the USV system becomes shorter than that of a conventional vessel, resulting in a higher likelihood of mission failure.
 
 ![USV Power System Reliability Comparison](usvpower.png)
 ##### Figure 4: USV Power System Reliability Comparison with Conventional Manned Vessel
 
-### 3.2 ST Engineering USV Power Distribution System
+### 3.2 ST Engineering USV PDS
 
-In this project, I have the hornor to work on ST Engineering's USV and examine its power distribution system in real life.
+In this project, I had the opportunity to work directly with ST Engineering’s USVs and examine their PDS in a real operational setting.
 
 ![Discharge Voltage Curve](voltagecapacity.webp)
-##### Figure 7: ST Engineering's USV Current Power Distribution System Architecture
+##### Figure 7: ST Engineering's USV Current PDS Architecture
 
-The current system consists mainly of commercial fuses and relays, controlled by a specific power system PLC. The switching of the power channel is controlled by a continuous digital signals from the PLC. The power switching functionality of the system enables a sequential start of the main compute stacks at boat start-up as well as the shutdown of unneccessary devices for power effeciency during mission
+The current system conists primarily of commercial fuses and relays, coordinated through a dedicated power-system PLC. Power channel switching is controlled by continuous digital signals from the PLC, which govern when individual subsystems are energised or disconnected. This switching capability enables the sequential start-up of the main compute stacks during vessel initialization, as well as the selective shutdown of non-essential devices to improve power efficiency during missions.
 
 Two main problems exists in the current system:
 
 **Size Constraint**:
-Currently, the power distribution system is housed within the equipment racks of the USV. However, due to the bulky nature of the conventional power distribution components, the system occupies a significant portion of the rack's internal volume. This oversizing poses challenges during integration, as it limits the available space for other essential components and makes maintenance tasks more cumbersome. The oversized system also complicates cable management within the rack, leading to potential issues with airflow and accessibility.
+Currently, the PDS is housed within the equipment racks of the USV. However, due to the bulky nature of the conventional power distribution components, the system occupies a significant portion of the rack's internal volume. This oversizing poses challenges during integration, as it limits the available space for other essential components and makes maintenance tasks more cumbersome. The oversized system also complicates cable management within the rack, leading to potential issues with accessibility.
 
 What is more, ST Engineering is designing USVs for 3 different sizes with the following dimension statistics:
 | **USV Model Name** | **Length (m)** | **Width (m)** |
@@ -108,12 +111,15 @@ What is more, ST Engineering is designing USVs for 3 different sizes with the fo
 |   Puma         |      17.5        |     5.2      |
 ##### Table 1: ST Engineering's USV Size Statistics
 
-With the current power distribution system being already oversized in medium size vehicle Puma and Bellagio, it is foreseeable that the system will be even more ill-suited for the smaller USV models like Goldfish. Therefore, there is a pressing need to redesign the power distribution system to be more compact and efficient, ensuring it can fit seamlessly within the spatial constraints of all USV models while still delivering reliable performance.
+With the current PDS being already oversized in medium size vehicle Puma and Bellagio, it is foreseeable that the system will be even more ill-suited for the smaller USV models like Goldfish. Therefore, there is a pressing need to redesign the PDS to be more compact and efficient, ensuring it can fit within the constraints of all USV models while still delivering reliable performance.
 
 **Existance of Single Pont of Failure**:
-The current power distribution system lacks redundancy and fault tolerance, making it susceptible to single points of failure. 
+The current PDS lacks both redundancy and fault-tolerance, making it highly susceptible to single points of failure.
 
-For example, if the PLC for the power distribution system fails, due to the control logic where the ON state of power channel is maintained by a continuous digital high signal from PLC, the loss of its control signal can lead to a shutdown of all relays controlled by the PLC and a complete loss of power to all systems onboard the USV. This vulnerability poses a significant risk to the mission success rate of the USV and even the loss of the vehicle itself on the sea.  
+For instance, if the PLC of PDS fails, the consequences can be severe. Because the system’s control logic requires each power channel to remain continuously energised by a digital HIGH signal from the PLC, the loss of this signal immediately de-energises all PLC-controlled relays. This results in a complete shutdown of all subsystems powered through these channels. Such a failure mode presents a significant operational risk to the USV and may even lead to the total loss of the vessel while at sea. 
+
+**Lack of power status indications**:
+The current PDS lacks adequate power status monitoring and reporting capabilities. This deficiency makes it challenging to assess the health and performance of the power distribution system in real-time. Without proper monitoring, it becomes difficult to identify potential issues before they escalate into critical failures, leading to reduce in mission success rate.
 
 ---
 
@@ -122,23 +128,23 @@ Targeting the above identified problems, the design statement of this project ar
 
 <div align="center">
     <b>
-      Design a power distribution system, to reduce the size of the current medium USV power system while increase vehicle mission success rate by improving its fault tolerance and power system monitoring
+      Design a PDS, to reduce the size of the current medium USV power system while increase vehicle mission success rate by improving its fault tolerance and power system monitoring
     </b>
 </div>
 
 ## 4. Value Proposition
 
 ### 4.1 Stakeholders
-The first stakeholders for this project is the ST Engineering USV Team members, including boat designers, manufacturers and testing engineers who will directly interact with and benefit from the improved power distribution system. Additionally, the broader ST Engineering Unmanned & Integrated Systems Department stands to gain from the advancements made in this project, as the developed technologies and methodologies can be applied to other USV projects within the department.
+The first group of stakeholders of this project are the members of the ST Engineering USV Team, including boat designers, manufacturing engineers, and testing engineers who will directly interact with—and benefit from—the improved PDS. The broader ST Engineering Unmanned & Integrated Systems Department will also gain from this work, as the technologies, design approaches, and methodologies developed here can be applied across other USV platforms within the department.
 
-The second stakeholders include end-users of the USV, such as maritime security agencies and research institutions, who will benefit from the enhanced reliability and performance of the USV enabled by the new power distribution system. Improving mission success rate can greatly enhance the operational effectiveness of their tasks and reduce the extra cost of maintaining the USV from faulty situations.
+The second group of stakeholders are the end-users of the USVs, such as maritime security agencies, port authorities, and research institutions. These users will benefit from the improved reliability, robustness, and performance enabled by the upgraded PDS. A higher mission success rate directly enhances operational effectiveness while also reducing the additional costs associated with maintenance, fault recovery, and unplanned downtime.
 
 ### 4.2 Benefits
-The new Power Distribution System offers several key benefits to its stakeholders:
+The new PDS offers several key benefits to its stakeholders::
 
 | **Benefits**                                      |                  **Rationale**                   |
 | :------------------------------------- | :----------------------------------------------: |
-| Compact Design                        | Reduces the spatial footprint of the power distribution system, allowing for more efficient use of space within the USV's equipment racks; Increase design flexibility and scalarbility for USVs with different size requirements |
+| Compact Design                        | Reduces the spatial footprint of the PDS, allowing for more efficient use of space within the USV's equipment racks; Increase design flexibility and scalarbility for USVs with different size requirements |
 | Enhanced Fault Tolerance              | Improves the reliability of the USV by incorporating features that mitigate the impact of component failures, thereby increasing the overall mission success rate. |
 | Advanced Power Monitoring and Reporting | Provides real-time insights into the power system's status, enabling proactive maintenance and informed decision-making during operations. |
 
@@ -147,25 +153,25 @@ The new Power Distribution System offers several key benefits to its stakeholder
 ## 5. Design Requirments
 
 ### 5.1 Technical Specifications
-To begin, the new power distribution system must meet or exceed the technical performance of its predecessor. The following functional requirements were defined following the capability of the current system
+To begin, the new PDS must match or exceed the technical performance of the existing system. Based on an evaluation of the current PDS capabilities, the following technical requirements were identified:
 
 | **Technical Capabilities** | **Specifications**                                                                |
 | :------------------------- | :-------------------------------------------------------------------------------- |
-| Maximum Physical Dimension         |  445mm x 600mm x 133mm                                                                              |
+| Physical Dimension         |  < 445mm x 600mm x 133mm                                                                              |
 | Application Voltage             | 12V and 24V DC                                                               |
-| Maximum Continuous Current         | 30A                                                                               |
+| Maximum Continuous Current        | 30A                                                                               |
 | Maximum Transient Current     | 100A                                                                            |
 | Fault Protection     | Overvoltage/Undervoltage/Overcurrent/Short Circuit                                                                            |
 | Fault Reponse Time     |  <10ms                                                                          |                                                                           |
 | Power System Monitoring                  | Current, Internal Temperature, Power Good(PG), Fault Status |
 | Communication Protocol     | Digital/Analog/CAN 2.0      |
 
-##### Table 7: Core Functional Requirements for the New Power Distribution System
+##### Table 7: Core Functional Requirements for the New PDS
 
-The 30A current specification is based on the maximum continuous current draw possible from one channel of the current ST power distribution system (20A). This provides sufficient headroom. CAN Bus is used for communication between backplane and PLC, whose design will be explained further in the sections below.
+The 30A current specification is based on the maximum continuous current draw possible from one channel of the current ST PDS (20A). This provides sufficient headroom. CAN Bus is used for communication between backplane and PLC, whose design will be explained further in the sections below.
 
 ### 5.2 Functional Sub-goals
-Three main functionalities need to be achived in the new power distribution system, with each sub-goal detailed in its respective section.
+In addition to meeting the technical specifications, the new PDS must achieve three key functionalities to satisfy user requirements. Each of these is described in detail in the corresponding section below.
 
 | **Key Functionalities**                          |                  **Section Number**                   |
 | :------------------------------------- | :---------------------------------------------------: |
@@ -176,7 +182,7 @@ Three main functionalities need to be achived in the new power distribution syst
 
 ### 5.3 Environmental Requirments
 
-Other than functional requirements, as this product may eventually be applied to a product used in marinetime environments, proper industrial standrads has to be followed. The below design standrad requirements is derivate fro the _IEEE Recommended Practice for the Design and Application of Power Electronics in Electrical Power Systems_ and are the most relevant to this project.
+Since this product is intended for use in maritime environments, relevant industrial standards must be adhered to. The design requirements listed below are derived from the _IEEE Recommended Practice for the Design and Application of Power Electronics in Electrical Power Systems_ and are the most applicable to this project.
 
 
 | **Characteristics**  | **Constraints**                                                                        |
@@ -194,46 +200,46 @@ Other than functional requirements, as this product may eventually be applied to
 This section presents the summarised architectures to provide a high-level overview of the systems. Subsequent sections will explain how the design choices support the overall project goals.
 
 ![Summarised Power Architecture of PMB](powerarch.png)
-##### Figure 11: Summarised System Architecture of the developed power distribution system
+##### Figure 11: Summarised System Architecture of the developed PDS
 
 ---
 
 ## 6. Power Switching 
-The new Power Distribution System is designed to provide compact and robust power switching solutions for each power channel. And this is achieved through two main improvements, moving from traditional relay + PLC combination towards PCB backplane system as well as improving the power switching logic.
+The new PDS is designed to provide compact and robust power switching solutions for each power channel. And this is achieved through two main improvements, moving from traditional relay + PLC combination towards PCB backplane system as well as improving the power switching logic.
 
 ### 6.1 Moving towards PCB 
 
 #### 6.1.1 Comparison of PLC + Relay vs MCU + PCB System
 
-As mentioned in the case study above, the current power distribution system adapted in ST Engineering USV relies on a combination of a Programmable Logic Controller (PLC) and SSR relays to manage power switching. This is also the common approach used in conventioanl power distribution system in marine industry. Another possibl approach is to use a MCU + PCB system, which involves a substantial amount of customisation and design efforts.
+As mentioned in the case study above, the current PDS adapted in ST Engineering USV relies on a combination of a Programmable Logic Controller (PLC) and SSR relays to manage power switching. This is also the common approach used in conventioanl PDS in marine industry. Another possibl approach is to use a MCU + PCB system, which involves a substantial amount of customisation and design efforts.
 
 The below table summarises the key advantages and disadvntages between the two approaches:
 
 | **Aspect**               | **PLC + Relay**                                                | **MCU + PCB System**                                                                                                                                   |
 | ------------------------ | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Size and Weight          | - Bulky and heavy due to discrete components<br>- Requires additional space for wiring and terminal blocks<br> | - Compact and lightweight due to integrated design<br>- Reduces wiring complexity and space requirements<br>                                           |
-| Reliability and Durability | - Mechanical parts prone to wear and failure over time<br>- Susceptible to vibration and shock<br> | - Solid-state components with higher reliability<br>- Better resistance to vibration and shock<br>                                                       |
-| Customisability and Scalability | - Limited customisation options<br>- Scaling up requires additional components and wiring<br> | - Highly customisable to specific requirements<br>- Easily scalable by adding or modifying PCB modules<br>                                           |
+| Reliability and Durability | - industrially certified for maritime usage<br> - proper insulation and protection done based on industrial standards<br>   | - Larger efforts are required to design for robustness
+| Customisability and Scalability | - Limited customisation options<br>- Easily scalable by adding or modifying Relay/PLC modules<br> | - Highly customisable to specific requirements<br>- More difficult to replace/scale up                                           |
 
 #### 6.1.2 Targeting limitations in MCU + PCB System
-While the MCU + PCB system offers significant advantages in terms of size, reliability, and customisability, it also presents certain challenges that need to be addressed to ensure successful implementation.
+While the MCU + PCB system offers significant advantages in achieving size reduction, it also presents the above mentioned limitations that need to be addressed to ensure successful implementation.
 
-### 6.2 Power Switching Logic Modification
+### 6.2 Customisable Power Switching Logic
 As mentioned in [Section](#232-limited-capabilities-of-battery-fuel-gauge), the current control logics relied on a continous signal from PLC. This approach means that if there is any signal loss from the PLC, be it PLC failure or loose connection, the power supply maybe disturbed. In this project, I would like to introduce a new user-customisable control logic using a latching PCB design to mitigate this risk.
 
 #### 6.2.1 Comparison Between New and Old Control Logic
 The diagram below illustrates the current control logic flow and the proposed new control logic. 
 
 ![TI's Forum Search Result](forum.png)
-##### Figure 18: Current Control Logic in ST Engineering USV Power Distribution System
+##### Figure 18: Current Control Logic in the PDS
 
 ![TI's YouTube Playlist on Battery Management](youtube.png)
 ##### Figure 19: New Control Logic proposed
 
-The key difference between the two control logics is that in the current system, the ON state of power channel is maintained by a continuous digital high signal from PLC. In contrast, the new control logic uses a latching mechanism where a momentary high signal from the MCU would be able to toggles the power channel ON and only with a subsequent continous high signal , will the cahnnel be turn OFF. This means that once the power channel is turned ON, it will remain ON even if there is a loss of signal from the MCU.
+The key difference between the two control logics lies in how the power channel’s ON state is maintained. In the current system, the ON state is sustained by a continuous digital HIGH signal from the PLC. In contrast, the new control logic employs a latching mechanism: a momentary HIGH signal from the MCU toggles the power channel ON at startup, and the channel is only turned OFF when a subsequent continuous HIGH signal is applied. This design ensures that once a power channel is turned ON, it remains ON even if the MCU signal is lost. This significantly enhances fault tolerance, as transient or permanant PLC/MCU failures will not inadvertently disrupt power delivery to critical subsystems during missions.
 
 #### 6.2.3 User-customisability with latching PCB Design
-Although the latching PCB design improves fault tolerance, it may introduce some inconveniences during operation. For instance, if the MCU fails while the power channel is ON, the user will not be able to turn OFF the power channel remotely even if they are unneccssary to be ON during mission operation (e.g. on-board lights that are only needed during maintainence work). To address this, a seperate PCB is designed to achieve the latching mechanism while remain pluggable from the main MOSFET relay board. This makes the control logic user-customisable, allowing them to choose between the new latching control logic or revert to the old continuous signal control logic based on their operational needs.
+Although the latching PCB design enhances fault tolerance, it may introduce certain operational limitations. For example, if the MCU fails while a power channel is ON, the user cannot remotely turn off that channel, even for systems that are not required during mission operation (e.g., onboard lights used only for maintenance), which could reduce overall power efficiency. To address this, a separate PCB was designed to implement the latching mechanism while remaining pluggable from the main MOSFET relay board. This modular design makes the control logic user-customisable, allowing operators to choose between the new latching mechanism or revert to the traditional continuous-signal control logic according to their operational requirements.
 
 ![Latching PCB](latchingpcb_pcb.png)
 ##### Figure 20: Latching PCB Schematic and Layout
@@ -245,14 +251,15 @@ Although the latching PCB design improves fault tolerance, it may introduce some
 
 ## 7. Power Protection
 
-Power protection is crucial in ensuring the safety and reliability of the power distribution system. Current power distribution system in ST Engineering USV lacks adequate protection features, making it vulnerable to transient and fault situations. 
+Power protection is crucial in ensuring the safety and reliability of the PDS. Current PDS in ST Engineering USV lacks adequate protection features, making it vulnerable to transient and fault situations. 
 
 ### 7.1 Protection Requirements
-The type of faults the power protection feature of the new power distribution system should be able to handle are derivate from the design standrads mentioned in [Section 5.3](#53-environmental-requirments). The faults are overvoltage, undervoltage, overcurrent and short circuit.
+The types of faults that the new PDS should be able to protect against are derived from the design standards outlined in Section 5.3
+. These include overvoltage, undervoltage, overcurrent, and short-circuit conditions.
 
 #### 7.2 Choice of MOSFET Gate Driver IC - TPS4800
 
-As a result, the MOSFET gate driver IC TPS4800 from Texas Instruments is selected among all other MOSFET gate driver IC for its ability to achieve all the above protection features and at the same time, satisy the technical specifications mentioned in [Section 5.1](#51-technical-specifications). The key features of the TPS4800 are summarised in the table below:
+As a result, the MOSFET gate driver IC TPS4800 from Texas Instruments is selected among all other MOSFET gate driver IC for its ability to achieve all the above protection features while satisfying the technical specifications mentioned in [Section 5.1](#51-technical-specifications). The key features of the TPS4800 are summarised in the table below:
 
 | **Key Features**                | **Specifications**                                                                 |
 | :------------------------------ | :-------------------------------------------------------------------------------- |
@@ -260,73 +267,21 @@ As a result, the MOSFET gate driver IC TPS4800 from Texas Instruments is selecte
 | Maximum Continuous Current      | 30A                                                                               |
 | Overvoltage Protection Threshold | Adjustable between 10V to 60V DC                                                  |
 | Undervoltage Protection Threshold | Adjustable between 6V to 54V DC                                                   |
+| Overcurrent Protection Threshold | Adjustable between 5A to 50A                                                      |
 | Overcurrent Protection Response Time | <10ms                                                                          |
-##### Table 13: Key Features of TPS4800 MOSFET Gate Driver IC
+| Short-Circuit Protection Response Time | <1µs                                                                           |
+##### Table 2: Key Features of TPS4800 MOSFET Gate Driver IC
 
 ![Using resistors and capacitors to configure Protection Settings](protection.png)
 ##### Figure 37: Configuring TPS4800 Protection Parameters
 
 Besides the gate driver IC, the IPTC014N10NM5 MOSFET was chosen as it has a top side cooling package. This allows the use of thermal pads to conduct the heat from the MOSFET to the top of the battery hull [6].
 
-![MOSFET Highlighted on The New PMB](pcbmosfet.png)
-##### Figure 40: MOSFET Highlighted on The New PMB
-
-A test was conducted to compare the new MOSFET with the old MOSFET and its thermal conducting capabilities. The PMB is placed within the enclosed battery hull with starting temperature of 28 degree Celsius. A continuous current draw of 40A was carried out for 10 minutes. A thermal camera was then used to measure the temperature of the PCB.
-
-![Thermal Image of the New PMB](newpmbthermal.jpg)
-##### Figure 41: Thermal Image of the New PMB after Load Test
-
-![Thermal Image of the Old PMB](thermaloldpmb.jpg)
-##### Figure 42: Thermal Image of the Old PMB after Load Test
-
-It can be observed that the old PMB has a higher temperature after the load test, indicating that the MOSFETs on the new PMB are better at conducting thermal heat away.
-
 To ensure reliable power supply, a power consumption chart was drawn up to verify that the selected voltage regulators are able to supply enough power.
 
 ![PMB's Power Consumption Chart](pmbpowerconsume.png)
-##### Figure 43: PMB's Power Consumption Chart
+##### Figure 43: ST USV Components Power Consumption Chart
 
-### 8.3 PCB Design for Power and Signal Integrity
-
-#### 8.3.1 Design for High Power Handling
-The PMB is designed to handle 40A of continuous current. Hence, 2oz copper was used on the outer layers of the PCB, where the power path are, to reduce temperature rise. The traces are also made as wide as possible to reduce resistance.
-
-![3D Model of Power Path](3dpower.png)
-##### Figure 38: 3D Model of Power Path
-
-![Power Path on the Top Layer](toppower.png)
-##### Figure 39: Power Path on the Top Layer
-
-#### 8.3.2 Design for Signal Integrity
-Ensuring that the signals transmitted on the data lines are not degraded by noise is critical to creating a reliable PMB.
-
-Firstly, the board was split into high-power and low-power zones to minimise interference.
-
-![Split between Higher and Lower Power Section of the PMB](highlowsplit.png)
-##### Figure 44: Split between Higher and Lower Power Sections of the PMB (Red Line Divides the Sections)
-
-Due to the variation in current drawn from the battery, it is likely that there would be noise if the low power components were powered from the same source. Hence, an Isolated DC-DC regulator was used to isolate the Battery and AUV power from the microcontroller's components. A low-dropout regulator (LDO) was used to step down to 3.3V for 3.3V components.
-
-The BQ40Z50 communicates via SMBus, which spans both the high-power low-power sections. Therefore an I2C isolator is used. To protect the SMBus lines from electrostatic discharge and voltage spikes, TVS and Zener diodes are connected to the lines
-
-The various power and ground nets are summarised in the table below:
-
-
-| **Power and Ground Nets**    | **Description**                                                                        |
-| :--------------------------- | :------------------------------------------------------------------------------------- |
-| +3V3, +5, GND                | Isolated power and ground to power the components associated with the microcontroller. |
-| Batt_Pos, Batt_Neg           | Positive and negative input from the battery.                                          |
-| AUV_Pos, +3V3_UnIso, AUV_Neg | Positive and negative output to the AUV, and a 3V3 that references the AUV_Neg.        |
-
-##### Table 22: Table of Power and Ground Nets with Its Description
-
-This can be further seen in the division of the Power and Ground Plane within the PMB. 
-
-![PMB Power Plane](pcbpowerplane.png)
-##### Figure 45: PMB Power Plane
-
-![PMB Ground Plane](pmbgndplane.png)
-##### Figure 46: PMB Ground Plane
 ---
 
 ## 8. Power Monitoring
@@ -345,35 +300,18 @@ Accurate power(current) consumption monitoring is essential for effective power 
 
 ### 8.4 Fault Analysis Logics
 
-The diagram below illustrates the fault analysis logic flow implemented in the new power distribution system.
+The diagram below illustrates the fault analysis logic flow implemented in the new PDS.
 
 ![Fault Analysis Logic Flow](faultlogic.png)
 ##### Figure 32: Fault Analysis Logic Flow
 
 ### 8.5 Overall Dat Collection and Reporting
 
-#### 8.5.1 Chosen Method
-Telegram was selected as the alert platform due to its prior success and team-wide adoption. Furthermore, as it is used for internal communications, it provides a low-barrier of entry and high-visibility for any fault notification. 
+#### 8.5.1 Digital/Analog from Relay PCBs to MCU
+The PMB uses a combination of digital and analog signals to communicate power status and consumption data to the microcontroller unit (MCU). The digital signals include the Power Good (PG) status and fault status, while the analog signals represent the current consumption data.
 
-### 7.3 Remote Status Monitoring
-As discussed in in [Section 2.3.3](#233-challenges-with-tracking-battery-hulls-pressure-and-temperature), the team currently relies on manual logging to monitor the battery hull’s internal pressure and temperature. This lack of historical data makes it difficult to determine if a slow leak is present. Additionally, telemetry such as individual cell voltages and state of health is not consistently recorded, limiting the ability to track battery degradation over time.
-
-To address these limitations, a remote status monitoring system was proposed. The requirements for the system and its rationale are summarised below.
-
-| **Requirements**                     | **Rationale**                                                                                                                  |
-| :----------------------------------- | :----------------------------------------------------------------------------------------------------------------------------- |
-| Automated Reporting                  | Minimises human error by eliminating manual data entry.                                                                        |
-| Wireless Data Upload                 | Avoids the need to unseal the hull to retrieve the data.                                                                       |
-| Database with A Low-Barrier of Entry | As members from different sub-teams have to maintain the battery hulls, the storage database should be easy to access and use. |
-##### Table 14: “Requirements and Rationale for Remote Status Monitoring
-
-### 7.2.1 Design Concept 1 - Microcontroller with Wireless Capabilities
-The initial design involved using a microcontroller with built-in WiFi capabilities (STM32Wx, Espressif MCUs), allowing it to connect to the internet whenever the battery hull is powered on. However, this approach is not ideal as the PMB is placed within a metal hull, which would act as a Faraday cage. This would weaken the WiFi signal leading to unreliable connections.
-
-Given that the battery is already connected to the internet when it is attached to the AUV (Figure 28), wireless capabilities are only necessary when the battery hull is charging in the BCB. 
-
-![Diagram of Data Flow from PMB to the Internet](pmbtointernetauv.png)
-##### Figure 29: Diagram of Data Flow from PMB to the Internet
+### 8.5.2 CAN Bus from MCU to PLC 
+The Controller Area Network (CAN) bus is employed for communication between the MCU on the Backplane and the PLC of the USV. CAN bus is chosen for its robustness, reliability, and ability to handle high-speed data transmission in noisy environments, making it ideal for maritime applications.
 
 ## 9. Prototyping and Testing 
 
@@ -387,7 +325,6 @@ Several key safety features were configured and tested:
 | Over Charging Current Protection (OCC)  | When the charging current is higher than the preset threshold, the charging MOSFET is turned off.                                     |
 
 ##### Table 21: Test Results for TPS4800 Protection Features
-
 
 ---
 
@@ -416,34 +353,21 @@ The following timeline outlines the proposed development plan for holiday time a
 
 ---
 
-## Appendix A: PCB Schematics
-+ [Power Monitoring Board Schematic](PMB4.5-2Schematics.pdf)
-+ [Battery Telemetry Board Schematic](btpschematic.pdf)
+## Appendix A: Relay and Latch PCB Schematics
++ [Relay PCB Schematics](PMB4.5-2Schematics.pdf)
++ [Latch PCB Schematics](btpschematic.pdf)
 
-## Appendix B: Individual Layers of Power Monitoring Board
-
-![PMB Top Layer](pmbtoponly.png)
-##### Top Layer of PMB
-
-![PMB Power Plane](pmbpwronly.png)
-##### Power Plane of PMB
-
-![PMB Ground Plane](pmbgndonly.png)
-##### Ground Plane of PMB
-
-![PMB Bottom Layer](pmbbottomonly.png)
-##### Bottom Layer of PMB
+## Appendix B: Relay and Latch PCB Layouts
++ [Relay PCB Layouts](PMB4.5-2Layouts.pdf)  
++ [Latch PCB Layouts](btplayout.pdf)
 
 ## Appendix C: Relay Circuit Calculation
 
 ![Relay Circuit Calculation](relaycircuitcalc.png)
 ##### Relay Circuit Calculation
 
-## Appendix D: Battery Specification
-+ [AUV4.1 LiPo Battery](lipobatt.pdf)
-+ [AUV4.5 Li-Ion Battery](liionbatt.pdf)
 
-## Appendix E: 3D Model of AUV4.5 Power Monitoring Board
+## Appendix E: 3D Model of Overall Power Distribution System
 
 <div style="display: flex; justify-content: center;">
   <div class="sketchfab-embed-wrapper" style="width: 100%; max-width: 900px;">
