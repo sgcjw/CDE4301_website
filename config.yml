@@ -1,5 +1,5 @@
 baseURL: "https://ChenJiawei.github.io/website/" 
-title: AUV Battery Management System
+title: USV Power Distribution System
 theme: PaperMod
 
 enableInlineShortcodes: true
@@ -22,8 +22,8 @@ menu:
 
 
 params:
-    description: "Documentation of Bumblebee's AUV Battery Management System"
-    author: Teoh Xu En
+    description: "Documentation of ST Engineering's USV Power Distribution System"
+    author: Chen Jiawei
     # googleAnalyticsID: "G-XXXXX"
     DateFormat: "January 2006"
     defaultTheme: light
@@ -47,8 +47,8 @@ params:
     math: true
     profileMode:
           enabled: true
-          title: Battery Management System
-          subtitle: "This Battery Management System is designed and tested for Bumblebee's AUV4.5 to be deployed at RoboSub 2025"
+          title: USV Power Distribution System
+          subtitle: "This Power Distribution System is designed and tested for ST Engineering's Unmanned Surface Vehicle (USV)"
           imageWidth: 160
           imageHeight: 160
           buttons:
@@ -71,7 +71,7 @@ params:
         hiddenInList: false
         hiddenInSingle: true
     label:
-      text: "Battery Management System"
+      text: "USV Power Distribution System"
       icon: favicon.ico
       iconHeight: 18
 

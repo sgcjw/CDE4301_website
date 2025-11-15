@@ -1,26 +1,24 @@
 ---
-title: "Development of A Battery Management System for AUV4.5" 
-date: 2025-04-03
-lastmod: 2025-04-04
-author: ["Teoh Xu En"]
-description: "This report documents the work done on developing the Battery Management System for an Autonomous Underwater Vehicle (AUV4.5) in preparation for RoboSub 2025."
-summary: "This report documents the work done on developing the Battery Management System for an Autonomous Underwater Vehicle (AUV4.5) in preparation for RoboSub 2025."
+title: "Development of a Compact Power Distribution System for Unmanned Surface Vehicle (USV)" 
+date: 2025-11-14
+lastmod: 2025-11-16
+author: ["Chen Jiawei"]
+description: "This report documents the work done on developing a compact power distribution system for ST Engineering's Unmanned Surface Vehicle (USV)."
+summary: "This report documents the work done on developing a compact power distribution system for ST Engineering's Unmanned Surface Vehicle (USV)."
 editPost:
-    URL: "https://bumblebee.sg/"
-    Text: "Team Website"
+    URL: "https://www.stengg.com/"
+    Text: "ST Engineering Company Website"
 showToc: true
 disableAnchoredHeadings: false
 ---
 
 ## Acknowledgements
 
-Firstly, I would like to thank Team Bumblebee for the opportunity to work on this project. This project would not have been possible without the support of the many dedicated Bumblebee members. I am especially grateful to Chai Zi Yang and Tan Chern Lin Justin for taking the time to review my PCB designs, Chen Jia Wei for spending countless hours troubleshooting with me and Marvin Pranajaya for his valuable advice on the Power Management Board. I also appreciate the guidance and technical input from Zhang Yijian, Sim Justin, and Irwin Kong, which supported the firmware development of the Power Monitoring Board. Special thanks to Guk Yi Siong for assisting with the collection of power consumption data during in-water testing, and to Ananya Agarwal for her work on the battery hulls. 
+Firstly, I would like to thank ST Engineering for giving me the opportunity to work on this project. This project would not have been possible without the support of many dedicated ST Engineering members. I am especially grateful to Ang Ming Xiang, my ST Engineering supervisor and  Nathanel Tan, the Head of ST engineering Unmaned & Integrated System Department for providing the guidance and technical input for this project. Special thanks also to Gabriel for assisting with the collection of power distribution performance data during in-water testing. 
 
-Additionally, I would like to express my gratitude to Parker Schless from Cornell AUV, for generously taking the time to address my technical queries on the implementation of the BQ40Z50 chip.
+I also wish to acknowledge the support provided by the NUS College of Engineering, particularly Mr Royston, and Mr Graham from the Engineering Design and Innovation Centre. I would also like to thank Mr Eugene Ee for taking the time to review my project and provide valuable advice.
 
-I also wish to acknowledge the support provided by the NUS College of Engineering, particularly Ms Annie, Mr Patrick, and Mr Graham from the Engineering Design and Innovation Centre. I would also like to thank Prof Goh Cher Hiang and Mr Eugene Ee for taking the time to review my project and provide valuable advice.
-
-Finally, I am deeply grateful to my family for their unwavering patience and support through my journey in Team Bumblebee.
+Finally, I am deeply grateful to my family for their unwavering patience and support through my journey in ST Engineering.
 
 ----
 ## List of Common Acronyms
@@ -29,16 +27,13 @@ Finally, I am deeply grateful to my family for their unwavering patience and sup
 
 | **Acronym** |        **Definition**         |
 | :---------: | :---------------------------: |
-|   **ASV**   |   Autonomous Surface Vessel   |
-|   **AUV**   | Autonomous Underwater Vehicle |
-|  **BBAS**   | Bumblebee Autonomous Systems  |
-|   **BCB**   |     Battery Charging Box      |
-|   **BTB**   |    Battery Telemetry Board    |
+|   **USV**   |    Unmanned Surface Vessel    |
+|   **PLC**   |    Programmable Logic Controller   |
+|   **DC**   |    Direct Current    |
 |   **CAN**   |    Controller Area Network    |
-|   **OCS**   |   Operator Control Station    |
 |   **PCB**   |     Printed Circuit Board     |
-|   **PMB**   |    Power Monitoring Board     |
-|   **SoC**   |        State of Charge        |
+|   **PDB**   |    Power Distribution Board     |
+|   **PG**   |    Power Good     |
 
 </div>
 
@@ -46,76 +41,56 @@ Finally, I am deeply grateful to my family for their unwavering patience and sup
 
 ## 1. Summary
 
-This project focuses on developing a Power Monitoring Board for the upcoming Autonomous Underwater Vehicle, AUV4.5. The PMB is a critical component of the vehicle’s electrical system, designed to interface the battery reliably and safely with the AUV. 
+This project focuses on developing a compact Power Distribution System for ST Engineering's Unmanned Surface Vehicle. The PDS is a critical component of the vehicle’s electrical system, designed to distribute and control the power to different parts of the vehicle. 
 
-The new PMB introduces key features such as accurate state-of-charge tracking and in-hull firmware upgrades while maintaining backward compatibility with AUV4.1. Additionally, a new Battery Telemetry Board (BTB) will be integrated into the Battery Charging Box (BCB) enabling real-time monitoring, wireless data upload and automated fault detection throughout battery charging.
+The new Power Distribution System developed mainly consists of a compact and robust power switching PCB solution with a backplane design for the ease of modularity and integration. The system also includes key features such as power line protection and accurate power status monitoring and reporting, to ensure its critical functionality even when a power line fault has occured.
 
 ---
 
-## 2. Problem Background
+## 2. Background
+
 ### 2.1 Introduction
-Bumblebee Autonomous Systems (BBAS) is a student-led project team that designs and builds Autonomous Underwater Vehicles (AUVs) for the annual RoboSub competition. Following lessons learned from AUV4.1’s participation in RoboSub 2023 (Figure 1), the team is concurrently developing AUV4.5 for RoboSub 2025 and AUV5.0 for RoboSub 2026 (Table 1).
+Unmanned Surface Vehicle (USV) is defined as a boat or ship that operates on the surface of the water without a crew.
+
+USV market is a fast growing market recent years in the maritime industry, especially around the Asia Pacific Region. The most common way to classify USV is based on their sizes, where they are divided into 3 different size categories. Among the three, the medium size category USV, with a length of 2 to 24 meters, is the target vehicle of this project
+
+Within the USV market, more than half of the vessel is developed for defence purpose and most of the them fall below the weight of 2000 kg, which often classified as small and medium USV.
+
 
 ![AUV4.1 at RoboSub 2023](RoboSub2023.jpeg)
 ##### Figure 1: AUV4.1 at RoboSub 2023
 
-| **Competition** | **Vehicles Deployed** |
-| :-------------: | :-------------------: |
-|  RoboSub 2023   |        AUV4.1         |
-|  RoboSub 2025   |        AUV4.5         |
-|  RoboSub 2026   |   AUV4.5 and AUV5.0   |
-##### Table 1: AUV Deployments in RoboSub Competitions
 
-AUV4.5 retains the same hull design as AUV4.1 but features a newly developed electrical and software subsystem. This new electrical subsystem is designed to be mechanically compatible with the existing AUV4.1 hull while also serving as the baseline for AUV5.0. 
+To achieve autonomous operation, USV is often equipped with various sensors and equipment which are powered by an engine/batteries and supplied through an on board power distribution system, which is the focus of this project.
 
-### 2.2 Current System
-The current power system for the AUVs comprises two main components, the battery hull (Figure 2) and the Battery Charging Box (BCB). Each battery hull houses a Power Monitoring Board (PMB) and a LiPo battery.
+### 2.2 Existing Solutions
+Most of the USVs nowadays still adapts a similar power distribution system as those used in the conventional boats.
 
-The PMB (Figure 3) monitors and reports key telemetry data, such as the battery's voltage, current, battery hull's temperature and pressure, both on the screen and via the CAN Bus. Two such hulls are connected to power to the AUV. The waterproof designs allows for quick battery swap during pool test by eliminating the need to unseal the main vehicle hull.
+Common components implemented are Transformer, DC convertors, Programmable Logic Controllers, relays, fuse and circuit breaker. They are joint together using cables and terminal blocks
 
-![Battery Hull](BatteryHull.png)
-##### Figure 2: Metal 3D-Printed Battery Hull
+### 2.3 Problem Case Studys   
+In order to understand further how problems may arised from aplplying conventional power distribution system in medium sized USV, I have carried out analysis on two signature case studies, the first one is a literature review on the power system product onboard DC grid developed by ABB, a key power system provider in the marine industries, as well as a real life product study on ST Engineering’s medium size USV power distribution system 
 
+#### 2.3.1 Onboard DC Grid&trade;
+Onboard DC Grid™ is an advanced DC power distribution system developed by ABB, a leading global technology company renowned for its expertise in electrification, automation, and digital solutions. The system is designed to efficiently manage the generation, storage, and distribution of direct current (DC) power on ships, industrial platforms, and other onboard applications.
 
-![AUV4.1 PMB](AUV4.1PMB.png)
-##### Figure 3: AUV4.1's Power Monitoring Board
+In 2020, ABB has made the report _Unmanned Surface Vehicles/Vessel (USV) 
+Reliable Power and PropulsionArchitecture Characterization_, in response for a Request for Information (RFI) from the US government. In the report, the company introduce this product and highlight some problems on the current USV power architecture 
 
-![Assembled Battery Hull](assembled.png)
-##### Figure 4: Assembled Battery Hull
+The primary concern identified by this leading company on the current USV solutions is its negative impact on the vehicle's mission success rate. Compared to their usage in conventional manned vessel, the power distribution system used in USV has same subsystems' Mean Time Before Failure (MTBF) but much higher Mean Time To Repair (MTTR) 
 
-The BCB (Figure 5) comprises an AC-DC power supply and a LiPo charger. It includes connectors that interface directly with the battery hull, allowing the battery to be charged without removing it from the hull.
-
-![Battery Charging Box](bcb.png)
-##### Figure 5: Battery Charging Box
-
-### 2.3 Limitations of Current System  
-Deploying the current system at RoboSub 2023 identified several challenges.
-
-#### 2.3.1 Challenges with Battery Hull Sealing
-The limited space within the battery hull and the need for a watertight seal, makes sealing and unsealing the hull a challenging and time-consuming process. Without error, unsealing takes 2 members approximately 10 minutes, while resealing requires another 15 minutes. However, the confined space often results in disconnected cables during assembly, further complicating the process. This overhead increase downtime and the risk of assembly errors. 
 
 ![Sealing a Battery Hull at RoboSub 2023](sealing.png)
 ##### Figure 6: Two Man Team Attempting to Seal a Battery Hull at RoboSub 2023
 
-#### 2.3.2 Limited Capabilities of Battery Fuel Gauge
-The PMB currently uses BQ34110 chip as a gas gauge, which is designed for rarely discharged applications and lacks essential protection features [1], reducing the AUV's reliability. Furthermore, the battery gauging capability was also not used, leading the team to rely on voltage readings to estimate the capacity of the battery. This method is inaccurate as the battery voltage remains relatively constant over a significant portion of the discharge cycle, while the actual capacity decreases rapidly (Figure 7). To err on the side of caution, the pool test is ended when the voltage drops to the nominal level, further limiting the AUV's runtime.
+#### 2.3.2 ST Engineering USV Power Distribution System
+
 
 ![Discharge Voltage Curve](voltagecapacity.webp)
 ##### Figure 7: Typical Li-Ion Discharge Voltage Curve [2]
 
-#### 2.3.3 Challenges with Tracking Battery Hull's Pressure and Temperature
-During assembly, the battery hull is pressurised. Monitoring changes in pressure and temperature can alert the team to potential leaks. Currently, this tracking is done manually and only when a leak is
-suspected. This reactive approach limits the availability of historical data. Manual tracking can lead to missing data or recording errors, reducing the effectiveness of leak detection.
-
-![Manually Logging Battery's Hull and Temperature on the Battery Hull's Lid](manualtrack.png)
-##### Figure 8: Manually Logging Battery's Hull and Temperature on the Battery Hull's Lid
-
-![Manually Logging Battery's Hull and Temperature on Excel](excel.png)
-##### Figure 9: Manually Logging Battery's Hull and Temperature on Excel
-
 ### 2.4 Problem Analysis  
 The limitations in the current system can be split into three overarching themes: poor user operability, limited runtime and reduced reliability. These themes and their associated limitations are summarised in Table 2.
-
 
 <table>
   <thead>
@@ -173,34 +148,34 @@ Poor user operability increases the likelihood of mistakes at competition, espec
 
 ---
 
-## 3. Project Goal
+## 3. Design Statement
 As a competition team, the primary objective is to maximise vehicle performance at RoboSub. By enhancing user operability and ensuring safe operation, the PMB directly contributes to system reliability, allowing for more in-water testing, and ultimately better competition performance.
 
-The project goal can be summarised as:
+The design statement of this project can be summarised as:
 
 <div align="center">
     <b>
-        To develop a battery management system that enhances user operability and workflow, ensures safe operation, and improves the AUV’s overall reliability and performance.
+      Design a power distribution system, to reduce the size of the current medium USV power system while increase vehicle mission success rate by improving its fault tolerance and power system monitoring
     </b>
 </div>
 
-### 3.1.1 Project Sub-Goals
+### 3.3 Key Functionalities
 Hence, a three-Pronged approach was used to guide the development of the PMB, with each sub-goal detailed in its respective section.
 
-| **Sub Goals**                          |                  **Section Number**                   |
+| **Key Functionalities**                          |                  **Section Number**                   |
 | :------------------------------------- | :---------------------------------------------------: |
-| Enhance User Operability and Work Flow | [Section 7](#7-enhance-user-operability-and-workflow) |
-| Improve Safety and Reliability         |   [Section 8](#8-improving-safety-and-reliability)    |
-| Improve AUV Performance                |       [Section 6](#6-improving-auv-performance)       |
-##### Table 5: Sub Goals and Corresponding Report Section
+| Compact & robust power switching solutions for each power channel | [Section 7](#7-Power-Switching) |
+| Implement power line protection features for transient/fault situation |   [Section 8](#8-Power-Protection)    |
+| Monitor and report power status and power(current) consumptions in each channel|       [Section 6](#6-Power-Monitoring)       |
+##### Table 5: Key System Functionalities and Corresponding Report Section
 
 ---
 
-## 4. Design Considerations
+## 4. Design Standrad
   
-### 4.1 Backward Compatibility
+### 4.1 IEEE Recommended Practice for the Design and Application of Power Electronics in Electrical Power Systems
 
-As outlined in [Section 2.1](#21-introduction), AUV4.5 has the same mechanical structure as AUV4.1. As such, the new PMB must remain mechanically and electrically compatible with the AUV4.1 battery hull. This backward compatibility ensures minimal modification to the existing support infrastructure when using the new PMB. Furthermore, designing to meet AUV4.1's specifications would also ensure forward compatibility with AUV5.0. This approach enables component reuse across AUV4.1, AUV4.5 and AUV5.0, reducing the need for custom variants and lowering the manufacturing cost by leveraging economies of scale.
+
 
 To maintain backwards compatibility, the following constraints were identified.
 
@@ -212,7 +187,8 @@ To maintain backwards compatibility, the following constraints were identified.
 ##### Table 6: Design Constraints for Backward Compatibility
 
 
-### 4.2 Functional Requirements  
+### 4.2 Functional Requirements
+
 In addition to physical compatibility, the PMB must meet or exceed the technical performance of its predecessor. The following functional requirements were defined to ensure the board can support AUV4.1, AUV4.5 and AUV5.0.
 
 | **Technical Capabilities** | **Specifications**                                                                |
@@ -227,26 +203,9 @@ In addition to physical compatibility, the PMB must meet or exceed the technical
 The 40A current specification is based on the rated continuous current limit of the SubConn Low Profile Connector on the battery hull [7]. This provides sufficient headroom, as testing indicates a typical current draw of 11A per battery when moving at full-speed. CAN Bus is used for inter-board communication within the AUV, hence CAN bus integration is critical.
 
 
-
-### 4.3 Component Standardisation
-
-To reduce cost and simplify procurement, certain components of the PMB are shared with the other PCBs onboard the AUV. Specifically, the STM32F103C8T6 and the ISOW1044B isolated CAN Transceiver (Table 8). This standardisation reduces design effort and chance of error as the same validated schematic can be reused across the PCBs. This also allows for easier spare preparation as the same component can act as spares for the different PCBs.
-
-<img src="mcuschematic.png" alt="Common Schematic for STM32F103C8T6" style="max-width: 100%;">
-
-##### Figure 10: Common Schematic for STM32F103C8T6
-
-| **Component** | **Reason for Selection**                                                                                                          |
-| :------------ | :-------------------------------------------------------------------------------------------------------------------------------- |
-| STM32F103C8T6 | A widely used microcontroller that is onboard the "Blue-Pill" development board, ensuring high availability and supply stability. |
-| ISOW1044B     | Combines the isolated regulator and CAN transceiver into one single component, saving space onboard the PCB.                      |
-
-##### Table 8: Reasons for the Components Selected for Standardisation 
-  
-
 ---  
 
-## 5. System Architecture
+## 5. System Requirements
 
 This section presents the summarised power, electrical and connector architectures to provide a high-level overview of the systems. Subsequent sections will explain how the design choices support the overall project goals.
 
@@ -261,11 +220,11 @@ This section presents the summarised power, electrical and connector architectur
 
 ---
 
-## 6. Improving AUV Performance
+## 6. Power Switching 
 One way to improve the AUV's performance is by extending its run time. This enables longer in-water testing by reducing interruptions due to battery swaps. This uninterrupted testing can better simulate longer competition runs. Two methods were implemented to achieve this: renewing the current batteries and introducing accurate state-of-charge (SoC) estimation.
 
 
-### 6.1 Battery Renewal
+### 6.1 Moving towards PCB 
 The batteries have been in use for over 2 years, with an estimated 200 cycles completed. 
 
 ![Battery Cycle Life](cyclestats.png)
@@ -309,7 +268,7 @@ Two Raitan Li-Ion batteries were procured for testing and comparison with the cu
 
 Raitan Li-Ion battery has been verified to be comparable to the GrePow LiPo battery (Table 10), while fitting within the dimension constraints (Table 6), making it a suitable replacement for the old batteries.
 
-### 6.2 Accurate SoC Estimation
+### 6.2 Power Switching Logic Modification
 As mentioned in [Section 2.3.2](#232-limited-capabilities-of-battery-fuel-gauge), the team previously relied on voltage to estimate the battery capacity. This approach tends to end tests prematurely, as conservative voltage thresholds fail to account for load and battery age. By utilising the gauging feature on battery management chip, we can determine a more accurate SoC, allowing in-water tests to run longer without risking battery damage.
 
 #### 6.2.1 Literature Review
@@ -383,7 +342,7 @@ This can be useful as it allows members to better plan and anticipate battery ch
 
 ---
 
-## 7. Enhancing User Operability and Workflow
+## 7. Power Protection
 
 One part of the project is to enhance user operability and workflow. User operability is improved by simplifying operation and maintenance of the battery hull, reducing AUV's downtime. Easier maintenance can also help prevent damage to the battery hulls. 
 
@@ -391,7 +350,7 @@ Improved workflow can help to identify potential issues and allow for early dete
 
 Both user operability and workflow can come together to increase the reliability of the vehicle.
 
-### 7.1 In-Hull Firmware Flashing
+### 7.1 Protection Requirements
 The microcontroller on the PMB currently requires firmware updates via exposed SWD pins inside the sealed battery hull, necessitating disassembly of the battery hulls. This process is time-consuming and increases the risk of assembly errors. Enabling in-hull firmware flashing eliminates the need for unsealing, reducing maintenance time and improving operational efficiency.
 
 #### 7.1.1 Prior Implementation: RobotX 2024
@@ -518,11 +477,11 @@ Due to limited space on the screen, only high-priority telemetry is shown to avo
 
 ---
 
-## 8. Improving Safety and Reliability
+## 8. Power Monitoring
 Ensuring safety and reliability of the system requires timely identification and mitigation of faults  before it damages the system. This section outlines three key strategies: leak detection in the battery hull, robust electrical protection features, and utilising good electrical practises to design a high power PCB.
 
 
-### 8.1 Real-Time Safety and Status Notifications
+### 8.1 Power Good Status
 As mentioned in [Section 2.3.3](#233-challenges-with-tracking-battery-hulls-pressure-and-temperature), slow battery hull leaks are difficult to detect without consistent data. A possible solution will be the automatic notification of team members when a leak is detected by the system.
 
 #### 8.1.1 Past Experiences
@@ -599,7 +558,7 @@ forget to turn off the charger, especially after fatigue from a long day of pool
 ![Telegram Channel Reporting Charged Battery](teletelem.png)
 ##### Figure 36: Telegram Channel Reporting a Fully Charged PMB1
 
-### 8.2 Protection Features
+### 8.2 Fault Reporting
 BQ40Z50 comprises various protection features. This includes two tiers of protection. The first tier disconnects the circuits via MOSFETs, while the second tier permanently disables the battery pack by blowing the fuse.  Within the first tier there are also hardware protections that can be configured for a faster response from the chip.
 
 These features collectively protect the vehicle from electrical fault, improving the reliability of the system.
@@ -619,7 +578,7 @@ Several key safety features were configured and tested:
 
 Additionally, a secondary overvoltage protection chip (BQ294701) monitors cell voltages independently and can also activate the fuse if an overvoltage is detected. This act as a fallback if the BQ40Z50 is malfunctioning. 
 
-### 8.3 PMB PCB Design
+### 8.3 Power(Current) Consumption Statistics
  To ensure that the PMB is reliable, good PCB design practices  must be followed to ensure both signal integrity and that the PMB can support the power required. The PMB design adheres to recommendations from TI's SLUA660A Advanced Gas Gauge Circuit Design document [5], ensuring proper layout and component interfacing.
 
  The PMB is a 4-Layer PCB with signal routing on the outer layers and dedicated internal planes for power and ground. ([Appendix B](#appendix-b-individual-layers-of-power-monitoring-board))
@@ -708,7 +667,7 @@ The final layout and assembled PCB are shown below.
  
 ---
 
-## 9. System Evaluation
+## 9. Prototyping and Testing 
 
 The new design is able to meet the functional requirements stated in [Section 4](#4-design-considerations).
 
@@ -752,7 +711,7 @@ Designed with backward and forward compatibility in mind, the new system is buil
 
 ---
 
-## 11. Impact and Future Work
+## 11. Future Project Timeline 
 
 Due to limited availability of serviceable battery hulls and competing  priorities during pool tests, the new battery system has not been tested in-water with the AUV. Hence, testing with the AUV should be done to fully validate the entire system under actual operating conditions.
 
