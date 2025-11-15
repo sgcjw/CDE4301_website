@@ -16,32 +16,32 @@
       <description>This report documents the work done on developing a compact power distribution system for ST Engineering&amp;#39;s Unmanned Surface Vehicle (USV).</description>
     </item>
     <item>
-      <title>Battery Learning Cycle for BQ40Z50</title>
-      <link>http://localhost:1313/website/guides/training/</link>
-      <pubDate>Thu, 03 Apr 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/website/guides/training/</guid>
-      <description>This documents the steps required to successfully complete a learning cycle for new batteries attached to BQ40Z50.</description>
-    </item>
-    <item>
-      <title>BQ40Z50 Registers and Data Flash</title>
+      <title>Configuration of Power Distribution System</title>
       <link>http://localhost:1313/website/configurations/registers/</link>
       <pubDate>Thu, 03 Apr 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/website/configurations/registers/</guid>
-      <description>An explanation of Key Register and Data Flash and reasons for their corresponding values.</description>
+      <description>This documents records the configuration Power Distribution System for use.</description>
     </item>
     <item>
-      <title>Setting Up PMB for AUV4.5</title>
+      <title>Setting Up Power Distribution System</title>
       <link>http://localhost:1313/website/guides/setup/</link>
       <pubDate>Thu, 03 Apr 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/website/guides/setup/</guid>
-      <description>This documents the steps required to set up the PMB for use.</description>
+      <description>This documents the steps required to set up the Power Distribution System for use.</description>
     </item>
     <item>
-      <title>Using BQ40Z50 for AUV4.5</title>
+      <title>Setting Up Power Distribution System</title>
+      <link>http://localhost:1313/website/guides/training/</link>
+      <pubDate>Thu, 03 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/website/guides/training/</guid>
+      <description>This documents the steps required to set up the Power Distribution System for use.</description>
+    </item>
+    <item>
+      <title>Setting Up Power Distribution System</title>
       <link>http://localhost:1313/website/guides/using/</link>
       <pubDate>Thu, 03 Apr 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/website/guides/using/</guid>
-      <description>Tips and tricks on how to use the BQ40Z50 on the PMB.</description>
+      <description>This documents the steps required to set up the Power Distribution System for use.</description>
     </item>
     <item>
       <title>Location</title>

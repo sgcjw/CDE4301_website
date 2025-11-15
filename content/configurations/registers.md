@@ -1,19 +1,19 @@
 ---
-title: "BQ40Z50 Registers and Data Flash" 
+title: "Configuration of Power Distribution System" 
 date: 2025-04-03
 lastmod: 2025-04-04
-author: ["Teoh Xu En"]
-description: "An explanation of Key Register and Data Flash and reasons for their corresponding values."
-summary: "An explanation of Key Register and Data Flash and reasons for their corresponding values."
+author: ["Chen Jiawei"]
+description: "This documents records the configuration Power Distribution System for use."
+summary: "This documents records the configuration Power Distribution System for use."
 editPost:
-    URL: "https://www.ti.com/lit/ug/sluubc1d/sluubc1d.pdf"
-    Text: "BQ40Z50-R1 Technical Reference Manual"
+    URL: "https://www.stengg.com/"
+    Text: "ST Engineering Company Website"
 showToc: true
 disableAnchoredHeadings: false
 ---
 
 ## Preface
 
-Note that this is **not** part of CDE4301 Final Report but documentation for future team members working on the Power Management Board.
+Note that this is **not** part of CDE4301 Final Report but documentation for future ST USV team member working on the Power Distribution System.
 
 ---

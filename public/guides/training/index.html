@@ -5,10 +5,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>Battery Learning Cycle for BQ40Z50 | USV Power Distribution System</title>
+<title>Setting Up Power Distribution System | USV Power Distribution System</title>
 <meta name="keywords" content="">
-<meta name="description" content="This documents the steps required to successfully complete a learning cycle for new batteries attached to BQ40Z50.">
-<meta name="author" content="Teoh Xu En">
+<meta name="description" content="This documents the steps required to set up the Power Distribution System for use.">
+<meta name="author" content="Chen Jiawei">
 <link rel="canonical" href="http://localhost:1313/website/guides/training/">
 <link crossorigin="anonymous" href="/website/assets/css/stylesheet.5e7937a63ee023e710c118bb90ce77a5642898bb8f3ab5adb8ca751deaa6714f.css" integrity="sha256-Xnk3pj7gI&#43;cQwRi7kM53pWQomLuPOrWtuMp1HeqmcU8=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/website/favicon.ico">
@@ -26,16 +26,16 @@
         }
 
     </style>
-</noscript><meta property="og:title" content="Battery Learning Cycle for BQ40Z50" />
-<meta property="og:description" content="This documents the steps required to successfully complete a learning cycle for new batteries attached to BQ40Z50." />
+</noscript><meta property="og:title" content="Setting Up Power Distribution System" />
+<meta property="og:description" content="This documents the steps required to set up the Power Distribution System for use." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://localhost:1313/website/guides/training/" /><meta property="article:section" content="guides" />
 <meta property="article:published_time" content="2025-04-03T00:00:00+00:00" />
 <meta property="article:modified_time" content="2025-04-04T00:00:00+00:00" />
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Battery Learning Cycle for BQ40Z50"/>
-<meta name="twitter:description" content="This documents the steps required to successfully complete a learning cycle for new batteries attached to BQ40Z50."/>
+<meta name="twitter:title" content="Setting Up Power Distribution System"/>
+<meta name="twitter:description" content="This documents the steps required to set up the Power Distribution System for use."/>
 
 
 <script type="application/ld+json">
@@ -52,7 +52,7 @@
     {
       "@type": "ListItem",
       "position":  2 ,
-      "name": "Battery Learning Cycle for BQ40Z50",
+      "name": "Setting Up Power Distribution System",
       "item": "http://localhost:1313/website/guides/training/"
     }
   ]
@@ -62,20 +62,20 @@
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "Battery Learning Cycle for BQ40Z50",
-  "name": "Battery Learning Cycle for BQ40Z50",
-  "description": "This documents the steps required to successfully complete a learning cycle for new batteries attached to BQ40Z50.",
+  "headline": "Setting Up Power Distribution System",
+  "name": "Setting Up Power Distribution System",
+  "description": "This documents the steps required to set up the Power Distribution System for use.",
   "keywords": [
     
   ],
-  "articleBody": "Preface Note that this is not part of CDE4301 Final Report but documentation for future team members working on the Power Management Board.\nInsert Reference to the Training Document\nSwitch off SMBus Comms to MCU JIC! 0) check that batteries are fully charged\nCalibrate Current 1b) See how much current when PMB is active vs inactive (MCU side ON vs MCU side OFF) Check all settings mentioned in learning PDF (MAKE SURE ALL SETTING RELATING TO CURRENT AND CAPACITY IS HALF) (Check Parker Docs Again) Bare Minimnum (Design Capacity, Design Voltage, Taper, DSG Current, CHG Current, Quit Current, Term Voltage) 2b) Make sure that the correct Battery Chemistry is Flashed. Turn off Protection on setting page (make sure scan is turned on) 3b) Turn on autoexport .gg.csv for every 30mins Click on GAUGE_EN and check that GAUGE_EN bit is set. Then click on RESET (Turn on Log) 5b) Verify Update Status is 04 Discharge until empty (C/4?) Wait until REST Bit is Set Charge Cell to Full using nominal charge rate, charge termination is reached when VCT = 1 Let cell rest until REST bit is set In Data Memory\u003eGas Gauging\u003eUpdate Status Register should equal 05 Check RDIS = 0 Discharge cell at C/5 rate until terminate voltage is reached Let cell rest until REST bit is set In Data Memory\u003eGas Gauging\u003eUpdate Status Register should equal 06 Resistance Table and QMax should be updated ",
-  "wordCount" : "234",
+  "articleBody": "Preface Note that this is not part of CDE4301 Final Report but documentation for future ST USV team member working on the Power Distribution System.\n",
+  "wordCount" : "25",
   "inLanguage": "en",
   "datePublished": "2025-04-03T00:00:00Z",
   "dateModified": "2025-04-04T00:00:00Z",
   "author":[{
     "@type": "Person",
-    "name": "Teoh Xu En"
+    "name": "Chen Jiawei"
   }],
   "mainEntityOfPage": {
     "@type": "WebPage",
@@ -160,9 +160,9 @@
   <header class="post-header">
     
     <h1 class="post-title entry-hint-parent">
-      Battery Learning Cycle for BQ40Z50
+      Setting Up Power Distribution System
     </h1>
-    <div class="post-meta"><span title='2025-04-03 00:00:00 +0000 UTC'>April 2025</span>&nbsp;&middot;&nbsp;Teoh Xu En&nbsp;&middot;&nbsp;<a href="https://www.youtube.com/watch?v=WAcxrGDb68g" rel="noopener noreferrer" target="_blank">Video Guide</a>
+    <div class="post-meta"><span title='2025-04-03 00:00:00 +0000 UTC'>April 2025</span>&nbsp;&middot;&nbsp;Chen Jiawei&nbsp;&middot;&nbsp;<a href="https://www.stengg.com/" rel="noopener noreferrer" target="_blank">ST Engineering Company Website</a>
 
 </div>
   </header> <div class="toc">
@@ -181,33 +181,8 @@
 </div>
 
   <div class="post-content"><h2 id="preface">Preface<a hidden class="anchor" aria-hidden="true" href="#preface">#</a></h2>
-<p>Note that this is <strong>not</strong> part of CDE4301 Final Report but documentation for future team members working on the Power Management Board.</p>
+<p>Note that this is <strong>not</strong> part of CDE4301 Final Report but documentation for future ST USV team member working on the Power Distribution System.</p>
 <hr>
-<p>Insert Reference to the Training Document</p>
-<p>Switch off SMBus Comms to MCU JIC!
-0) check that batteries are fully charged</p>
-<ol>
-<li>Calibrate Current
-1b) See how much current when PMB is active vs inactive (MCU side ON vs MCU side OFF)</li>
-<li>Check all settings mentioned in learning PDF (MAKE SURE ALL SETTING RELATING TO CURRENT AND CAPACITY IS HALF) (Check Parker Docs Again)
-Bare Minimnum (Design Capacity, Design Voltage, Taper, DSG Current, CHG Current, Quit Current, Term Voltage)
-2b) Make sure that the correct Battery Chemistry is Flashed.</li>
-<li>Turn off Protection on setting page (make sure scan is turned on)
-3b) Turn on autoexport .gg.csv for every 30mins</li>
-<li>Click on GAUGE_EN and check that GAUGE_EN bit is set.</li>
-<li>Then click on RESET (Turn on Log)
-5b) Verify Update Status is 04</li>
-<li>Discharge until empty (C/4?)</li>
-<li>Wait until REST Bit is Set</li>
-<li>Charge Cell to Full using nominal charge rate, charge termination is reached when VCT = 1</li>
-<li>Let cell rest until REST bit is set</li>
-<li>In Data Memory&gt;Gas Gauging&gt;Update Status Register should equal 05</li>
-<li>Check RDIS = 0</li>
-<li>Discharge cell at C/5 rate until terminate voltage is reached</li>
-<li>Let cell rest until REST bit is set</li>
-<li>In Data Memory&gt;Gas Gauging&gt;Update Status Register should equal 06</li>
-<li>Resistance Table and QMax should be updated</li>
-</ol>
 
 
   </div>

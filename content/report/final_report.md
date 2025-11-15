@@ -14,11 +14,9 @@ disableAnchoredHeadings: false
 
 ## Acknowledgements
 
-Firstly, I would like to thank ST Engineering for giving me the opportunity to work on this project. This project would not have been possible without the support of many dedicated ST Engineering members. I am especially grateful to Ang Ming Xiang, my ST Engineering supervisor and  Nathanel Tan, the Head of ST engineering Unmaned & Integrated System Department for providing the guidance and technical input for this project. Special thanks also to Gabriel for assisting with the collection of power distribution performance data during in-water testing. 
+Firstly, I would like to thank ST Engineering for giving me the opportunity to work on this project. This project would not have been possible without the support of many dedicated ST Engineering members. I am especially grateful to Ang Ming Xiang, my ST Engineering supervisor and  Nathanel Tan, the Head of ST engineering Unmaned & Integrated System Department for providing the guidance and technical input for this project.
 
 I also wish to acknowledge the support provided by the NUS College of Engineering, particularly Mr Royston, and Mr Graham from the Engineering Design and Innovation Centre. I would also like to thank Mr Eugene Ee for taking the time to review my project and provide valuable advice.
-
-Finally, I am deeply grateful to my family for their unwavering patience and support through my journey in ST Engineering.
 
 ----
 ## List of Common Acronyms
@@ -30,6 +28,8 @@ Finally, I am deeply grateful to my family for their unwavering patience and sup
 |   **USV**   |    Unmanned Surface Vessel    |
 |   **PLC**   |    Programmable Logic Controller   |
 |   **DC**   |    Direct Current    |
+|   **MTBF**   |    Mean Time Before Failure    |
+|   **MTTR**   |    Mean Time To Repair    |
 |   **CAN**   |    Controller Area Network    |
 |   **PCB**   |     Printed Circuit Board     |
 |   **PDB**   |    Power Distribution Board     |
@@ -56,102 +56,69 @@ USV market is a fast growing market recent years in the maritime industry, espec
 
 Within the USV market, more than half of the vessel is developed for defence purpose and most of the them fall below the weight of 2000 kg, which often classified as small and medium USV.
 
-
-![AUV4.1 at RoboSub 2023](RoboSub2023.jpeg)
-##### Figure 1: AUV4.1 at RoboSub 2023
-
+![USV Market Size and Distribution](USV_Market_1.png)
+##### Figure 1: USV Market Size and Distribution
 
 To achieve autonomous operation, USV is often equipped with various sensors and equipment which are powered by an engine/batteries and supplied through an on board power distribution system, which is the focus of this project.
+
+![Common USV On-board Devices](USV_Market_2.png)
+##### Figure 2: Common USV On-board Devices
 
 ### 2.2 Existing Solutions
 Most of the USVs nowadays still adapts a similar power distribution system as those used in the conventional boats.
 
-Common components implemented are Transformer, DC convertors, Programmable Logic Controllers, relays, fuse and circuit breaker. They are joint together using cables and terminal blocks
+Common components implemented are Transformer, DC convertors, Programmable Logic Controllers (PLCs), relays, fuse and circuit breaker. They are joint together using cables and terminal blocks
 
-### 2.3 Problem Case Studys   
-In order to understand further how problems may arised from aplplying conventional power distribution system in medium sized USV, I have carried out analysis on two signature case studies, the first one is a literature review on the power system product onboard DC grid developed by ABB, a key power system provider in the marine industries, as well as a real life product study on ST Engineering’s medium size USV power distribution system 
+![Conventional Power Distribution System Architecture](conventional.png)
+##### Figure 3: Conventional Marine DC Power Distribution System Architecture
 
-#### 2.3.1 Onboard DC Grid&trade;
+## 3. Problem Analysis    
+In order to understand further how problems may arised from applying conventional power distribution system in medium sized USV, I have carried out analysis on two signature case studies, the first one is a literature review on a marine power system product (onboard DC grid&trade;) developed by ABB, a key power system provider in the marine industry, as well as a real life product analysis on the power distribution system of ST Engineering’s medium size USVs. 
+
+### 3.1 Onboard DC Grid&trade;
 Onboard DC Grid™ is an advanced DC power distribution system developed by ABB, a leading global technology company renowned for its expertise in electrification, automation, and digital solutions. The system is designed to efficiently manage the generation, storage, and distribution of direct current (DC) power on ships, industrial platforms, and other onboard applications.
 
-In 2020, ABB has made the report _Unmanned Surface Vehicles/Vessel (USV) 
-Reliable Power and PropulsionArchitecture Characterization_, in response for a Request for Information (RFI) from the US government. In the report, the company introduce this product and highlight some problems on the current USV power architecture 
+In 2020, ABB has published the report, _Unmanned Surface Vehicles/Vessel (USV) 
+Reliable Power and Propulsion Architecture Characterization_, in response for a Request for Information (RFI) from the US government. In the report, the company introduce this product and highlight some problems on the current USV power architecture 
 
-The primary concern identified by this leading company on the current USV solutions is its negative impact on the vehicle's mission success rate. Compared to their usage in conventional manned vessel, the power distribution system used in USV has same subsystems' Mean Time Before Failure (MTBF) but much higher Mean Time To Repair (MTTR) 
+The primary concern identified in this report regarding the current power distribution solution for USV, is its negative impact on the vehicle's mission success rate. Compared to its application in conventional manned vessel, the conventioanl power distribution system used in USV has same power subsystems' Mean Time Before Failure (MTBF) but much higher Mean Time To Repair (MTTR). This is because unlike manned vehicle, faults happened during the mission of the vehicle cannot be identified and fixed on the spot due to the absence of on-board crew for USV. These faults may not be fatal for the mission at the begining, but may subsequently lead to faults in  parts of the boat that are crtical for its operation. As a result, USV has a shorter overall system MTBF compared to conventioanl vehicle, leading to more frequent failure of mission.
 
+![USV Power System Reliability Comparison](usvpower.png)
+##### Figure 4: USV Power System Reliability Comparison with Conventional Manned Vessel
 
-![Sealing a Battery Hull at RoboSub 2023](sealing.png)
-##### Figure 6: Two Man Team Attempting to Seal a Battery Hull at RoboSub 2023
+### 3.2 ST Engineering USV Power Distribution System
 
-#### 2.3.2 ST Engineering USV Power Distribution System
-
+In this project, I have the hornor to work on ST Engineering's USV and examine its power distribution system in real life.
 
 ![Discharge Voltage Curve](voltagecapacity.webp)
-##### Figure 7: Typical Li-Ion Discharge Voltage Curve [2]
+##### Figure 7: ST Engineering's USV Current Power Distribution System Architecture
 
-### 2.4 Problem Analysis  
-The limitations in the current system can be split into three overarching themes: poor user operability, limited runtime and reduced reliability. These themes and their associated limitations are summarised in Table 2.
+The current system consists mainly of commercial fuses and relays, controlled by a specific power system PLC. The switching of the power channel is controlled by a continuous digital signals from the PLC. The power switching functionality of the system enables a sequential start of the main compute stacks at boat start-up as well as the shutdown of unneccessary devices for power effeciency during mission
 
-<table>
-  <thead>
-    <tr>
-      <th><b>Category</b></th>
-      <th><b>Limitations</b></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td rowspan="2"><strong>Poor User Operability</strong></td>
-      <td>Challenges with Battery Hull Sealing</td>
-    </tr>
-    <tr>
-      <td>Challenges with Tracking Battery Hull’s Pressure and Temperature</td>
-    </tr>
-    <tr>
-      <td rowspan="2"><strong>Limited Run Time</strong></td>
-      <td>Limitation of Battery Fuel Gauge</td>
-    </tr>
-    <tr>
-      <td>Challenges with Battery Hull Sealing</td>
-    </tr>
-    <tr>
-      <td rowspan="2"><strong>Poor Reliability</strong></td>
-      <td>Limitation of Battery Fuel Gauge</td>
-    </tr>
-    <tr>
-      <td>Challenges with Tracking Battery Hull’s Pressure and Temperature</td>
-    </tr>
-  </tbody>
-</table>
+Two main problems exists in the current system:
 
-##### Table 2: Categorisation of System Limitations
+**Size Constraint**:
+Currently, the power distribution system is housed within the equipment racks of the USV. However, due to the bulky nature of the conventional power distribution components, the system occupies a significant portion of the rack's internal volume. This oversizing poses challenges during integration, as it limits the available space for other essential components and makes maintenance tasks more cumbersome. The oversized system also complicates cable management within the rack, leading to potential issues with airflow and accessibility.
 
-Poor user operability increases the likelihood of mistakes at competition, especially under time constraints or operator fatigue. Furthermore, limited run time can lead to less testing opportunities and ultimately impacting competition performance (Table 3, Table 4). Finally, poor reliability increases the risk of mid-run failures or unplanned maintenance, leading to poor results.
+What is more, ST Engineering is designing USVs for 3 different sizes with the following dimension statistics:
+| **USV Model Name** | **Length (m)** | **Width (m)** |
+| :----------: | :------------: | :----------: |
+|   Goldfish      |      10       |     2.5      |
+|   Bellagio     |      15        |     4     |
+|   Puma         |      17.5        |     5.2      |
+##### Table 1: ST Engineering's USV Size Statistics
 
-|                           | **RobotX 2022** | **RobotX 2024** |
-| :-----------------------: | :-------------: | :-------------: |
-| Testing Time in Singapore |    200 Hours    |    330 Hours    |
-|  Final Score (adjusted)   |      1450       |      4450       |
+With the current power distribution system being already oversized in medium size vehicle Puma and Bellagio, it is foreseeable that the system will be even more ill-suited for the smaller USV models like Goldfish. Therefore, there is a pressing need to redesign the power distribution system to be more compact and efficient, ensuring it can fit seamlessly within the spatial constraints of all USV models while still delivering reliable performance.
 
-##### Table 3: Table of Competition Results and Testing Time in Singapore
+**Existance of Single Pont of Failure**:
+The current power distribution system lacks redundancy and fault tolerance, making it susceptible to single points of failure. 
 
-
-|    **Team**     | **Final Score** | **Testing Time** |
-| :-------------: | :-------------: | :--------------: |
-|     **NUS**     |      4450       |     49 Hours     |
-|    **KMOU**     |      2900       |     28 Hours     |
-|    **ERAU**     |      2250       |     33 Hours     |
-| **Inspiration** |      1600       |     25 Hours     |
-|     **NTU**     |      1050       |     17 Hours     |
-
-##### Table 4: Comparison of Final Score and Testing Time at RobotX 2024
+For example, if the PLC for the power distribution system fails, due to the control logic where the ON state of power channel is maintained by a continuous digital high signal from PLC, the loss of its control signal can lead to a shutdown of all relays controlled by the PLC and a complete loss of power to all systems onboard the USV. This vulnerability poses a significant risk to the mission success rate of the USV and even the loss of the vehicle itself on the sea.  
 
 ---
 
-## 3. Design Statement
-As a competition team, the primary objective is to maximise vehicle performance at RoboSub. By enhancing user operability and ensuring safe operation, the PMB directly contributes to system reliability, allowing for more in-water testing, and ultimately better competition performance.
-
-The design statement of this project can be summarised as:
+## 4. Design Statement
+Targeting the above identified problems, the design statement of this project are derived and summarised as:
 
 <div align="center">
     <b>
@@ -159,8 +126,46 @@ The design statement of this project can be summarised as:
     </b>
 </div>
 
-### 3.3 Key Functionalities
-Hence, a three-Pronged approach was used to guide the development of the PMB, with each sub-goal detailed in its respective section.
+## 4. Value Proposition
+
+### 4.1 Stakeholders
+The first stakeholders for this project is the ST Engineering USV Team members, including boat designers, manufacturers and testing engineers who will directly interact with and benefit from the improved power distribution system. Additionally, the broader ST Engineering Unmanned & Integrated Systems Department stands to gain from the advancements made in this project, as the developed technologies and methodologies can be applied to other USV projects within the department.
+
+The second stakeholders include end-users of the USV, such as maritime security agencies and research institutions, who will benefit from the enhanced reliability and performance of the USV enabled by the new power distribution system. Improving mission success rate can greatly enhance the operational effectiveness of their tasks and reduce the extra cost of maintaining the USV from faulty situations.
+
+### 4.2 Benefits
+The new Power Distribution System offers several key benefits to its stakeholders:
+
+| **Benefits**                                      |                  **Rationale**                   |
+| :------------------------------------- | :----------------------------------------------: |
+| Compact Design                        | Reduces the spatial footprint of the power distribution system, allowing for more efficient use of space within the USV's equipment racks; Increase design flexibility and scalarbility for USVs with different size requirements |
+| Enhanced Fault Tolerance              | Improves the reliability of the USV by incorporating features that mitigate the impact of component failures, thereby increasing the overall mission success rate. |
+| Advanced Power Monitoring and Reporting | Provides real-time insights into the power system's status, enabling proactive maintenance and informed decision-making during operations. |
+
+---
+
+## 5. Design Requirments
+
+### 5.1 Technical Specifications
+To begin, the new power distribution system must meet or exceed the technical performance of its predecessor. The following functional requirements were defined following the capability of the current system
+
+| **Technical Capabilities** | **Specifications**                                                                |
+| :------------------------- | :-------------------------------------------------------------------------------- |
+| Maximum Physical Dimension         |  445mm x 600mm x 133mm                                                                              |
+| Application Voltage             | 12V and 24V DC                                                               |
+| Maximum Continuous Current         | 30A                                                                               |
+| Maximum Transient Current     | 100A                                                                            |
+| Fault Protection     | Overvoltage/Undervoltage/Overcurrent/Short Circuit                                                                            |
+| Fault Reponse Time     |  <10ms                                                                          |                                                                           |
+| Power System Monitoring                  | Current, Internal Temperature, Power Good(PG), Fault Status |
+| Communication Protocol     | Digital/Analog/CAN 2.0      |
+
+##### Table 7: Core Functional Requirements for the New Power Distribution System
+
+The 30A current specification is based on the maximum continuous current draw possible from one channel of the current ST power distribution system (20A). This provides sufficient headroom. CAN Bus is used for communication between backplane and PLC, whose design will be explained further in the sections below.
+
+### 5.2 Functional Sub-goals
+Three main functionalities need to be achived in the new power distribution system, with each sub-goal detailed in its respective section.
 
 | **Key Functionalities**                          |                  **Section Number**                   |
 | :------------------------------------- | :---------------------------------------------------: |
@@ -169,432 +174,99 @@ Hence, a three-Pronged approach was used to guide the development of the PMB, wi
 | Monitor and report power status and power(current) consumptions in each channel|       [Section 6](#6-Power-Monitoring)       |
 ##### Table 5: Key System Functionalities and Corresponding Report Section
 
----
+### 5.3 Environmental Requirments
 
-## 4. Design Standrad
-  
-### 4.1 IEEE Recommended Practice for the Design and Application of Power Electronics in Electrical Power Systems
+Other than functional requirements, as this product may eventually be applied to a product used in marinetime environments, proper industrial standrads has to be followed. The below design standrad requirements is derivate fro the _IEEE Recommended Practice for the Design and Application of Power Electronics in Electrical Power Systems_ and are the most relevant to this project.
 
-
-
-To maintain backwards compatibility, the following constraints were identified.
 
 | **Characteristics**  | **Constraints**                                                                        |
 | :------------------- | :------------------------------------------------------------------------------------- |
-| Dimensions           | The battery must fit within a 192mm x 77.5mm x 44mm volume of the AUV4.1 battery hull. |
-| Electrical Interface | Existing connectors for power delivery and charging must be retained.                  |
+| Ambient Tempreature           | ≤50°C |
+| Vibration |          not less than 22Hz          |
+| Humidity              | around 80% |
 
 ##### Table 6: Design Constraints for Backward Compatibility
 
-
-### 4.2 Functional Requirements
-
-In addition to physical compatibility, the PMB must meet or exceed the technical performance of its predecessor. The following functional requirements were defined to ensure the board can support AUV4.1, AUV4.5 and AUV5.0.
-
-| **Technical Capabilities** | **Specifications**                                                                |
-| :------------------------- | :-------------------------------------------------------------------------------- |
-| Voltage Output             | 14.8V to 16.8V (4S)                                                               |
-| Continuous Current         | 40A                                                                               |
-| Communication Protocol     | CAN2.0                                                                            |
-| Telemetry                  | Voltage, Current, Internal Pressure, Internal Temperature displayed on the screen |
-
-##### Table 7: Core Functional Requirements for PMB
-
-The 40A current specification is based on the rated continuous current limit of the SubConn Low Profile Connector on the battery hull [7]. This provides sufficient headroom, as testing indicates a typical current draw of 11A per battery when moving at full-speed. CAN Bus is used for inter-board communication within the AUV, hence CAN bus integration is critical.
-
-
 ---  
 
-## 5. System Requirements
+## 5. System Overview
 
-This section presents the summarised power, electrical and connector architectures to provide a high-level overview of the systems. Subsequent sections will explain how the design choices support the overall project goals.
+This section presents the summarised architectures to provide a high-level overview of the systems. Subsequent sections will explain how the design choices support the overall project goals.
 
 ![Summarised Power Architecture of PMB](powerarch.png)
-##### Figure 11: Summarised Power Architecture of PMB
-
-![Summarised Communications Architecture of PMB](commsarch.png)
-##### Figure 12: Summarised Communications Architecture of PMB
-
-![Summarised Connectors Architecture of PMB](connectors.png)
-##### Figure 13: Summarised Connectors Architecture of PMB
+##### Figure 11: Summarised System Architecture of the developed power distribution system
 
 ---
 
 ## 6. Power Switching 
-One way to improve the AUV's performance is by extending its run time. This enables longer in-water testing by reducing interruptions due to battery swaps. This uninterrupted testing can better simulate longer competition runs. Two methods were implemented to achieve this: renewing the current batteries and introducing accurate state-of-charge (SoC) estimation.
-
+The new Power Distribution System is designed to provide compact and robust power switching solutions for each power channel. And this is achieved through two main improvements, moving from traditional relay + PLC combination towards PCB backplane system as well as improving the power switching logic.
 
 ### 6.1 Moving towards PCB 
-The batteries have been in use for over 2 years, with an estimated 200 cycles completed. 
 
-![Battery Cycle Life](cyclestats.png)
-##### Figure 14: Information on The Cycle Life of The Current Battery
-  
-As the current battery hull design is expected to remain in use for several more competition cycles, the batteries should be renewed to avoid further degradation.
+#### 6.1.1 Comparison of PLC + Relay vs MCU + PCB System
 
-Operationally, each AUV requires six batteries, organised into three sets of two: one set in use, one set charging, and one set on standby. Therefore, selecting cost-effective batteries can result in significant savings for the team.
+As mentioned in the case study above, the current power distribution system adapted in ST Engineering USV relies on a combination of a Programmable Logic Controller (PLC) and SSR relays to manage power switching. This is also the common approach used in conventioanl power distribution system in marine industry. Another possibl approach is to use a MCU + PCB system, which involves a substantial amount of customisation and design efforts.
 
-| **Specification**                          | **GrePow LiPo (current)** | **Raitan Li-Ion** | **MaxAmp Li-Ion** |
-| ------------------------------------------ | ------------------------- | ----------------- | ----------------- |
-| Configuration                              | 4S1P                      | 4S4P              | 4S3P              |
-| Fit within the current battery dimensions? | Yes                       | Yes               | Yes               |
-| Capacity                                   | 15000mAh                  | 16000mAh          | 15000mAh          |
-| Weight                                     | 1355g                     | 1200g             | 898g              |
-| Maximum Current Draw                       | 60A                       | 80A               | 75A               |
-| Cost Per Battery                           | SGD 320                   | SGD 250           | SGD 451           |
+The below table summarises the key advantages and disadvntages between the two approaches:
 
-##### Table 9 : Battery Comparison Table
+| **Aspect**               | **PLC + Relay**                                                | **MCU + PCB System**                                                                                                                                   |
+| ------------------------ | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Size and Weight          | - Bulky and heavy due to discrete components<br>- Requires additional space for wiring and terminal blocks<br> | - Compact and lightweight due to integrated design<br>- Reduces wiring complexity and space requirements<br>                                           |
+| Reliability and Durability | - Mechanical parts prone to wear and failure over time<br>- Susceptible to vibration and shock<br> | - Solid-state components with higher reliability<br>- Better resistance to vibration and shock<br>                                                       |
+| Customisability and Scalability | - Limited customisation options<br>- Scaling up requires additional components and wiring<br> | - Highly customisable to specific requirements<br>- Easily scalable by adding or modifying PCB modules<br>                                           |
 
-Lithium-ion batteries were chosen for comparison due to its longer lifespan and higher energy density [3]. With its higher capacity and lower cost, the Raitan Li-Ion battery was selected. Additionally, the team’s prior experience with Raitan provided confidence in the reliability and performance of their product.
-
-Two Raitan Li-Ion batteries were procured for testing and comparison with the current batteries.
-
-| **Specification**                                           | **GrePow LiPo (current)** | **Raitan Li-Ion (New)** |
-| :---------------------------------------------------------- | :------------------------ | :---------------------- |
-| Dimensions                                                  | 190mm x 75mm x 42mm       | 171mm x 77mm x 44mm     |
-| Mass                                                        | 1241g                     | 1179g                   |
-| Time taken to draw 7A from fully charged to nominal voltage | 40 Minutes                | 60 Minutes              |
-
-##### Table 10: Comparing GrePow LiPo Batteries with Raitan Li-Ion Batteries
-
-![Plotting Voltage of Battery over Time](voltagegraph.png)
-##### Figure 15: Voltage Drop over Time at 7A Constant Current Draw
-
-![Photo of Grepow Battery (left) and Raitan Li-Ion Battery (Right)](batteries.jpg)
-##### Figure 16: Photo of Grepow Battery (left) and Raitan Li-Ion Battery (Right)
-
-![Photo of New Batteries in AUV4.1 Battery Hull](newbatthull.png)
-##### Figure 17: Photo of New Batteries in AUV4.1 Battery Hull
-
-Raitan Li-Ion battery has been verified to be comparable to the GrePow LiPo battery (Table 10), while fitting within the dimension constraints (Table 6), making it a suitable replacement for the old batteries.
+#### 6.1.2 Targeting limitations in MCU + PCB System
+While the MCU + PCB system offers significant advantages in terms of size, reliability, and customisability, it also presents certain challenges that need to be addressed to ensure successful implementation.
 
 ### 6.2 Power Switching Logic Modification
-As mentioned in [Section 2.3.2](#232-limited-capabilities-of-battery-fuel-gauge), the team previously relied on voltage to estimate the battery capacity. This approach tends to end tests prematurely, as conservative voltage thresholds fail to account for load and battery age. By utilising the gauging feature on battery management chip, we can determine a more accurate SoC, allowing in-water tests to run longer without risking battery damage.
+As mentioned in [Section](#232-limited-capabilities-of-battery-fuel-gauge), the current control logics relied on a continous signal from PLC. This approach means that if there is any signal loss from the PLC, be it PLC failure or loose connection, the power supply maybe disturbed. In this project, I would like to introduce a new user-customisable control logic using a latching PCB design to mitigate this risk.
 
-#### 6.2.1 Literature Review
-Looking at RoboSub 2023 and RoboSub 2024 Teams' Technical Design Report, only 2 other teams (Cornell University [8] and The Ohio State University [9]) developed a PMB with a battery gauge. The teams used the BQ40Z50 and BQ40Z80 chips from Texas Instruments (TI) respectively.
-
-#### 6.2.2 Justification for Chip Selection
-Additionally TI, offers extensive community support on its forum and provides numerous resources guiding customers in using its chips (Figure 18, Figure 19, Figure 20). 
+#### 6.2.1 Comparison Between New and Old Control Logic
+The diagram below illustrates the current control logic flow and the proposed new control logic. 
 
 ![TI's Forum Search Result](forum.png)
-##### Figure 18: Search Results of TI Forums
+##### Figure 18: Current Control Logic in ST Engineering USV Power Distribution System
 
 ![TI's YouTube Playlist on Battery Management](youtube.png)
-##### Figure 19: TI's YouTube Playlist on Battery Management
+##### Figure 19: New Control Logic proposed
 
-![List of Documents for BQ40Z50](bqdocument.png)
-##### Figure 20: Documents for BQ40Z50
+The key difference between the two control logics is that in the current system, the ON state of power channel is maintained by a continuous digital high signal from PLC. In contrast, the new control logic uses a latching mechanism where a momentary high signal from the MCU would be able to toggles the power channel ON and only with a subsequent continous high signal , will the cahnnel be turn OFF. This means that once the power channel is turned ON, it will remain ON even if there is a loss of signal from the MCU.
 
-Additionally, its software application "bqStudio" provides an easy interface with the chip (Figure 21).
+#### 6.2.3 User-customisability with latching PCB Design
+Although the latching PCB design improves fault tolerance, it may introduce some inconveniences during operation. For instance, if the MCU fails while the power channel is ON, the user will not be able to turn OFF the power channel remotely even if they are unneccssary to be ON during mission operation (e.g. on-board lights that are only needed during maintainence work). To address this, a seperate PCB is designed to achieve the latching mechanism while remain pluggable from the main MOSFET relay board. This makes the control logic user-customisable, allowing them to choose between the new latching control logic or revert to the old continuous signal control logic based on their operational needs.
 
-![Screenshot of bQStudio](bq.png)
-##### Figure 21: Screenshot of bQStudio
+![Latching PCB](latchingpcb_pcb.png)
+##### Figure 20: Latching PCB Schematic and Layout
 
-To leverage the extensive resources available and increase likelihood of success, a compatible chip from the TI family was shortlisted. Successful implementations by teams such as Cornell and The Ohio State University further validate the chip’s reliability in AUV applications. 
-
-| **Feature**               | **BQ34110 (Current)**                                                | **BQ40Z50 (Proposed)**                                                                                                                                   |
-| ------------------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Battery Gauging Algorithm | Compensated End-of-Discharge Voltage                                 | TI’s Impedance Track                                                                                                                                     |
-| Algorithm Comparison [10] | - Inaccurate SoC after idle period<br>- Affected by aged battery<br> | - Remains accurate after idle<br>- Resistant to ageing and temperature changes<br>- Remains accurate at high level of discharge.<br> - Lower error rate. |
-##### Table 11: Comparing BQ34110 and BQ40Z0
-
-BQ40Z50 was chosen as it supports up to 4-Series Li-Ion or LiPo Battery Packs. It also offers programmable protection features ([Section 8.2](#82-protection-features)) as well as Impedance Tracking and cell balancing. The chip also tracks the number of charge-discharge cycles and calculates the full charge capacity of the battery, eliminating the need for guesswork when assessing battery degradation. This allows operators to proactively plan for battery replacement. Furthermore, its large number of available stocks (Figure 22) ensures that the PMB can be easily reproduced or repaired in the future if necessary.
-
-![BQ40Z50 Availability on Mouser](bq40z50mouser.png)
-##### Figure 22: BQ40Z50 Availability on Mouser
-
-
-#### 6.2.3 Evaluation of SoC Accuracy
-To ensure accurate data reporting, the BQ40Z50 chip requires a learning cycle to collect key parameters of the battery pack. To evaluate SOC accuracy, the new Li-Ion battery underwent a learning cycle with the BQ40Z50 chip on the PMB [11].
-
-When discharged at a constant current of 7A, the Voltage and SoC reported by BQ40Z50 was recorded (Table 12). When using the LiPo battery previously, the team had a threshold of 15.2V (nominal voltage + 0.4V). Based on the chart, this would be at roughly 40% capacity (Figure 23).
-
-![Voltage to Capacity](blog-lipo-battery-voltage-quick-chart.webp)
-##### Figure 23: Chart of Voltage and its Corresponding Capacity [2]
-
-If the Li-Ion battery were limited by a fixed threshold of 14.8V (nominal voltage + 0.4V), testing would conclude in 65 minute(Table 12). In contrast, using SoC tracking and targeting just over 40% remaining capacity allows the vehicle to operate for at least 75 minutes. This extends runtime by 15.4%.
-
-
-| **Time (minutes)** | **Voltage (V)** | **Relative State of Charge Reported by BQ40Z50** |
-| :----------------: | :-------------: | :----------------------------------------------: |
-|         0          |      16.5       |                       100%                       |
-|         10         |      16.03      |                       93%                        |
-|         20         |      15.91      |                       86%                        |
-|         30         |      15.45      |                       74%                        |
-|         45         |      15.18      |                       67%                        |
-|         55         |      15.94      |                       59%                        |
-|         65         |      14.68      |                       51%                        |
-|         75         |      14.4       |                       45%                        |
-
-##### Table 12: BQ40Z50 SoC Reporting During Constant Current Discharge
-
-The BQ40Z50 is also able to report the estimated time taken to fully charge or fully discharge the batteries. This estimation is calculated by the average power draw of the batteries.
-
-
-| **Case** | **Start Time** | **Starting Battery Voltage and SoC** | **Predicted End Time** | **Actual End Time** | **Time Difference** |
-| :------: | :------------: | :----------------------------------: | :--------------------: | :-----------------: | :-----------------: |
-|    A     |    8:20 PM     |             16.42V, 84%              |        9:30 PM         |       9:10 PM       |    20 mins early    |
-|    B     |    1:07 AM     |             15.76V, 65%              |        3:15 AM         |       2:41 AM       |    34 mins early    |
-##### Table 13: Battery Charging Time Compared to BQ40Z50 Predicted End Time
-
-This can be useful as it allows members to better plan and anticipate battery changes at pool tests. While the predicted end time tends to be conservative, this behaviour is preferable as it provides a useful buffer when planning for battery swaps.
+![Relay_Latching_PCB Combination ](Integration.png)
+##### Figure 21: 3D model of the MOSFET Relay Board with Latching PCB Integrated
 
 ---
 
 ## 7. Power Protection
 
-One part of the project is to enhance user operability and workflow. User operability is improved by simplifying operation and maintenance of the battery hull, reducing AUV's downtime. Easier maintenance can also help prevent damage to the battery hulls. 
-
-Improved workflow can help to identify potential issues and allow for early detection of faults. 
-
-Both user operability and workflow can come together to increase the reliability of the vehicle.
+Power protection is crucial in ensuring the safety and reliability of the power distribution system. Current power distribution system in ST Engineering USV lacks adequate protection features, making it vulnerable to transient and fault situations. 
 
 ### 7.1 Protection Requirements
-The microcontroller on the PMB currently requires firmware updates via exposed SWD pins inside the sealed battery hull, necessitating disassembly of the battery hulls. This process is time-consuming and increases the risk of assembly errors. Enabling in-hull firmware flashing eliminates the need for unsealing, reducing maintenance time and improving operational efficiency.
+The type of faults the power protection feature of the new power distribution system should be able to handle are derivate from the design standrads mentioned in [Section 5.3](#53-environmental-requirments). The faults are overvoltage, undervoltage, overcurrent and short circuit.
 
-#### 7.1.1 Prior Implementation: RobotX 2024
+#### 7.2 Choice of MOSFET Gate Driver IC - TPS4800
 
-In-hull flashing was successfully implemented during RobotX 2024. A USB port was exposed on the side of the hulls onboard the Autonomous Surface Vessel (ASV), allowing members to update the firmware without opening the hull. This cuts down the time required for firmware update from five minutes to one minute.
+As a result, the MOSFET gate driver IC TPS4800 from Texas Instruments is selected among all other MOSFET gate driver IC for its ability to achieve all the above protection features and at the same time, satisy the technical specifications mentioned in [Section 5.1](#51-technical-specifications). The key features of the TPS4800 are summarised in the table below:
 
-![USB Port for Flashing on the ASV](hullflashing.jpg)
-##### Figure 24: USB Port for Flashing on ASV4.0
+| **Key Features**                | **Specifications**                                                                 |
+| :------------------------------ | :-------------------------------------------------------------------------------- |
+| Operating Voltage               | 8V to 60V DC                                                                      |
+| Maximum Continuous Current      | 30A                                                                               |
+| Overvoltage Protection Threshold | Adjustable between 10V to 60V DC                                                  |
+| Undervoltage Protection Threshold | Adjustable between 6V to 54V DC                                                   |
+| Overcurrent Protection Response Time | <10ms                                                                          |
+##### Table 13: Key Features of TPS4800 MOSFET Gate Driver IC
 
-#### 7.1.2 Design Concept 1 - Firmware Flashing via CAN Bus
-Initially, an option was to use the CAN bus to flash firmware onto the microcontroller.
+![Using resistors and capacitors to configure Protection Settings](protection.png)
+##### Figure 37: Configuring TPS4800 Protection Parameters
 
-![AUV4.1 Battery Hull Power Connector Pinout](battconnector.png)
-##### Figure 25: AUV4.1 Battery Hull Power Connector Pinout
-
-However, this option increases complexity of the system as a bootloader has to be written to support the firmware upload over CAN Bus. 
-  
-#### 7.1.3 Design Concept 2 - Repurposing the Balance Connector
-
-An alternate approach is to repurpose the AUV4.1 balance connector, which was originally used to expose the LiPo battery's balance pins for external cell balancing during charging. However, as the BQ40Z50 chip support cell balancing, this connector is now redundant and can be reassigned for other functions. 
-
-![Old Balance Connector Pin Out](oldbal.png)
-##### Figure 26: Old Balance Connector Pin Out
-
-The balance connector can be re-wired within the battery hull to expose the microcontroller programming pins (SWDIO, SWDCLK, RESET and Ground). Since communication with the BQ40Z50 chip is via SMBus, the SMBus lines (SMBD, SMBC and SMB GND) can also be exposed on the same connector. This allows the user to programme the microcontroller and the BQ40Z50 chip without unsealing the hull, reducing down time. Furthermore, it does not require significant development effort to implement this feature. 
-
-![New Balance Connector Pin Out](newbal.png)
-##### Figure 27: New Balance Connector Pin Out
-
-  
-### 7.2 Remote Status Monitoring
-As discussed in in [Section 2.3.3](#233-challenges-with-tracking-battery-hulls-pressure-and-temperature), the team currently relies on manual logging to monitor the battery hull’s internal pressure and temperature. This lack of historical data makes it difficult to determine if a slow leak is present. Additionally, telemetry such as individual cell voltages and state of health is not consistently recorded, limiting the ability to track battery degradation over time.
-
-To address these limitations, a remote status monitoring system was proposed. The requirements for the system and its rationale are summarised below.
-
-| **Requirements**                     | **Rationale**                                                                                                                  |
-| :----------------------------------- | :----------------------------------------------------------------------------------------------------------------------------- |
-| Automated Reporting                  | Minimises human error by eliminating manual data entry.                                                                        |
-| Wireless Data Upload                 | Avoids the need to unseal the hull to retrieve the data.                                                                       |
-| Database with A Low-Barrier of Entry | As members from different sub-teams have to maintain the battery hulls, the storage database should be easy to access and use. |
-##### Table 14: “Requirements and Rationale for Remote Status Monitoring
-
-### 7.2.1 Design Concept 1 - Microcontroller with Wireless Capabilities
-The initial design involved using a microcontroller with built-in WiFi capabilities (STM32Wx, Espressif MCUs), allowing it to connect to the internet whenever the battery hull is powered on. However, this approach is not ideal as the PMB is placed within a metal hull, which would act as a Faraday cage. This would weaken the WiFi signal leading to unreliable connections.
-
-Given that the battery is already connected to the internet when it is attached to the AUV (Figure 28), wireless capabilities are only necessary when the battery hull is charging in the BCB. 
-
-![Diagram of Data Flow from PMB to the Internet](pmbtointernetauv.png)
-##### Figure 28: Data Flow from PMB to the Internet
-
-### 7.2.2 Design Concept 2 - Accompanying PCB Within the Battery Charging Box
-
-To address these limitations, a revised design places a PCB with wireless capabilities in the BCB. The battery hull connects to the LiPo charger in the BCB via the connector in Figure 25. As such, the CAN Low and CAN High data lines are unused during charging. Using this connection, a microcontroller can retrieve data from the PMB when it is charging and upload it online. 
-
-Hence, a Battery Telemetry Board (BTB) was designed to reside within the BCB. It uses an Espressif32-DevKitC V4 as it was readily available in the lab. While this would mean an additional component is required to reside within the BCB, it is worthwhile as other features such as [Real-Time Safety and Status Notifications](#81-real-time-safety-and-status-notifications) can be implemented on the same Battery Telemetry Board.
-
-The key components of the BTB and its purpose are summarised in the table below:
-
-| **Key Components**                  | **Functions**                                                              |
-| :---------------------------------- | :------------------------------------------------------------------------- |
-| Espressif ESP32-DevKitC V4          | Microcontroller with WiFi capabilities to upload telemetry online.         |
-| SSD1306                             | Onboard screen to display key information.                                 |
-| ISOW1044B                           | Isolated CAN transceiver to allow for CAN communication with the PMB.      |
-| Buzzer                              | Used to alert user of any potential fault.                                 |
-| USB-C Connector & Voltage Regulator | To power the board directly from the LiPo charger to simplify integration. |
-##### Table 15: Components and Functions of the Battery Telemetry Board (BTB)
-
-![Labelled Components on BTB](btpcomponents.png)
-##### Figure 29: Labelled Components on BTB
-
-The BTB schematics are provided in Appendix A.
-
-### 7.2.3 Data Flow
-
-The PMB continuously transmit telemetry via five CAN Messages. These includes critical information for fault detection (e.g.: voltage, current, internal pressure and temperature), as well as data for monitoring degradation (e.g.: individual cell voltages, state of health). Additionally, telemetry data that helps in operational planning such as time to full charge and time to empty are transmitted to support efficient pool test scheduling.
-
-![List of CAN Messages](canmsgs.png)
-##### Figure 30: Data Flow from BTB to Telegram Channel and Google Sheets
-
-The BTB interprets the CAN messages and packages it to be sent to the Telegram Channel and a Google App Script. The Google App Script will then update the respective Google Sheets based on the PMB ID. The time recorded is obtained via Network Time Protocol (NTP).
-
-Google Sheets was chosen as it has a low barrier of entry, allowing all members to easily access the data. Furthermore, it does not require any additional applications to view the data.
-
-![Data Flow from BTB to Telegram Channel and Google Sheets](dataflowbtb.png)
-
-##### Figure 31: Data Flow from BTB to Telegram Channel and Google Sheets
-
-![BCB Google Sheet](bcbexcel.png)
-
-##### Figure 32: Recorded Telemetry on Google Sheets
-
-To ensure accurate data is being published,a timeout mechanism is implemented for all incoming telemetry. If the BTP does not receive the same message ID from the same PMB within twice its expected interval, all the data from that PMB will not be recorded. This ensures that only valid data is retained, preserving the integrity of the dataset for analysis.
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align:center;"><strong>Telemetry</strong></th>
-      <th style="text-align:center;"><strong>Reported on PMB Screen</strong></th>
-      <th style="text-align:center;"><strong>Reported on Telegram Channel</strong></th>
-      <th style="text-align:center;"><strong>Recorded on Google Sheet</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr><td>Voltage</td><td style="background-color:#c6f6c3; text-align:center;">Y</td><td style="background-color:#c6f6c3; text-align:center;">Y</td><td style="background-color:#c6f6c3; text-align:center;">Y</td></tr>
-    <tr><td>Cell1 Voltage</td><td style="background-color:#f8c6c6; text-align:center;">N</td><td style="background-color:#f8c6c6; text-align:center;">N</td><td style="background-color:#c6f6c3; text-align:center;">Y</td></tr>
-    <tr><td>Cell2 Voltage</td><td style="background-color:#f8c6c6; text-align:center;">N</td><td style="background-color:#f8c6c6; text-align:center;">N</td><td style="background-color:#c6f6c3; text-align:center;">Y</td></tr>
-    <tr><td>Cell3 Voltage</td><td style="background-color:#f8c6c6; text-align:center;">N</td><td style="background-color:#f8c6c6; text-align:center;">N</td><td style="background-color:#c6f6c3; text-align:center;">Y</td></tr>
-    <tr><td>Cell4 Voltage</td><td style="background-color:#f8c6c6; text-align:center;">N</td><td style="background-color:#f8c6c6; text-align:center;">N</td><td style="background-color:#c6f6c3; text-align:center;">Y</td></tr>
-    <tr><td>Current</td><td style="background-color:#c6f6c3; text-align:center;">Y</td><td style="background-color:#c6f6c3; text-align:center;">Y</td><td style="background-color:#c6f6c3; text-align:center;">Y</td></tr>
-    <tr><td>SoC</td><td style="background-color:#c6f6c3; text-align:center;">Y</td><td style="background-color:#c6f6c3; text-align:center;">Y</td><td style="background-color:#c6f6c3; text-align:center;">Y</td></tr>
-    <tr><td>Time to Full</td><td style="background-color:#f8c6c6; text-align:center;">N</td><td style="background-color:#c6f6c3; text-align:center;">Y</td><td style="background-color:#c6f6c3; text-align:center;">Y</td></tr>
-    <tr><td>Average Power</td><td style="background-color:#f8c6c6; text-align:center;">N</td><td style="background-color:#c6f6c3; text-align:center;">Y</td><td style="background-color:#c6f6c3; text-align:center;">Y</td></tr>
-    <tr><td>State of Health FCC</td><td style="background-color:#f8c6c6; text-align:center;">N</td><td style="background-color:#f8c6c6; text-align:center;">N</td><td style="background-color:#c6f6c3; text-align:center;">Y</td></tr>
-    <tr><td>Internal Pressure</td><td style="background-color:#c6f6c3; text-align:center;">Y</td><td style="background-color:#c6f6c3; text-align:center;">Y</td><td style="background-color:#c6f6c3; text-align:center;">Y</td></tr>
-    <tr><td>Temp Probe 1</td><td style="background-color:#f8c6c6; text-align:center;">N</td><td style="background-color:#c6f6c3; text-align:center;">Y</td><td style="background-color:#c6f6c3; text-align:center;">Y</td></tr>
-    <tr><td>Temp Probe 2</td><td style="background-color:#f8c6c6; text-align:center;">N</td><td style="background-color:#c6f6c3; text-align:center;">Y</td><td style="background-color:#c6f6c3; text-align:center;">Y</td></tr>
-    <tr><td>Internal Temperature</td><td style="background-color:#c6f6c3; text-align:center;">Y</td><td style="background-color:#c6f6c3; text-align:center;">Y</td><td style="background-color:#c6f6c3; text-align:center;">Y</td></tr>
-  </tbody>
-</table>
-
-##### Table 16: Summary of Telemetry Availability Across Interfaces
-
-Due to limited space on the screen, only high-priority telemetry is shown to avoid clutter. The Telegram channel provides immediate operational updates, while full datasets are continuously uploaded to Google Sheets for future analysis. This tiered reporting approach balances operational clarity without sacrificing traceability.
-
----
-
-## 8. Power Monitoring
-Ensuring safety and reliability of the system requires timely identification and mitigation of faults  before it damages the system. This section outlines three key strategies: leak detection in the battery hull, robust electrical protection features, and utilising good electrical practises to design a high power PCB.
-
-
-### 8.1 Power Good Status
-As mentioned in [Section 2.3.3](#233-challenges-with-tracking-battery-hulls-pressure-and-temperature), slow battery hull leaks are difficult to detect without consistent data. A possible solution will be the automatic notification of team members when a leak is detected by the system.
-
-#### 8.1.1 Past Experiences
-During the testing and development of the Autonomous Surface Vessel (ASV), a Telegram Channel was running on the ASV to periodically report the battery voltage and current draw. This proved invaluable as it allowed the team to anticipate and prepare for battery swaps. Furthermore, it helped the team to identify a load-balancing issue in the vehicle that would have otherwise gone unnoticed.
-
-![Telegram Channel Reporting ASV's Battery Status](tele.png)
-##### Figure 33: Telegram Channel Reporting ASV's Battery Status
-
-#### 8.1.2 Chosen Method
-Telegram was selected as the alert platform due to its prior success and team-wide adoption. Furthermore, as it is used for internal communications, it provides a low-barrier of entry and high-visibility for any fault notification. 
-
-#### 8.1.3 Leak Detection Implementation
-A Google App Script processes data uploaded from the Battery Telemetry Board (BTB) and checks for the following leak indicators:
-
-| **Condition**                                               | **Notification**                             |
-| :---------------------------------------------------------- | :------------------------------------------- |
-| Internal Pressure Below 107                                 | ALERT: PMB IS LEAKING!                       |
-| Drop in the Ratio of Internal Pressure to Temperature > 0.5 | ALERT: PMB MIGHT BE leaking, please observe. |
-##### Table 17: Leak Detection Thresholds and Corresponding Notifications
-
-The leak detection is based on the Gay Lussac's Law [4] which states that the pressure of a gas is directly proportional to its temperature at constant volume. Hence, if the battery hull is not leaking, the amount of gas in the hull should remain the same. Thus, the ratio of internal pressure to temperature should remain consistent despite temperature changes. Therefore, a significant deviation in this ratio would suggest a potential leak.
-
-To obtain the previous Internal Pressure to Temperature ratio, the Google App Script obtains the last recorded data for the PMB on the Google Sheet.
-
-The threshold of 0.5 is determined by observing the change in temperature and internal pressure of three battery hulls.
-
-| **Pressure** | **Temp** | **P/T** | **P/T Difference** |
-| :----------: | :------: | :-----: | :----------------: |
-|    110.30    |    24    |  4.596  |         -          |
-|    110.38    |    25    |  4.415  |       -0.181       |
-|    110.45    |    27    |  4.091  |       -0.324       |
-|    110.52    |    27    |  4.093  |       0.003        |
-|    110.58    |    27    |  4.096  |       0.002        |
-|    110.71    |    28    |  3.954  |       -0.142       |
-|    110.80    |    28    |  3.957  |       0.003        |
-|    110.85    |    28    |  3.959  |       0.002        |
-##### Table 18: Changes in Pressure and Temperature of Battery Hull A
-
-| **Pressure** | **Temp** | **P/T** | **P/T Difference** |
-| :----------: | :------: | :-----: | :----------------: |
-|    112.49    |    24    |  4.687  |         -          |
-|    112.54    |    24    |  4.689  |       0.002        |
-|    112.59    |    25    |  4.504  |       -0.186       |
-|    112.63    |    25    |  4.506  |       0.002        |
-|    112.67    |    25    |  4.507  |       0.002        |
-|    112.75    |    25    |  4.510  |       0.003        |
-|    112.80    |    25    |  4.512  |       0.002        |
-|    112.85    |    26    |  4.340  |       -0.172       |
-##### Table 19: Changes in Pressure and Temperature of Battery Hull B
-
-| **Pressure** | **Temp** | **P/T** | **P/T Difference** |
-| :----------: | :------: | :-----: | :----------------: |
-|    111.88    |    24    |  4.662  |         -          |
-|    112.04    |    26    |  4.309  |       -0.352       |
-|    112.10    |    28    |  4.004  |       -0.306       |
-|    112.16    |    28    |  4.006  |       0.002        |
-|    112.23    |    29    |  3.870  |       -0.136       |
-|    112.34    |    29    |  3.874  |       0.004        |
-|    112.43    |    29    |  3.877  |       0.003        |
-|    112.47    |    30    |  3.749  |       -0.128       |
-##### Table 20: Changes in Pressure and Temperature of Battery Hull B
-
-By feeding various data to the BTB, a simulated leak scenario was tested to verify detection logic. This lead to an alert sent to the Telegram Channel.
-
-![Telegram Channel Reporting a Possible Leak](ratio.png)
-##### Figure 34: Telegram Channel Reporting a Possible Leak in PMB2
-
-![Telegram Channel Reporting a Leak](leak.png)
-##### Figure 35: Telegram Channel Reporting a Leak in PMB1
-
-The same Telegram channel is also used to broadcast the progress of the battery charging and notifies members when it is fully charged. This feature addresses a common operational issue, where team members may
-forget to turn off the charger, especially after fatigue from a long day of pool tests. By receiving timely reminders, the team can ensure a safer operation by turning off the charger when the battery is fully charged.
-
-![Telegram Channel Reporting Charged Battery](teletelem.png)
-##### Figure 36: Telegram Channel Reporting a Fully Charged PMB1
-
-### 8.2 Fault Reporting
-BQ40Z50 comprises various protection features. This includes two tiers of protection. The first tier disconnects the circuits via MOSFETs, while the second tier permanently disables the battery pack by blowing the fuse.  Within the first tier there are also hardware protections that can be configured for a faster response from the chip.
-
-These features collectively protect the vehicle from electrical fault, improving the reliability of the system.
-
-![Using bQStudio to configure Protection Settings](protection.png)
-##### Figure 37: Configuring BQ40Z50 Protection Parameters in bqStudio
-
-Several key safety features were configured and tested:
-
-| **Feature**                             | **Test Result**                                                                                                                       |
-| :-------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------ |
-| Overcurrent in Discharge (OCD)          | Used a load tester to verify that discharging above the set current value for the specified time would turn off the discharge MOSFET. |
-| Overload in Discharge Protection (AOLD) | Almost instantaneous cut off when discharging above the set current limit.                                                            |
-| Over Charging Current Protection (OCC)  | When the charging current is higher than the preset threshold, the charging MOSFET is turned off.                                     |
-
-##### Table 21: Test Results for BQ40Z50 Protection Features
-
-Additionally, a secondary overvoltage protection chip (BQ294701) monitors cell voltages independently and can also activate the fuse if an overvoltage is detected. This act as a fallback if the BQ40Z50 is malfunctioning. 
-
-### 8.3 Power(Current) Consumption Statistics
- To ensure that the PMB is reliable, good PCB design practices  must be followed to ensure both signal integrity and that the PMB can support the power required. The PMB design adheres to recommendations from TI's SLUA660A Advanced Gas Gauge Circuit Design document [5], ensuring proper layout and component interfacing.
-
- The PMB is a 4-Layer PCB with signal routing on the outer layers and dedicated internal planes for power and ground. ([Appendix B](#appendix-b-individual-layers-of-power-monitoring-board))
-
- To remain backwards compatible, the PMB has the same dimensions and connector layout as its predecessor. 
-
-#### 8.3.1 Design for High Power Handling
-The PMB is designed to handle 40A of continuous current. Hence, 2oz copper was used on the outer layers of the PCB, where the power path are, to reduce temperature rise. The traces are also made as wide as possible to reduce resistance.
-
-![3D Model of Power Path](3dpower.png)
-##### Figure 38: 3D Model of Power Path
-
-![Power Path on the Top Layer](toppower.png)
-##### Figure 39: Power Path on the Top Layer
-
-The IPTC014N10NM5 MOSFET was chosen as it has a top side cooling package. This allows the use of thermal pads to conduct the heat from the MOSFET to the top of the battery hull [6].
+Besides the gate driver IC, the IPTC014N10NM5 MOSFET was chosen as it has a top side cooling package. This allows the use of thermal pads to conduct the heat from the MOSFET to the top of the battery hull [6].
 
 ![MOSFET Highlighted on The New PMB](pcbmosfet.png)
 ##### Figure 40: MOSFET Highlighted on The New PMB
@@ -613,6 +285,17 @@ To ensure reliable power supply, a power consumption chart was drawn up to verif
 
 ![PMB's Power Consumption Chart](pmbpowerconsume.png)
 ##### Figure 43: PMB's Power Consumption Chart
+
+### 8.3 PCB Design for Power and Signal Integrity
+
+#### 8.3.1 Design for High Power Handling
+The PMB is designed to handle 40A of continuous current. Hence, 2oz copper was used on the outer layers of the PCB, where the power path are, to reduce temperature rise. The traces are also made as wide as possible to reduce resistance.
+
+![3D Model of Power Path](3dpower.png)
+##### Figure 38: 3D Model of Power Path
+
+![Power Path on the Top Layer](toppower.png)
+##### Figure 39: Power Path on the Top Layer
 
 #### 8.3.2 Design for Signal Integrity
 Ensuring that the signals transmitted on the data lines are not degraded by noise is critical to creating a reliable PMB.
@@ -644,82 +327,76 @@ This can be further seen in the division of the Power and Ground Plane within th
 
 ![PMB Ground Plane](pmbgndplane.png)
 ##### Figure 46: PMB Ground Plane
-
-#### 8.3.4 User Interface
-The PMB uses reed switches and latching relay to allow the battery to be turned on or off without unsealing the hull. To turn off the system, the microcontroller checks for a HIGH signal from the "OFF" reed switch, ensuring that the relay is only reset after tasks are safely concluded. This would be critical to prevent file corruption if onboard logging is implemented.
-
-![Relay Circuit on The PMB](relaycircuit.png)
-##### Figure 47: Relay Circuit on The PMB
-
-Key telemetry information being displayed on the screen can also alert users immediately to any potential issues within the battery hull.
-
-![Telemetry Display and Reed Switches for The Battery Hull](telemandreed.jpg)
-##### Figure 48: Telemetry Display and Reed Switches for The Battery Hull
-
-
-The final layout and assembled PCB are shown below.
-
-![PMB Top View](pmbtop.png)
-##### Figure 49: Top View of PMB
-
-![PMB Bottom View](pmbbottom.png)
-##### Figure 50: Bottom View of PMB
- 
 ---
+
+## 8. Power Monitoring
+The power monitoring system is responsible for monitoring and reporting power status and power(current) consumptions in each channel. This section will detail the various features implemented to achieve this functionality.
+
+### 8.1 Power Good Status
+The Power Good (PG) status is a critical indicator of the health and stability of the power supply. It provides real-time feedback on whether the power supply is operating within acceptable parameters, allowing for proactive management of the power system.
+
+To achieve the PG monitoring functionality, a TPS3711DDCR voltage supervisor from Texas Instruments is selected for its simplicity and reliability. The TPS3711 monitors the output voltage of the power channel and asserts the PG signal when the voltage is within the specified range.
+
+### 8.2 Fault Reporting
+As mentioned in [Section 7.1](#71-protection-requirements), the MOSFET gate driver IC TPS4800 is selected for its built-in protection features which collectively protect the vehicle from electrical fault, improving the reliability of the system. At the same time, the TPS4800 is also able to report fault status via its FAULT pin. This pin goes LOW when any of the protection features are triggered, allowing the microcontroller to log and report the fault event.
+
+### 8.3 Power(Current) Consumption Statistics
+Accurate power(current) consumption monitoring is essential for effective power management and optimization. The AMC1301DWVR, a precision isolated delta-sigma modulator from Texas Instruments, is selected for its high accuracy and isolation capabilities.
+
+### 8.4 Fault Analysis Logics
+
+The diagram below illustrates the fault analysis logic flow implemented in the new power distribution system.
+
+![Fault Analysis Logic Flow](faultlogic.png)
+##### Figure 32: Fault Analysis Logic Flow
+
+### 8.5 Overall Dat Collection and Reporting
+
+#### 8.5.1 Chosen Method
+Telegram was selected as the alert platform due to its prior success and team-wide adoption. Furthermore, as it is used for internal communications, it provides a low-barrier of entry and high-visibility for any fault notification. 
+
+### 7.3 Remote Status Monitoring
+As discussed in in [Section 2.3.3](#233-challenges-with-tracking-battery-hulls-pressure-and-temperature), the team currently relies on manual logging to monitor the battery hull’s internal pressure and temperature. This lack of historical data makes it difficult to determine if a slow leak is present. Additionally, telemetry such as individual cell voltages and state of health is not consistently recorded, limiting the ability to track battery degradation over time.
+
+To address these limitations, a remote status monitoring system was proposed. The requirements for the system and its rationale are summarised below.
+
+| **Requirements**                     | **Rationale**                                                                                                                  |
+| :----------------------------------- | :----------------------------------------------------------------------------------------------------------------------------- |
+| Automated Reporting                  | Minimises human error by eliminating manual data entry.                                                                        |
+| Wireless Data Upload                 | Avoids the need to unseal the hull to retrieve the data.                                                                       |
+| Database with A Low-Barrier of Entry | As members from different sub-teams have to maintain the battery hulls, the storage database should be easy to access and use. |
+##### Table 14: “Requirements and Rationale for Remote Status Monitoring
+
+### 7.2.1 Design Concept 1 - Microcontroller with Wireless Capabilities
+The initial design involved using a microcontroller with built-in WiFi capabilities (STM32Wx, Espressif MCUs), allowing it to connect to the internet whenever the battery hull is powered on. However, this approach is not ideal as the PMB is placed within a metal hull, which would act as a Faraday cage. This would weaken the WiFi signal leading to unreliable connections.
+
+Given that the battery is already connected to the internet when it is attached to the AUV (Figure 28), wireless capabilities are only necessary when the battery hull is charging in the BCB. 
+
+![Diagram of Data Flow from PMB to the Internet](pmbtointernetauv.png)
+##### Figure 29: Diagram of Data Flow from PMB to the Internet
 
 ## 9. Prototyping and Testing 
 
-The new design is able to meet the functional requirements stated in [Section 4](#4-design-considerations).
+### 9.1 Testing of Power Protection Features
+Several key safety features were configured and tested:
 
-| **Requirements**    | **Achieved** | **Description**                                                                                                                                                           |
-| :------------------ | :----------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Backward Compatible |     Yes      | The battery and PMB fit within the previous battery hull and use the existing connectors.                                                                                 |
-| Voltage Output      |     Yes      | A 4S Li-Ion battery was used.                                                                                                                                             |
-| Continuous Current  |     Yes      | Tested that the board is able to draw 40A for 10 minutes.                                                                                                                 |
-| Telemetry           |     Yes      | Voltage, current, and internal pressure are displayed on the telemetry screen. Voltage was verified with a multimeter and the current was calibrated using a load tester. |
-| Charging            |     Yes      | Able to charge the battery.                                                                                                                                               |
+| **Feature**                             | **Test Result**                                                                                                                       |
+| :-------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------ |
+| Overcurrent in Discharge (OCD)          | Used a load tester to verify that discharging above the set current value for the specified time would turn off the discharge MOSFET. |
+| Overload in Discharge Protection (AOLD) | Almost instantaneous cut off when discharging above the set current limit.                                                            |
+| Over Charging Current Protection (OCC)  | When the charging current is higher than the preset threshold, the charging MOSFET is turned off.                                     |
 
-##### Table 23: Verification of Functional Requirements
+##### Table 21: Test Results for TPS4800 Protection Features
 
-The sub-goals set out in [Section 3](#3-project-goal) have been met. 
-
-| **Sub Goals**                          | **Implementation**                                                                                        | **Improvements**                                                                                                                   |
-| :------------------------------------- | :-------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------- |
-| Enhance User Operability and Work Flow | - In-hull firmware update via balance connector<br>- Remote status monitoring via Battery Telemetry Board | - Firmware update time reduced from 25 minutes to 3 minutes.<br>- Members can monitor charging progress and access historical data |
-| Improve Safety and Reliability         | - Real-time safety and status notification via Telegram<br>- Protection features with BQ40Z50             | - Immediate alerts when faults are detected.<br>- AUV electrical system is protected from potential electrical faults.             |
-| Improve AUV Performance                | - New Li-Ion batteries<br>- Accurate SoC estimation with BQ40Z50                                          | - In-water testing time can be extended.                                                                                           |
-##### Table 24: Summary of Sub Goals and Its Implementation and Improvements
-
-Unfortunately, there were also mistakes when designing the PCBs that had to be rectified during testing.
-
-| **PCB** | **Mistake**                                                                                      | **Problems**                                                                    | **Current Fix**                                                                |
-| :-----: | :----------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------ | :----------------------------------------------------------------------------- |
-|   PMB   | No pull-up resistor on the I2C lines connecting the microcontroller, screen, and pressure sensor | Unable to establish communications on I2C lines                                 | Pull-up resistor soldered onto the board                                       |
-|   PMB   | No pull-down resistor for the signal from the microcontroller to reset the reed switch           | Relay would be reset when the MCU is powered on, leading to the power being cut | Pull-down resistor soldered onto the board                                     |
-|   BTB   | Resistors from the CC lines on the USB-C connector are pulled up instead of down                 | USB-C would not negotiate properly for power delivery                           | Existing resistor removed and new resistor soldered to pull CC lines to ground |
-##### Table 25: Summary of PCB Mistakes and Its Fixes
-
-![PMB Fix](pmbfix.png)
-##### Figure 51: Soldering Pull-Down Resistor on PMB
-
-![BTB Fix](btpfix.png)
-##### Figure 52: Soldering Pull-Down Resistor on BTB
-  
-The integration of SoC tracking, protection features and remote status monitoring redefines the PMB from being a passive Power Monitoring Board to a Power Management Board. Furthermore, the addition of a BTB to the BCB provides an integrated system to monitor and alert operators of potential faults within the AUV's battery system. 
-
-Designed with backward and forward compatibility in mind, the new system is built to support current and future AUV platforms. These changes enhance safety, usability, and reliability, positioning the team for continued success at RoboSub. 
 
 ---
 
 ## 11. Future Project Timeline 
 
-Due to limited availability of serviceable battery hulls and competing  priorities during pool tests, the new battery system has not been tested in-water with the AUV. Hence, testing with the AUV should be done to fully validate the entire system under actual operating conditions.
+The following timeline outlines the proposed development plan for holiday time and the next semester. Key milestones include hardware revisions, Subsystem integration and testing phases to ensure continued reliability and performance enhancements.
 
-The BQ40Z50 supports communication of target charging voltage and  current via SMBus. This opens the opportunity to develop a custom charger that interfaces directly with the battery pack, enabling smart charge regulation. The BTB can be integrated with the custom charger to report the charging status.
-
-One usability issue identified relates to connector reuse. To minimise modifications to the existing battery hull, identical connectors were used for both battery balance lines and the microcontroller programming pins. This design choice introduces the risk of incorrect connections during assembly, which could damage the microcontroller. While backward compatibility was prioritised, minor modifications should still be made when necessary to prevent user error and enhance system robustness.
-
-If no major issues are discovered during pool testing, the PMB will be deployed at RoboSub 2025 and RoboSub 2026 across the AUVs fielded by BBAS. Furthermore, with BBAS releasing our PCB schematics online, the PMB can serve as a reference to other AUV teams working on battery management systems. Notably, no internet-connected charging system were observed at RoboSub 2023. By demonstrating this feature at RoboSub 2025, BBAS can inspire other teams to implement remote monitoring for their systems.
+![Future Project Timeline](futuretimeline.png)
+##### Figure 53: Future Project Timeline
 
 ---
 

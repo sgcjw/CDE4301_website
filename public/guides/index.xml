@@ -9,25 +9,25 @@
     <lastBuildDate>Fri, 04 Apr 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/website/guides/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Battery Learning Cycle for BQ40Z50</title>
-      <link>http://localhost:1313/website/guides/training/</link>
-      <pubDate>Thu, 03 Apr 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/website/guides/training/</guid>
-      <description>This documents the steps required to successfully complete a learning cycle for new batteries attached to BQ40Z50.</description>
-    </item>
-    <item>
-      <title>Setting Up PMB for AUV4.5</title>
+      <title>Setting Up Power Distribution System</title>
       <link>http://localhost:1313/website/guides/setup/</link>
       <pubDate>Thu, 03 Apr 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/website/guides/setup/</guid>
-      <description>This documents the steps required to set up the PMB for use.</description>
+      <description>This documents the steps required to set up the Power Distribution System for use.</description>
     </item>
     <item>
-      <title>Using BQ40Z50 for AUV4.5</title>
+      <title>Setting Up Power Distribution System</title>
+      <link>http://localhost:1313/website/guides/training/</link>
+      <pubDate>Thu, 03 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/website/guides/training/</guid>
+      <description>This documents the steps required to set up the Power Distribution System for use.</description>
+    </item>
+    <item>
+      <title>Setting Up Power Distribution System</title>
       <link>http://localhost:1313/website/guides/using/</link>
       <pubDate>Thu, 03 Apr 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/website/guides/using/</guid>
-      <description>Tips and tricks on how to use the BQ40Z50 on the PMB.</description>
+      <description>This documents the steps required to set up the Power Distribution System for use.</description>
     </item>
   </channel>
 </rss>
