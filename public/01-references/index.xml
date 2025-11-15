@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>01 References on USV Power Distribution System</title>
-    <link>https://ChenJiawei.github.io/website/01-references/</link>
+    <link>sgcjw.github.io./01-references/</link>
     <description>Recent content in 01 References on USV Power Distribution System</description>
     <generator>Hugo -- 0.152.2</generator>
     <language>en</language>
     <lastBuildDate>Wed, 08 May 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://ChenJiawei.github.io/website/01-references/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="sgcjw.github.io./01-references/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Location</title>
-      <link>https://ChenJiawei.github.io/website/01-references/location/</link>
+      <link>sgcjw.github.io./01-references/location/</link>
       <pubDate>Wed, 08 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://ChenJiawei.github.io/website/01-references/location/</guid>
+      <guid>sgcjw.github.io./01-references/location/</guid>
       <description>Professor Dr von Igelfeld&amp;#39;s mailing and office addresses at the Institute of Romance Philology.</description>
     </item>
     <item>
       <title>Office Hours</title>
-      <link>https://ChenJiawei.github.io/website/01-references/officehours/</link>
+      <link>sgcjw.github.io./01-references/officehours/</link>
       <pubDate>Wed, 08 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://ChenJiawei.github.io/website/01-references/officehours/</guid>
+      <guid>sgcjw.github.io./01-references/officehours/</guid>
       <description>Schedule and location for Professor Dr von Igelfeld&amp;#39;s office hours.</description>
     </item>
   </channel>
