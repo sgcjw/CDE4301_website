@@ -94,7 +94,7 @@ While initial faults may not be mission-critical, they can propagate into second
 In this project, I had the opportunity to work directly with ST Engineering’s USVs and examine their PDS in a real operational setting.
 
 ![ST Engineering USV PDS Architecture](stpds.png)
-##### Figure 7: ST Engineering's USV Current PDS Architecture
+##### Figure 5: ST Engineering's USV Current PDS Architecture
 
 The current system conists primarily of commercial fuses and relays, coordinated through a dedicated power-system PLC. Power channel switching is controlled by continuous digital signals from the PLC, which govern when individual subsystems are energised or disconnected. This switching capability enables the sequential start-up of the main compute stacks during vessel initialization, as well as the selective shutdown of non-essential devices to improve power efficiency during missions.
 
@@ -157,6 +157,8 @@ The new PDS offers several key benefits to its stakeholders::
 | Enhanced Fault Tolerance              | **To USV Users** - A more robust PDS reduces the impact of component failures, improving overall system reliability and increasing mission success rates. |
 | Advanced Power Monitoring and Reporting | **To USV Users** - Real-time power-status insights support early detection of abnormal conditions. This enables proactive maintenance, prevents minor issues from escalating into critical faults, and reduces repair costs and downtime. |
 
+##### Table 3: Key Benefits of the New PDS to Stakeholders
+
 ---
 
 ## 5. Design Requirments
@@ -180,7 +182,7 @@ To begin, the new PDS must match or exceed the technical performance of the exis
 | Power System Monitoring                  | Current, Internal Temperature, Power Good(PG), Fault Status |
 | Communication Protocol     | Digital/Analog/CAN 2.0      |
 
-##### Table 7: Core Technical Requirements for the New PDS
+##### Table 4: Core Technical Requirements for the New PDS
 
 The 30 A current specification is based on the maximum continuous current draw of the existing PDS—20 A, as measured during the operation of the searchlight according to its datasheet—augmented with a 50% design margin. This additional margin ensures sufficient headroom to handle transient overloads without compromising system reliability.
 
@@ -216,7 +218,7 @@ Since this product is intended for use in maritime environments, the following e
 This section presents the summarised architectures to provide a high-level overview of the systems. Subsequent sections will explain how the design choices support the overall project goals.
 
 ![Summarised Power Architecture of PDS](powerarch.png)
-##### Figure 11: Summarised System Architecture of the developed PDS
+##### Figure 6: Summarised System Architecture of the developed PDS
 
 ---
 
@@ -237,8 +239,17 @@ The below table summarises the key advantages and disadvntages between the two a
 | Reliability and Durability | - industrially certified for maritime usage<br> - proper insulation and protection done based on industrial standards<br>   | - Larger efforts are required to design for robustness
 | Customisability and Scalability | - Limited customisation options<br>- Easily scalable by adding or modifying Relay/PLC modules<br> | - Highly customisable to specific requirements<br>- More difficult to replace/scale up                                           |
 
+##### Table 7: Comparison Between PLC + Relay vs MCU + PCB System
+
 #### 6.1.2 Targeting limitations in MCU + PCB System
-While the MCU + PCB system offers significant advantages in achieving size reduction, it also presents the above mentioned limitations that need to be addressed to ensure successful implementation.
+While the MCU + PCB system offers significant advantages in achieving size reduction, it also presents the above mentioned limitations that need to be addressed to ensure successful implementation. As such, the following design improvements were made in this project to mitigate these limitations:
+
+* **Customisability and Scalability:** To address the challenges of customisability and scalability, a backplane system architecture was adopted. This modular design allows for easy replacement and upgrading of individual PCB modules, enabling users to tailor the PDS to their specific needs without requiring a complete redesign.
+
+* **Reliability and Durability:** To improve the reliability and durability of the MCU + PCB system, PLC will be used as the primary source of switching while MCU will be used as a redundancy. This hybrid approach leverages the strengths of both PLCs and MCUs, ensuring robust performance while maintaining the compactness of the PCB design.
+
+![New Switching Signal Flow](SSF.png)
+##### Figure 7: Switching Signal Flow in the PDS
 
 ### 6.2 Customisable Power Switching Logic
 As mentioned in [Section](#232-limited-capabilities-of-battery-fuel-gauge), the current control logics relied on a continous signal from PLC. This approach means that if there is any signal loss from the PLC, be it PLC failure or loose connection, the power supply maybe disturbed. In this project, I would like to introduce a new user-customisable control logic using a latching PCB design to mitigate this risk.
@@ -247,10 +258,10 @@ As mentioned in [Section](#232-limited-capabilities-of-battery-fuel-gauge), the 
 The diagram below illustrates the current control logic flow and the proposed new control logic. 
 
 ![Current Control Logic](CCL.png)
-##### Figure 18: Current Control Logic in the PDS
+##### Figure 8: Current Control Logic in the PDS
 
 ![New Control Logic](NCL.png)
-##### Figure 19: New Control Logic proposed
+##### Figure 9: New Control Logic proposed
 
 The key difference between the two control logics lies in how the power channel’s ON state is maintained. In the current system, the ON state is sustained by a continuous digital HIGH signal from the PLC. In contrast, the new control logic employs a latching mechanism: a momentary HIGH signal from the MCU toggles the power channel ON at startup, and the channel is only turned OFF when a subsequent continuous HIGH signal is applied. This design ensures that once a power channel is turned ON, it remains ON even if the MCU signal is lost. This significantly enhances fault tolerance, as transient or permanant PLC/MCU failures will not inadvertently disrupt power delivery to critical subsystems during missions.
 
@@ -258,10 +269,10 @@ The key difference between the two control logics lies in how the power channel�
 Although the latching PCB design enhances fault tolerance, it may introduce certain operational limitations. For example, if the MCU fails while a power channel is ON, the user cannot remotely turn off that channel, even for systems that are not required during mission operation (e.g., onboard lights used only for maintenance), which could reduce overall power efficiency. To address this, a separate PCB was designed to implement the latching mechanism while remaining pluggable from the main MOSFET relay board. This modular design makes the control logic user-customisable, allowing operators to choose between the new latching mechanism or revert to the traditional continuous-signal control logic according to their operational requirements.
 
 ![Latching PCB](latching_pcb.png)
-##### Figure 20: Latching PCB Schematic and Layout
+##### Figure 10: Latching PCB Schematic and Layout
 
 ![Relay_Latching_PCB Combination ](integration.png)
-##### Figure 21: 3D model of the MOSFET Relay Board with Latching PCB Integrated
+##### Figure 11: 3D model of the MOSFET Relay Board with Latching PCB Integrated
 
 ---
 
@@ -285,7 +296,7 @@ As a result, the MOSFET gate driver IC TPS4800 from Texas Instruments is selecte
 | Overcurrent Protection Threshold | Adjustable between 5A to 50A                                                      |
 | Overcurrent Protection Response Time | <10ms                                                                          |
 | Short-Circuit Protection Response Time | <1µs                                                                           |
-##### Table 2: Key Features of TPS4800 MOSFET Gate Driver IC
+##### Table 8: Key Features of TPS4800 MOSFET Gate Driver IC
 
 ---
 
@@ -308,7 +319,7 @@ Accurate power(current) consumption monitoring is essential for effective power 
 The diagram below illustrates the fault analysis logic flow implemented in the new PDS.
 
 ![Fault Analysis Logic Flow](faultlogic.png)
-##### Figure 32: Fault Analysis Logic Flow
+##### Figure 12: Fault Analysis Logic Flow
 
 ### 8.5 Overall Dat Collection and Reporting
 
@@ -316,20 +327,17 @@ The diagram below illustrates the fault analysis logic flow implemented in the n
 The PMB uses a combination of digital and analog signals to communicate power status and consumption data to the microcontroller unit (MCU). The digital signals include the Power Good (PG) status and fault status, while the analog signals represent the current consumption data.
 
 ### 8.5.2 CAN Bus from MCU to PLC 
-The Controller Area Network (CAN) bus is employed for communication between the MCU on the Backplane and the PLC of the USV. CAN bus is chosen for its robustness, reliability, and ability to handle high-speed data transmission in noisy environments, making it ideal for maritime applications.
+The Controller Area Network (CAN) bus is employed for communication between the MCU on the Backplane and the PLC of the USV. CAN bus is chosen for its robustness, reliability, and ability to handle high-speed data transmission in noisy environments, making it ideal for maritime applications. This also reduce the wiring complexity between the PDS and the USV main computer stack.
 
 ## 9. Prototyping and Testing 
 
-### 9.1 Testing of Power Protection Features
-Several key safety features were configured and tested:
+Here are some of the features that will be tested and recorded for the new PDS:
 
-| **Feature**                             | **Test Result**                                                                                                                       |
-| :-------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------ |
-| Overcurrent in Discharge (OCD)          | Used a load tester to verify that discharging above the set current value for the specified time would turn off the discharge MOSFET. |
-| Overload in Discharge Protection (AOLD) | Almost instantaneous cut off when discharging above the set current limit.                                                            |
-| Over Charging Current Protection (OCC)  | When the charging current is higher than the preset threshold, the charging MOSFET is turned off.                                     |
+![Continous Current Test](CCT.png)
+##### Figure 13: Continous Current Test
 
-##### Table 21: Test Results for TPS4800 Protection Features
+![Fault Protection Test](FPT.png)
+##### Figure 14: Fault Protection Test 
 
 ---
 
@@ -338,7 +346,7 @@ Several key safety features were configured and tested:
 The following timeline outlines the proposed development plan for holiday time and the next semester. Key milestones include hardware revisions, Subsystem integration and on-boat testing phases to ensure continued reliability and performance enhancements.
 
 ![Future Project Timeline](futuretimeline.png)
-##### Figure 53: Future Project Timeline
+##### Figure 13: Future Project Timeline
 
 ---
 
@@ -366,36 +374,6 @@ The following timeline outlines the proposed development plan for holiday time a
 + [Relay PCB Layouts](PMB4.5-2Layouts.pdf)  
 + [Latch PCB Layouts](btplayout.pdf)
 
-## Appendix C: Relay Circuit Calculation
-
-![Relay Circuit Calculation](relaycircuitcalc.png)
-##### Relay Circuit Calculation
-
-
-## Appendix E: 3D Model of Overall Power Distribution System
-
-<div style="display: flex; justify-content: center;">
-  <div class="sketchfab-embed-wrapper" style="width: 100%; max-width: 900px;">
-    <iframe title="AUV4.5 Power Monitoring Board 3D Model"
-            frameborder="0"
-            allowfullscreen
-            mozallowfullscreen="true"
-            webkitallowfullscreen="true"
-            allow="autoplay; fullscreen; xr-spatial-tracking"
-            xr-spatial-tracking
-            execution-while-out-of-viewport
-            execution-while-not-rendered
-            web-share
-            style="width: 100%; height: 480px;"
-            src="https://sketchfab.com/models/1ba9f9a1e7d0487896ffd8acb5602e95/embed">
-    </iframe>
-    <p style="font-size: 13px; font-weight: normal; margin: 5px; color: #4A4A4A; text-align: center;">
-      <a href="https://sketchfab.com/3d-models/step-no-variations-for-auv4-5-2-pmb-pcbdoc-1ba9f9a1e7d0487896ffd8acb5602e95?utm_medium=embed&utm_campaign=share-popup&utm_content=1ba9f9a1e7d0487896ffd8acb5602e95"
-         target="_blank"
-         rel="nofollow"
-         style="font-weight: bold; color:black;">
-        AUV4.5 Power Management Board 3D Model
-      </a>
-    </p>
-  </div>
-</div>
+## Appendix C: Latch PCB Simulation
+![Latching PCB Simulation](latchsim.png)  
+##### Latch PCB Simulation Results
