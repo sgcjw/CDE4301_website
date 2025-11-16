@@ -257,10 +257,10 @@ The key difference between the two control logics lies in how the power channelâ
 #### 6.2.3 User-customisability with latching PCB Design
 Although the latching PCB design enhances fault tolerance, it may introduce certain operational limitations. For example, if the MCU fails while a power channel is ON, the user cannot remotely turn off that channel, even for systems that are not required during mission operation (e.g., onboard lights used only for maintenance), which could reduce overall power efficiency. To address this, a separate PCB was designed to implement the latching mechanism while remaining pluggable from the main MOSFET relay board. This modular design makes the control logic user-customisable, allowing operators to choose between the new latching mechanism or revert to the traditional continuous-signal control logic according to their operational requirements.
 
-![Latching PCB](latchingpcb_pcb.png)
+![Latching PCB](latching_pcb.png)
 ##### Figure 20: Latching PCB Schematic and Layout
 
-![Relay_Latching_PCB Combination ](Integration.png)
+![Relay_Latching_PCB Combination ](integration.png)
 ##### Figure 21: 3D model of the MOSFET Relay Board with Latching PCB Integrated
 
 ---
@@ -280,18 +280,12 @@ As a result, the MOSFET gate driver IC TPS4800 from Texas Instruments is selecte
 | **Key Features**                | **Specifications**                                                                 |
 | :------------------------------ | :-------------------------------------------------------------------------------- |
 | Operating Voltage               | 8V to 60V DC                                                                      |
-| Maximum Continuous Current      | 30A                                                                               |
 | Overvoltage Protection Threshold | Adjustable between 10V to 60V DC                                                  |
 | Undervoltage Protection Threshold | Adjustable between 6V to 54V DC                                                   |
 | Overcurrent Protection Threshold | Adjustable between 5A to 50A                                                      |
 | Overcurrent Protection Response Time | <10ms                                                                          |
 | Short-Circuit Protection Response Time | <1Âµs                                                                           |
 ##### Table 2: Key Features of TPS4800 MOSFET Gate Driver IC
-
-![Using resistors and capacitors to configure Protection Settings](protection.png)
-##### Figure 37: Configuring TPS4800 Protection Parameters
-
-Besides the gate driver IC, the IPTC014N10NM5 MOSFET was chosen as it has a top side cooling package. This allows the use of thermal pads to conduct the heat from the MOSFET to the top of the battery hull [6].
 
 ---
 
@@ -341,7 +335,7 @@ Several key safety features were configured and tested:
 
 ## 11. Future Project Timeline 
 
-The following timeline outlines the proposed development plan for holiday time and the next semester. Key milestones include hardware revisions, Subsystem integration and testing phases to ensure continued reliability and performance enhancements.
+The following timeline outlines the proposed development plan for holiday time and the next semester. Key milestones include hardware revisions, Subsystem integration and on-boat testing phases to ensure continued reliability and performance enhancements.
 
 ![Future Project Timeline](futuretimeline.png)
 ##### Figure 53: Future Project Timeline
