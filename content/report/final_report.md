@@ -371,12 +371,12 @@ The following timeline outlines the proposed development plan for holiday time a
 ##### Key Features of TPS4800 MOSFET Gate Driver IC
 
 ## Appendix B: MOSFET and Latch PCB Schematics
-+ [MOSFET PCB Schematics]
-+ [Latch PCB Schematics]
++ [MOSFET PCB Schematics](mosfetschem.pdf)
++ [Latch PCB Schematics](latchschem.png)
 
 ## Appendix C: MOSFET and Latch PCB Layouts
-+ [MOSFET PCB Layouts] 
-+ [Latch PCB Layouts]
++ [MOSFET PCB Layouts](mosfetlayout.pdf)
++ [Latch PCB Layouts](latchlayout.pdf)
 
 ## Appendix D: Latch PCB Simulation
 ![Latching PCB Simulation](latchsim.png)  
