@@ -27,13 +27,13 @@ I also wish to acknowledge the support provided by the NUS College of Engineerin
 | :---------: | :---------------------------: |
 |   **USV**   |    Unmanned Surface Vessel    |
 |   **PDS**   |    Power Distribution System     |
+|   **PCB**   |     Printed Circuit Board     |
 |   **PLC**   |    Programmable Logic Controller   |
 |   **MCU**   |    Microcontroller   |
 |   **DC**   |    Direct Current    |
 |   **MTBF**   |    Mean Time Before Failure    |
 |   **MTTR**   |    Mean Time To Repair    |
 |   **CAN**   |    Controller Area Network    |
-|   **PCB**   |     Printed Circuit Board     |
 |   **PG**   |    Power Good     |
 
 </div>
@@ -44,7 +44,7 @@ I also wish to acknowledge the support provided by the NUS College of Engineerin
 
 This project focuses on developing a compact Power Distribution System (PDS) for ST Engineering's Unmanned Surface Vehicle. The PDS is a critical component of the vehicle’s electrical system, designed to distribute and control the power to different parts of the vehicle. 
 
-The new PDS developed mainly consists of a compact and robust power switching PCB solution with a backplane system for the ease of modularity and integration. The system also includes key features such as power line protection and accurate power status monitoring and reporting, to ensure its functionality even after a power line fault has occured.
+The new PDS developed mainly consists of a compact and robust power switching printed circuit board (PCB) solution with a backplane system for the ease of modularity and integration. The system also includes key features such as power line protection and accurate power status monitoring and reporting, to ensure its functionality even after a power line fault has occured.
 
 ---
 
@@ -93,7 +93,7 @@ While initial faults may not be mission-critical, they can propagate into second
 
 In this project, I had the opportunity to work directly with ST Engineering’s USVs and examine their PDS in a real operational setting.
 
-![Discharge Voltage Curve](voltagecapacity.webp)
+![ST Engineering USV PDS Architecture](stpds.png)
 ##### Figure 7: ST Engineering's USV Current PDS Architecture
 
 The current system conists primarily of commercial fuses and relays, coordinated through a dedicated power-system PLC. Power channel switching is controlled by continuous digital signals from the PLC, which govern when individual subsystems are energised or disconnected. This switching capability enables the sequential start-up of the main compute stacks during vessel initialization, as well as the selective shutdown of non-essential devices to improve power efficiency during missions.
@@ -103,13 +103,22 @@ Two main problems exists in the current system:
 **Size Constraint**:
 Currently, the PDS is housed within the equipment racks of the USV. However, due to the bulky nature of the conventional power distribution components, the system occupies a significant portion of the rack's internal volume. This oversizing poses challenges during integration, as it limits the available space for other essential components and makes maintenance tasks more cumbersome. The oversized system also complicates cable management within the rack, leading to potential issues with accessibility.
 
+Here are the dimension statistics of the current PDS used in ST Engineering USV and a estimation of the equipment rack space it occupies:
+
+| **PDS Sections** | **Length (mm)** | **Width (mm)** | **Height (mm)** | **Equipment Rack Space Occupied (%)** |
+| :----------: | :------------: | :----------: | :----------: | :----------: |
+|   Auxilary Power Box      |      750       |     570      |    150      |    10     |
+|   Main Power Distribution Unit     |      890       |     1200      |    266      |   15     |
+##### Table 1: Current PDS Size Statistics
+
 What is more, ST Engineering is designing USVs for 3 different sizes with the following dimension statistics:
+
 | **USV Model Name** | **Length (m)** | **Width (m)** |
 | :----------: | :------------: | :----------: |
 |   Goldfish      |      10       |     2.5      |
 |   Bellagio     |      15        |     4     |
 |   Puma         |      17.5        |     5.2      |
-##### Table 1: ST Engineering's USV Size Statistics
+##### Table 2: ST Engineering's USV Size Statistics
 
 With the current PDS being already oversized in medium size vehicle Puma and Bellagio, it is foreseeable that the system will be even more ill-suited for the smaller USV models like Goldfish. Therefore, there is a pressing need to redesign the PDS to be more compact and efficient, ensuring it can fit within the constraints of all USV models while still delivering reliable performance.
 
@@ -119,12 +128,12 @@ The current PDS lacks both redundancy and fault-tolerance, making it highly susc
 For instance, if the PLC of PDS fails, the consequences can be severe. Because the system’s control logic requires each power channel to remain continuously energised by a digital HIGH signal from the PLC, the loss of this signal immediately de-energises all PLC-controlled relays. This results in a complete shutdown of all subsystems powered through these channels. Such a failure mode presents a significant operational risk to the USV and may even lead to the total loss of the vessel while at sea. 
 
 **Lack of power status indications**:
-The current PDS lacks adequate power status monitoring and reporting capabilities. This deficiency makes it challenging to assess the health and performance of the power distribution system in real-time. Without proper monitoring, it becomes difficult to identify potential issues before they escalate into critical failures, leading to reduce in mission success rate.
+ST Engineering’s USVs currently operate under the principle that if a fault is not classified as critical, the vehicle will continue its mission. However, the existing PDS lacks adequate power-status monitoring and reporting capabilities. This limitation makes it difficult to assess the health and performance of the power distribution system in real time and to detect early signs of degradation or malfunction. As a result, non-critical issues may go unnoticed and remain unisolated from the main power network, allowing them to propagate into critical failures that ultimately reduce the overall mission success rate.
 
 ---
 
 ## 4. Design Statement
-Targeting the above identified problems, the design statement of this project are derived and summarised as:
+Targeting the above identified problems, the design statement of this project are summarised as:
 
 <div align="center">
     <b>
@@ -135,25 +144,30 @@ Targeting the above identified problems, the design statement of this project ar
 ## 4. Value Proposition
 
 ### 4.1 Stakeholders
-The first group of stakeholders of this project are the members of the ST Engineering USV Team, including boat designers, manufacturing engineers, and testing engineers who will directly interact with—and benefit from—the improved PDS. The broader ST Engineering Unmanned & Integrated Systems Department will also gain from this work, as the technologies, design approaches, and methodologies developed here can be applied across other USV platforms within the department.
+The first group of stakeholders in this project are the members of the ST Engineering USV Team, who will directly involve in the design, integration, and testing of the new USV. Their primary task is to ensure that the new platform meets all technical and operational requirements set by users.
 
-The second group of stakeholders are the end-users of the USVs, such as maritime security agencies, port authorities, and research institutions. These users will benefit from the improved reliability, robustness, and performance enabled by the upgraded PDS. A higher mission success rate directly enhances operational effectiveness while also reducing the additional costs associated with maintenance, fault recovery, and unplanned downtime.
+The second group of stakeholders are the end-users of the USVs, such as maritime security agencies, port authorities, and research institutions. These organisations deploy the vehicles for operational tasks and are also responsible for performing maintenance and repair activities when faults occur.
 
 ### 4.2 Benefits
 The new PDS offers several key benefits to its stakeholders::
 
 | **Benefits**                                      |                  **Rationale**                   |
 | :------------------------------------- | :----------------------------------------------: |
-| Compact Design                        | Reduces the spatial footprint of the PDS, allowing for more efficient use of space within the USV's equipment racks; Increase design flexibility and scalarbility for USVs with different size requirements |
-| Enhanced Fault Tolerance              | Improves the reliability of the USV by incorporating features that mitigate the impact of component failures, thereby increasing the overall mission success rate. |
-| Advanced Power Monitoring and Reporting | Provides real-time insights into the power system's status, enabling proactive maintenance and informed decision-making during operations. |
+| Compact Design                        |  **To ST Engineering USV Team** - A smaller PDS footprint allows more efficient use of space within the USV’s equipment racks. This increases design flexibility and scalability across different USV sizes and configurations.  |
+| Enhanced Fault Tolerance              | **To USV Users** - A more robust PDS reduces the impact of component failures, improving overall system reliability and increasing mission success rates. |
+| Advanced Power Monitoring and Reporting | **To USV Users** - Real-time power-status insights support early detection of abnormal conditions. This enables proactive maintenance, prevents minor issues from escalating into critical faults, and reduces repair costs and downtime. |
 
 ---
 
 ## 5. Design Requirments
 
-### 5.1 Technical Specifications
-To begin, the new PDS must match or exceed the technical performance of the existing system. Based on an evaluation of the current PDS capabilities, the following technical requirements were identified:
+### 5.1 Design Standards
+To ensure the new PDS meets industry best practices and regulatory requirements, the design standards were adopted:
+*IEEE Recommended Practice for the Design and Application of Power Electronics in Electrical Power Systems*
+(IEEE Std 1709-2010) [4]. This standard provides comprehensive guidelines for designing power electronic systems in maritime applications, covering aspects such as electrical safety, electromagnetic compatibility, thermal management, and environmental considerations.
+
+### 5.2 Technical Specifications
+To begin, the new PDS must match or exceed the technical performance of the existing system. Based on an evaluation of the current PDS capabilities as well as suggestions given by the ST USV engineering team, the following technical requirements were identified:
 
 | **Technical Capabilities** | **Specifications**                                                                |
 | :------------------------- | :-------------------------------------------------------------------------------- |
@@ -166,32 +180,34 @@ To begin, the new PDS must match or exceed the technical performance of the exis
 | Power System Monitoring                  | Current, Internal Temperature, Power Good(PG), Fault Status |
 | Communication Protocol     | Digital/Analog/CAN 2.0      |
 
-##### Table 7: Core Functional Requirements for the New PDS
+##### Table 7: Core Technical Requirements for the New PDS
 
-The 30A current specification is based on the maximum continuous current draw possible from one channel of the current ST PDS (20A). This provides sufficient headroom. CAN Bus is used for communication between backplane and PLC, whose design will be explained further in the sections below.
+The 30 A current specification is based on the maximum continuous current draw of the existing PDS—20 A, as measured during the operation of the searchlight according to its datasheet—augmented with a 50% design margin. This additional margin ensures sufficient headroom to handle transient overloads without compromising system reliability.
 
-### 5.2 Functional Sub-goals
+A power consumption chart was also drawn up to verify that the above technical specifications are able to supply enough power which will be attached in the Appendix section.
+
+
+### 5.3 Functional Sub-goals
 In addition to meeting the technical specifications, the new PDS must achieve three key functionalities to satisfy user requirements. Each of these is described in detail in the corresponding section below.
 
 | **Key Functionalities**                          |                  **Section Number**                   |
 | :------------------------------------- | :---------------------------------------------------: |
-| Compact & robust power switching solutions for each power channel | [Section 7](#7-Power-Switching) |
-| Implement power line protection features for transient/fault situation |   [Section 8](#8-Power-Protection)    |
-| Monitor and report power status and power(current) consumptions in each channel|       [Section 6](#6-Power-Monitoring)       |
-##### Table 5: Key System Functionalities and Corresponding Report Section
+| Compact and robust power-switching solutions for each channel | [Section 7](#7-Power-Switching) |
+| Integrated power-line protection for transient and fault conditions |   [Section 8](#8-Power-Protection)    |
+| Real-time monitoring and reporting of power status and current consumption for each channel |       [Section 6](#6-Power-Monitoring)       |
+##### Table 5: PDS System Functionalities and the Corresponding Report Sections
 
-### 5.3 Environmental Requirments
+### 5.4 Environmental Requirments
 
-Since this product is intended for use in maritime environments, relevant industrial standards must be adhered to. The design requirements listed below are derived from the _IEEE Recommended Practice for the Design and Application of Power Electronics in Electrical Power Systems_ and are the most applicable to this project.
+Since this product is intended for use in maritime environments, the following environmental parameters were selected from the design standrad mentioned above. These parameters represent the most relevant constraints for this project.
 
+| **Parameters**     | **Constraint**                         |
+|------------------------|-----------------------------------------|
+| Ambient Temperature    | ≤ 50°C                                  |
+| Vibration              | ≥ 22 Hz                                 |
+| Humidity               | Approximately 80%                       |
 
-| **Characteristics**  | **Constraints**                                                                        |
-| :------------------- | :------------------------------------------------------------------------------------- |
-| Ambient Tempreature           | ≤50°C |
-| Vibration |          not less than 22Hz          |
-| Humidity              | around 80% |
-
-##### Table 6: Design Constraints for Backward Compatibility
+##### Table 6: Environmental Design Constraints for Backward Compatibility
 
 ---  
 
@@ -199,7 +215,7 @@ Since this product is intended for use in maritime environments, relevant indust
 
 This section presents the summarised architectures to provide a high-level overview of the systems. Subsequent sections will explain how the design choices support the overall project goals.
 
-![Summarised Power Architecture of PMB](powerarch.png)
+![Summarised Power Architecture of PDS](powerarch.png)
 ##### Figure 11: Summarised System Architecture of the developed PDS
 
 ---
@@ -230,10 +246,10 @@ As mentioned in [Section](#232-limited-capabilities-of-battery-fuel-gauge), the 
 #### 6.2.1 Comparison Between New and Old Control Logic
 The diagram below illustrates the current control logic flow and the proposed new control logic. 
 
-![TI's Forum Search Result](forum.png)
+![Current Control Logic](CCL.png)
 ##### Figure 18: Current Control Logic in the PDS
 
-![TI's YouTube Playlist on Battery Management](youtube.png)
+![New Control Logic](NCL.png)
 ##### Figure 19: New Control Logic proposed
 
 The key difference between the two control logics lies in how the power channel’s ON state is maintained. In the current system, the ON state is sustained by a continuous digital HIGH signal from the PLC. In contrast, the new control logic employs a latching mechanism: a momentary HIGH signal from the MCU toggles the power channel ON at startup, and the channel is only turned OFF when a subsequent continuous HIGH signal is applied. This design ensures that once a power channel is turned ON, it remains ON even if the MCU signal is lost. This significantly enhances fault tolerance, as transient or permanant PLC/MCU failures will not inadvertently disrupt power delivery to critical subsystems during missions.
@@ -276,11 +292,6 @@ As a result, the MOSFET gate driver IC TPS4800 from Texas Instruments is selecte
 ##### Figure 37: Configuring TPS4800 Protection Parameters
 
 Besides the gate driver IC, the IPTC014N10NM5 MOSFET was chosen as it has a top side cooling package. This allows the use of thermal pads to conduct the heat from the MOSFET to the top of the battery hull [6].
-
-To ensure reliable power supply, a power consumption chart was drawn up to verify that the selected voltage regulators are able to supply enough power.
-
-![PMB's Power Consumption Chart](pmbpowerconsume.png)
-##### Figure 43: ST USV Components Power Consumption Chart
 
 ---
 
