@@ -128,8 +128,8 @@ The current PDS lacks both redundancy and fault-tolerance, making it highly susc
 
 For instance, if the PLC of PDS fails, the consequences can be severe. Because the system’s control logic requires each power channel to remain continuously energised by a digital HIGH signal from the PLC, the loss of this signal immediately de-energises all PLC-controlled relays. This results in a complete shutdown of all subsystems powered through these channels. Such a failure mode presents a significant operational risk to the USV and may even lead to the total loss of the vessel while at sea. 
 
-**Lack of power status indications**:
-ST Engineering’s USVs are designed to continue their missions as long as detected faults are not classified as critical. However, the current PDS provides limited visibility into power status, offering neither comprehensive monitoring nor timely reporting. Without real-time insight into the health of the power distribution network, early signs of degradation or minor malfunctions can easily be missed. These unaddressed non-critical issues may remain tied to the main power bus and gradually escalate, eventually developing into critical failures that undermine overall mission reliability and reduce the likelihood of mission success.
+**Lack of power line monitoring**:
+ST Engineering’s USVs are designed to continue their missions as long as detected faults are not fatal for operation. However, the current PDS provides limited visibility into power status, offering neither comprehensive monitoring nor timely reporting. Without real-time insight into the health of the power distribution network, early signs of degradation or minor malfunctions can easily be missed. These unaddressed non-critical issues may remain tied to the main power bus and gradually escalate, eventually developing into critical failures that undermine overall mission reliability and reduce the likelihood of mission success.
 
 ---
 
@@ -165,9 +165,12 @@ The new PDS offers several key benefits to its stakeholders::
 ## 5. Design Requirments
 
 ### 5.1 Design Standards
-To ensure the new PDS meets industry best practices and regulatory requirements, the following design standards were adopted:
+To ensure the new PDS meets industry best practices and regulatory requirements, the following design standards were adopted in the development process:
+
 *IEEE Recommended Practice for the Design and Application of Power Electronics in Electrical Power Systems*
-(IEEE Std 1709-2010) [4]. This standard provides comprehensive guidelines for designing power electronic systems in maritime applications, covering aspects such as electrical safety, electromagnetic compatibility, thermal management, and environmental considerations.
+(IEEE Std 1709-2010) [4]. 
+
+This standard provides comprehensive guidelines for designing power electronic systems in maritime applications, covering aspects such as electrical safety, electromagnetic compatibility, thermal management, and environmental considerations.
 
 ### 5.2 Technical Specifications
 To begin, the new PDS must match or exceed the technical performance of the existing system. Based on an evaluation of the current PDS capabilities as well as suggestions given by the ST USV engineering team, the following technical requirements were identified:
@@ -178,16 +181,18 @@ To begin, the new PDS must match or exceed the technical performance of the exis
 | Application Voltage             | 12V and 24V DC                                                               |
 | Maximum Continuous Current        | 20A                                                                               |
 | Maximum Transient Current     | 30A                                                                            |
-| Fault Protection     | Overvoltage/Undervoltage/Overcurrent/Short Circuit                                                                            |
+| Fault Protection     | Overvoltage/Undervoltage/Overcurrent                                                                            |
 | Fault Reponse Time     |  <1ms                                                                          |                                                                           |
 | Power System Monitoring                  | Current, Internal Temperature, Power Good(PG), Fault Status |
 | Communication Protocol     | Digital/Analog/CAN 2.0      |
 
 ##### Table 4: Core Technical Requirements for the New PDS
 
-The 30 A transient current specification is based on the maximum transient current of the existing PDS — 24 A, drawn during the operation of the searchlight according to its datasheet — augmented with a 50% design margin. This additional margin ensures sufficient headroom to handle transient overloads without compromising system reliability. The 1 ms fault response time requirement on the other hand is derived from the existing PDS’s relay G3NA-210B-UTU DC5-24 opeartion time capability(1/2 cycle of load power source + 1 ms max.)
+The 30 A transient current limit is derived from the maximum expected per-channel transient DC load — 24 A as specified in the searchlight datasheet — with an additional 50% design margin to provide sufficient headroom for short-duration overloads. A power-consumption chart was also prepared to verify that these power-level specifications are adequate for all required loads; this chart is included in the Appendix.
 
-A power consumption chart was also drawn up to verify that the above technical specifications are able to supply enough power which is attached in the Appendix section.
+The fault-response requirement is selected to match the operating characteristics of the G3NA-210B-UTU DC5–24 relay used in the current PDS, which has a specified operation time of up to 1 ms.
+
+The rationale for the remaining technical specifications will be presented in their respective sections below.
 
 
 ### 5.3 Functional Sub-goals
@@ -245,15 +250,15 @@ The below table summarises the key advantages and disadvntages between the two a
 #### 6.1.2 Targeting limitations in MCU + MOSFET PCB System
 While the MCU + MOSFET PCB system offers significant advantages in achieving size reduction, it also presents the above mentioned limitations that need to be addressed to ensure successful implementation. As such, the following design improvements were made in this project to mitigate these limitations:
 
-* **Customisability and Scalability:** To address the challenges of customisability and scalability, a backplane system architecture was adopted where MCU + MOSFET PCBs will be in the form of cards and only connectors and copper traces exists on the base backplane. This modular design allows for easy replacement and upgrading of individual PCB modules, enabling users to tailor the PDS to their specific needs without requiring a complete redesign.
+* **Customisability and Scalability:** To address this challenge, a backplane system architecture was adopted, in which the MCU and MOSFET PCBs are implemented as modular plug-in cards, while the base backplane contains only the connectors and copper traces. This modular approach enables easy replacement and upgrading of individual PCB modules, allowing users to customise and scale the PDS to their specific requirements without undertaking a full redesign.
 
-* **Reliability and Durability:** To improve the reliability and durability, PLC will still be used as the primary source of switching while MCU will be used as a redundancy and for monitoring data collections. This hybrid approach leverages the strengths of both PLCs and MCUs, ensuring robust performance while maintaining the compactness of the PCB design.
+* **Reliability and Durability:** To enhance system reliability and durability, the PLC will not be removed from the new PDS; instead, it will remain the primary switching mechanism, while the MCU functions as a redundant controller and handles monitoring and data collection. This hybrid approach leverages the strengths of both PLCs and MCUs, ensuring robust and fail-resistant operation without compromising the compactness of the PCB design.
 
 ![New Switching Signal Flow](SSF.png)
-##### Figure 7: Switching Signal Flow in the PDS
+##### Figure 7: Switching Signal Flow in the new PDS
 
 ### 6.2 Customisable Power Switching Logic
-As mentioned in [Section 3.2](#32-st-engineering-usv-pds), the current control logic of the ST Engineering USV PDS relies on a continuous signal from the PLC, which creates a risk of power-line disconnection in the event of a PLC failure or loose connection. In this project, I would like to introduce a new user-customisable control logic using a latching PCB design to mitigate this risk.
+As mentioned in [Section 3.2](#32-st-engineering-usv-pds), the current control logic of the ST Engineering USV PDS relies on a continuous signal from the PLC, which creates a risk of complete power-line disconnection in the event of a PLC failure or loose connection. In this project, I would like to introduce a new user-customisable control logic using a ON signal latching design to mitigate this risk.
 
 #### 6.2.1 Comparison Between New and Old Control Logic
 The diagrams below illustrate the current control logic flow and the proposed new control logic. 
@@ -285,12 +290,14 @@ Power protection is crucial in ensuring the safety and reliability of the PDS. C
 
 ### 7.1 Protection Requirements
 The types of faults that the new PDS should be able to protect against are identified from the design standards outlined in [Section 5.1](#51-design-standards)
-. These include overvoltage, undervoltage, overcurrent, and short-circuit faults.
+. These include overvoltage, undervoltage and overcurrent faults.
 
 #### 7.2 Choice of MOSFET Gate Driver IC - TPS4800
 **MOSFET gate driver** is an electronic device designed to efficiently control the gate terminal of a MOSFET, enabling rapid switching between its ON and OFF states. 
 
 In this project, the MOSFET gate driver IC TPS4800 from Texas Instruments is selected among all other MOSFET gate driver IC for its ability to achieve all the above protection features while satisfying the technical specifications mentioned in [Section 5.1](#51-technical-specifications). The key features of the TPS4800 are summarised in the appendix section.
+
+Besides, during the design of the MOSFET PCB, serveral considerations were taken to meet the technical and protection specifications. These considerations are mentioned in the appendix section as well. 
 
 ---
 
@@ -310,30 +317,32 @@ Accurate power(current) consumption monitoring is essential in this project to i
 
 ### 8.4 Fault Analysis Logics
 
-The diagram below illustrates the fault analysis logic flow implemented in the new PDS. With this logic, the system can differentiate between critical and non-critical faults for the vehicle's operation and respond accordingly.
+The diagram below illustrates a possible fault-analysis logic flow implemented in the new PDS, making use of its power-monitoring features. With this logic, the system can distinguish between critical and non-critical faults relevant to the vehicle’s operation and respond appropriately.
 
 ![Fault Analysis Logic Flow](faultlogic.png)
 ##### Figure 12: Fault Analysis Logic Flow
 
 ### 8.5 Overall Data Collection and Reporting
 
-#### 8.5.1 Digital/Analog from MOSFET PCBs to MCU
-The MOSFET PCB with all the above mentioned devices will output a combination of digital and analog signals to communicate power status and consumption data to MCU. The digital signals include the Power Good (PG) status and fault status, while the analog signals represent the current consumption data.
+The MOSFET PCB, along with the devices described above, outputs a combination of digital and analog signals to relay power-status and consumption data to the MCU. From the MCU, communication with the USV’s power PLC is carried out via the Controller Area Network (CAN) bus. CAN is chosen for its robustness, reliability, and suitability for high-speed data transmission in noisy environments, making it ideal for maritime applications. This approach also reduces wiring complexity between the PDS and the USV’s main computer stack, as only two wires are required for CAN communication.
 
-#### 8.5.2 CAN Bus from MCU to PLC 
-The Controller Area Network (CAN) bus is employed for communication between the MCU on the Backplane and the power PLC of the USV. CAN bus is chosen for its robustness, reliability, and ability to handle high-speed data transmission in noisy environments, making it ideal for maritime applications. This also reduce the wiring complexity between the PDS and the USV main computer stack as only two wires are required for CAN communication.
+![Power Data Flow](PDF.png)
+##### Figure 13: Power Data Flow in the new PDS
 
 ## 9. Prototyping and Testing 
 
-Prototypes developed before the submission of this report are provided in the appendix section below.
+Below is a diagram illustrating the planned prototyping and testing stages for this PDS.
+
+![Prototyping and Testing Stages](PTS.png)
+##### Figure 14: Prototyping and Testing Stages
 
 Testing will first be carries out with the MOSFET PCB standalone using power supply and a electronic load tester. Here are some of the features that will be tested and recorded:
 
 ![Continous Current Test](CCT.png)
-##### Figure 13: Continous Current Test
+##### Figure 15: Continous Current Test
 
 ![Fault Protection Test](FPT.png)
-##### Figure 14: Fault Protection Test 
+##### Figure 16: Fault Protection Test 
 
 After the standalone testing, the MOSFET PCB will replace one of the existing relay modules in the current ST Engineering USV PDS for overnight integration testing. 
 
@@ -341,10 +350,10 @@ After the standalone testing, the MOSFET PCB will replace one of the existing re
 
 ## 11. Future Project Timeline 
 
-The following timeline outlines the proposed development plan for holiday time and the next semester. Key milestones include hardware revisions, Subsystem integration and on-boat testing phases to ensure continued reliability and performance enhancements.
+The following timeline outlines the proposed development plan for the remaining duration of this project. Key milestones include separate testing of the card and backplane, subsystem integration, and the final on-boat testing phase. Due to the card-plus-backplane design adopted in this project, two parallel tracks are depicted: one for the card PCBs (MOSFET + Latch) development and another for the backplane development, ultimately culminating in their integration.
 
 ![Future Project Timeline](futuretimeline.png)
-##### Figure 13: Future Project Timeline
+##### Figure 17: Future Project Timeline
 
 ---
 
@@ -358,32 +367,63 @@ The following timeline outlines the proposed development plan for holiday time a
 6. Texas Instruments, "TPS4800-Q1 High-Side and Low-Side N-Channel MOSFET Driver with Integrated Protection Features," [Online]. Available: https://www.ti.com/product/TPS4800-Q1
 7. Texas Instruments, "TPS3711 Voltage Supervisor with Power-Good Output," [Online]. Available: https://www.ti.com/product/TPS3711
 8. Texas Instruments, "AMC1301 Isolated Delta-Sigma Modulator for Current Sensing," [Online]. Available: https://www.ti.com/product/AMC1301
+9. IPC-2152, "Standard for Determining Current-Carrying Capacity in Printed Board Design," pp.1-60, 2017.
 
 ---
 
 ## Appendix A: TPS4800 Key Features
 | **Key Features**                | **Specifications**                                                                 |
 | :------------------------------ | :-------------------------------------------------------------------------------- |
-| Operating Voltage               | 8V to 60V DC                                                                      |
+| Operating Voltage               | 3.5V to 95V DC                                                                      |
 | Overvoltage Protection Threshold | Adjustable between 10V to 60V DC                                                  |
 | Undervoltage Protection Threshold | Adjustable between 6V to 54V DC                                                   |
 | Overcurrent Protection Threshold | Adjustable between 5A to 50A                                                      |
-| Overcurrent Protection Response Time | <10ms (adjustable)                                                                          |
-| Short-Circuit Protection Response Time | <1µs                                                                           |
+| Overcurrent Protection Response Time | <1ms (adjustable)                                                                          |
+
+
 ##### Key Features of TPS4800 MOSFET Gate Driver IC
 
-## Appendix B: MOSFET and Latch PCB Schematics
+## Appendix B: Design MOSFET PCB to Meet Technical and Protection Specifications
+Several design considerations were taken during the MOSFET PCB design to ensure that the technical specifications and protection requirements mentioned in [Section 5.2](#52-technical-specifications) and [Section 7.1](#71-protection-requirements) are met:
+
+**Current Tolerance:** To handle the maximum continuous current of 20 A and transient current of 30 A, the MOSFET PCB adopts a 4-layer design, with the middle layers dedicated entirely to power and ground. Additionally, the PCB traces are designed with sufficient width and thickness to minimize resistance and heat generation (Calculation done based on design standrad _IPC-2152_). Thermal vias and copper pours are also incorporated to improve heat dissipation.
+
+![MOSFET PCB Dedicated Power Plane](Players.png)
+![MOSFET PCB Dedicated Ground Plane](Glayers.png)  
+##### Dedicated Power and Ground Plane in the MOSFET PCB
+
+![MOSFET PCB Trace Width Calculation](tracecalc.png)  
+##### Trace Width and Plane Area Calculation for the MOSFET PCB using online IPC-2152 Trace Width Calculator
+
+![MOSFET PCB Thermal Vias and Copper pours](thermalvias.png)
+##### Thermal Vias and Copper Pours in the MOSFET PCB
+
+**Fault Protection Thresholds:** The TPS4800 gate driver IC allows for adjustable fault protection thresholds. Below is a table showing the overvoltage, undervoltage, and overcurrent protection thresholds set for the the most recent prototype, according to the specifications outlined. Resistor dividers and charging capacitors are used to configure these thresholds accurately. 
+
+| **Protection Type**     | **Threshold Setting**                         |
+|------------------------|----------------------------------------------| 
+| Overvoltage Protection    | 30V DC                                       |
+| Undervoltage Protection   | 10V DC                                       |
+| Overcurrent Protection    | 30A                                          |
+| Fault Response Time        |  50μs                                       |
+##### Table 8: Protection Threshold Settings on the MOSFET PCB
+
+![Protection Threshold Configuration Circuit](protectioncircuit.png)
+##### Example of the Protection Threshold Configuration Circuit in the MOSFET PCB
+
+
+## Appendix C: MOSFET and Latch PCB Schematics
 + [MOSFET PCB Schematics](mosfetschem.pdf)
 + [Latch PCB Schematics](latchschem.png)
 
-## Appendix C: MOSFET and Latch PCB Layouts
+## Appendix D: MOSFET and Latch PCB Layouts
 + [MOSFET PCB Layouts](mosfetlayout.pdf)
 + [Latch PCB Layouts](latchlayout.pdf)
 
-## Appendix D: Latch PCB Simulation
+## Appendix E: Latch PCB Simulation
 ![Latching PCB Simulation](latchsim.png)  
 ##### Latch PCB Simulation Results
 
-## Appendix D: Power Consumption Chart
+## Appendix F: Power Consumption Chart
 ![Power Consumption Chart](powerchart.png)  
 ##### Power Consumption Chart of the USV DC Systems
