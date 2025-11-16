@@ -129,7 +129,7 @@ The current PDS lacks both redundancy and fault-tolerance, making it highly susc
 For instance, if the PLC of PDS fails, the consequences can be severe. Because the system’s control logic requires each power channel to remain continuously energised by a digital HIGH signal from the PLC, the loss of this signal immediately de-energises all PLC-controlled relays. This results in a complete shutdown of all subsystems powered through these channels. Such a failure mode presents a significant operational risk to the USV and may even lead to the total loss of the vessel while at sea. 
 
 **Lack of power status indications**:
-ST Engineering’s USVs currently operate under the principle that if a fault is not classified as critical, the vehicle will continue its mission. However, the existing PDS lacks adequate power-status monitoring and reporting capabilities. This limitation makes it difficult to assess the health and performance of the power distribution system in real time and to detect early signs of degradation or malfunction. As a result, non-critical issues may go unnoticed and remain unisolated from the main power network, allowing them to propagate into critical failures that ultimately reduce the overall mission success rate.
+ST Engineering’s USVs are designed to continue their missions as long as detected faults are not classified as critical. However, the current PDS provides limited visibility into power status, offering neither comprehensive monitoring nor timely reporting. Without real-time insight into the health of the power distribution network, early signs of degradation or minor malfunctions can easily be missed. These unaddressed non-critical issues may remain tied to the main power bus and gradually escalate, eventually developing into critical failures that undermine overall mission reliability and reduce the likelihood of mission success.
 
 ---
 
@@ -145,7 +145,7 @@ Targeting the above identified problems, the design statement of this project ar
 ## 4. Value Proposition
 
 ### 4.1 Stakeholders
-The first group of stakeholders in this project are the members of the ST Engineering USV Team, who will directly involve in the design, integration, and testing of the new USV. Their primary task is to ensure that the new platform meets all technical and operational requirements set by users.
+The first group of stakeholders in this project are the members of the ST Engineering USV Team, who will directly involve in the design, integration, and testing of the USV. Their primary task is to ensure that the platform meets all technical and operational requirements set by users.
 
 The second group of stakeholders are the end-users of the USVs, such as maritime security agencies, port authorities, and research institutions. These organisations deploy the vehicles for operational tasks and are also responsible for performing maintenance and repair activities when faults occur.
 
@@ -179,15 +179,15 @@ To begin, the new PDS must match or exceed the technical performance of the exis
 | Maximum Continuous Current        | 20A                                                                               |
 | Maximum Transient Current     | 30A                                                                            |
 | Fault Protection     | Overvoltage/Undervoltage/Overcurrent/Short Circuit                                                                            |
-| Fault Reponse Time     |  <10ms                                                                          |                                                                           |
+| Fault Reponse Time     |  <1ms                                                                          |                                                                           |
 | Power System Monitoring                  | Current, Internal Temperature, Power Good(PG), Fault Status |
 | Communication Protocol     | Digital/Analog/CAN 2.0      |
 
 ##### Table 4: Core Technical Requirements for the New PDS
 
-The 30 A transient current specification is based on the maximum transient current of the existing PDS — 24 A, as measured during the operation of the searchlight according to its datasheet — augmented with a 50% design margin. This additional margin ensures sufficient headroom to handle transient overloads without compromising system reliability.
+The 30 A transient current specification is based on the maximum transient current of the existing PDS — 24 A, drawn during the operation of the searchlight according to its datasheet — augmented with a 50% design margin. This additional margin ensures sufficient headroom to handle transient overloads without compromising system reliability. The 1 ms fault response time requirement on the other hand is derived from the existing PDS’s relay G3NA-210B-UTU DC5-24 opeartion time capability(1/2 cycle of load power source + 1 ms max.)
 
-A power consumption chart was also drawn up to verify that the above technical specifications are able to supply enough power which will be attached in the Appendix section.
+A power consumption chart was also drawn up to verify that the above technical specifications are able to supply enough power which is attached in the Appendix section.
 
 
 ### 5.3 Functional Sub-goals
@@ -352,10 +352,12 @@ The following timeline outlines the proposed development plan for holiday time a
 
 1. Abraham Sachin, "Marine Electrical Distribution," 22 June 2018. [Online] Avaliable: teckhmarine.blogspot.com/2018/06/marine-electrical-distribution.html.
 2. ABB, "Unmanned Surface Vehicles/Vessel (USV) Reliable Power and Propulsion Architecture Characterization," 2020. [Online]. Available: https://new.abb.com/docs/librariesprovider15/gov/usv-abb-white-paper-20200830.pdf?sfvrsn=6369e809_2
-3. IEEE Std 1709-2010, "IEEE Recommended Practice for the Design and Application of Power Electronics in Electrical Power Systems," pp.1-50, 2010.
-4. Texas Instruments, "TPS4800-Q1 High-Side and Low-Side N-Channel MOSFET Driver with Integrated Protection Features," [Online]. Available: https://www.ti.com/product/TPS4800-Q1
-5. Texas Instruments, "TPS3711 Voltage Supervisor with Power-Good Output," [Online]. Available: https://www.ti.com/product/TPS3711
-6. Texas Instruments, "AMC1301 Isolated Delta-Sigma Modulator for Current Sensing," [Online]. Available: https://www.ti.com/product/AMC1301
+3. ST Engineering, "Unmanned Surface Vehicle (USV) Solutions," [Online]. Available: https://www.stengg.com/en/solutions/unmanned-surface-vehicle-usv-solutions.html
+4. IEEE Std 1709-2010, "IEEE Recommended Practice for the Design and Application of Power Electronics in Electrical Power Systems," pp.1-50, 2010.
+5. Omron, "G3NA-210B-UTU DC5-24 Solid State Relay Datasheet," [Online]. Available: https://www.ia.omron.com/product/item/7692/
+6. Texas Instruments, "TPS4800-Q1 High-Side and Low-Side N-Channel MOSFET Driver with Integrated Protection Features," [Online]. Available: https://www.ti.com/product/TPS4800-Q1
+7. Texas Instruments, "TPS3711 Voltage Supervisor with Power-Good Output," [Online]. Available: https://www.ti.com/product/TPS3711
+8. Texas Instruments, "AMC1301 Isolated Delta-Sigma Modulator for Current Sensing," [Online]. Available: https://www.ti.com/product/AMC1301
 
 ---
 
