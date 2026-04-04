@@ -10,15 +10,18 @@ taxonomies:
 
 menu:
     main:
-        - name: Report
-          url: report/
-          weight: 2 
+        - name: Interim Report
+          url: interim/
+          weight: 2
+        - name: Final Report
+          url: final/
+          weight: 3
         - name: Guides
           url: guides/
-          weight: 3
+          weight: 4
         - name: Configurations
           url: configurations/
-          weight: 4
+          weight: 5
 
 
 params:
@@ -37,7 +40,7 @@ params:
     ShowBreadCrumbs: false
     ShowCodeCopyButtons: true
     ShowAllPagesInArchive: false
-    MainSections: ["report", "guides", "configurations"]
+    MainSections: ["interim report", "final report", "guides", "configurations"]
     ShowToc: false
     disableScrollToTop: true
     TocOpen: true
@@ -52,8 +55,10 @@ params:
           imageWidth: 160
           imageHeight: 160
           buttons:
-            - name: Report
-              url: report/
+            - name: Interim Report
+              url: interim/
+            - name: Final Report
+              url: final/
             - name: Guides
               url: guides/
             - name: Configurations

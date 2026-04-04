@@ -1,7 +1,7 @@
 ---
 title: "Development of a Compact Power Distribution System (PDS) for Unmanned Surface Vehicle (USV)" 
-date: 2026-3-29
-lastmod: 2026-3-29
+date: 2026-03-29
+lastmod: 2026-03-29
 author: ["Chen Jiawei"]
 description: "This report documents the work done on developing a compact PDS for ST Engineering's Unmanned Surface Vehicle (USV)."
 summary: "This report documents the work done on developing a compact PDS for ST Engineering's Unmanned Surface Vehicle (USV)."

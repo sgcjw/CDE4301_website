@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/website/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=website/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Development of a Compact Power Distribution System (PDS) for Unmanned Surface Vehicle (USV) | USV Power Distribution System</title>
+<meta name="keywords" content="">
+<meta name="description" content="This report documents the work done on developing a compact PDS for ST Engineering&#39;s Unmanned Surface Vehicle (USV).">
+<meta name="author" content="Chen Jiawei">
+<link rel="canonical" href="http://localhost:1313/website/final/final_report/">
+<link crossorigin="anonymous" href="/website/assets/css/stylesheet.5e7937a63ee023e710c118bb90ce77a5642898bb8f3ab5adb8ca751deaa6714f.css" integrity="sha256-Xnk3pj7gI&#43;cQwRi7kM53pWQomLuPOrWtuMp1HeqmcU8=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/website/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/website/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/website/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/website/apple-touch-icon.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/website/final/final_report/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript><meta property="og:title" content="Development of a Compact Power Distribution System (PDS) for Unmanned Surface Vehicle (USV)" />
+<meta property="og:description" content="This report documents the work done on developing a compact PDS for ST Engineering&#39;s Unmanned Surface Vehicle (USV)." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/website/final/final_report/" /><meta property="article:section" content="final" />
+<meta property="article:published_time" content="2026-03-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-03-29T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Development of a Compact Power Distribution System (PDS) for Unmanned Surface Vehicle (USV)"/>
+<meta name="twitter:description" content="This report documents the work done on developing a compact PDS for ST Engineering&#39;s Unmanned Surface Vehicle (USV)."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Final Report",
+      "item": "http://localhost:1313/website/final/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Development of a Compact Power Distribution System (PDS) for Unmanned Surface Vehicle (USV)",
+      "item": "http://localhost:1313/website/final/final_report/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Development of a Compact Power Distribution System (PDS) for Unmanned Surface Vehicle (USV)",
+  "name": "Development of a Compact Power Distribution System (PDS) for Unmanned Surface Vehicle (USV)",
+  "description": "This report documents the work done on developing a compact PDS for ST Engineering's Unmanned Surface Vehicle (USV).",
+  "keywords": [
+    
+  ],
+  "articleBody": "Acknowledgements Firstly, I would like to thank ST Engineering for giving me the opportunity to work on this project. This project would not have been possible without the support of many dedicated ST Engineering members. I am especially grateful to Ang Ming Xiang and Teo Xuen, my ST Engineering supervisors and Nathanel Tan, the Head of ST engineering Unmaned \u0026 Integrated System Department for providing the guidance and technical input for this project.\nI also wish to acknowledge the support provided by the NUS College of Engineering, particularly Mr Royston, and Mr Graham from the Engineering Design and Innovation Centre. I would also like to thank Mr Eugene Ee for taking the time to review my project and provide valuable advices.\nList of Common Acronyms Acronym Definition USV Unmanned Surface Vessel PDS Power Distribution System PCB Printed Circuit Board PLC Programmable Logic Controller SSR Solid State Relay MCU Microcontroller DC Direct Current MTBF Mean Time Before Failure MTTR Mean Time To Repair MOSFET Metal-Oxide-Semiconductor Field-Effect Transistor TI Texas Instruments PG Power Good IC Integrated Circuit GPIO General Purpose Input/Output ADC Analog to Digital Converter I2C Inter-Integrated Circuit CAN Controller Area Network 1. Abstract This project focuses on developing a compact Power Distribution System (PDS) for ST Engineering’s Unmanned Surface Vehicle. The PDS is a critical component of the vehicle’s electrical system, designed to distribute and control the power to different parts of the vehicle.\nThe new PDS developed mainly consists of serveral compact and robust printed circuit board (PCB) solutions as well as the firmware associated with them. The solutions includes key features such as power line switching, protection and accurate power status monitoring and reporting, to ensure its functionality even after a power line fault has occured.\nTable of Contents Background Literature Review Design Statement Value Proposition Design Requirements System Overview Power Switching Power Protection Power Monitoring MCU PCB Power Backplane Individual System Prototyping and Testing Overall Integration and Testing Conclusion 2. Background 2.1 Introduction *For a detailed introduction to the background of this project, please refer to the interim report. Below is a brief summary of the key points.\nUnmanned Surface Vehicles (USVs) are boats or ships that operate on the water surface without an onboard crew.\nMedium-sized USVs—typically 2 to 24 meters in length—are the target vehicle of this project.\nIn current USV market, more than half of all vessels are small or medium-size categories.\nThese USV’s Power Distribution System (PDS) — the central focus of this project.\n2.2 Existing Solutions Most USVs today still adopt PDS designs similar to those used in conventional manned vessels, which were not specifically designed for autonomous operations.\nCommon components found in such PDS setups include transformers, DC converters, Programmable Logic Controllers (PLCs), Relays Module, Fuses, and Circuit Breakers. These components are interconnected using cables, terminal blocks, and wiring harnesses to form the overall electrical network.\nFigure 3: Conventional Marine Direct Current (DC) PDS Architecture 3. Literature Review To better understand the challenges that may arise when conventional PDS designes are applied to medium-sized USVs, analysis on two representative case studies will be discussed in this report. The first is a literature review of Onboard DC Grid™, a marine power system developed by ABB, one of the leading power system providers in the maritime industry. The second is a real-world examination of the PDS currently used in ST Engineering’s medium-sized USVs.\nPlease refer to the interim report for the detailed literature review of the above mentioned cases\nBelow is a brief summary of the existing problems identified in the literature review:\nThe impact on the autonomous mission success: higher system MTBF lead to more frequent power faults, which can significantly disrupt the USV’s operations and reduce its mission success rates.\nSize Constraint: Limits the available space for other essential components and makes maintenance tasks more cumbersome.\nExistance of Single Pont of Failure: The loss of PLC signal immediately de-energises all relays, presenting a significant operational risk to the USV.\nLack of power line monitoring and reporting: Early signs of degradation or minor malfunctions can easily be missed and gradually escalate, eventually developing into critical failures.\n4. Design Statement Targeting the above identified problems, the design statement of this project are summarised as:\nDesign a Power Distribution System, to reduce the size of the current medium USV power system while increasing the vehicle's mission success rate by improving its fault tolerance and power system monitoring\r5. Value Proposition For detailed discussion on the value proposition of this project, please refer to the interim report. Below is a brief summary of the key points.\nThe new PDS offers several key benefits to its stakeholders::\nBenefits Rationale Compact Design A smaller PDS footprint allows more efficient use of space within the USV’s equipment racks. This increases design flexibility and scalability across different USV sizes and configurations. Enhanced Fault Tolerance A more robust PDS reduces the impact of component failures, improving overall system reliability and increasing mission success rates. Advanced Power Monitoring and Reporting Real-time power-status insights support early detection of abnormal conditions. This enables proactive maintenance, prevents minor issues from escalating into critical faults, and reduces repair costs and downtime. Table 3: Key Benefits of the New PDS to Stakeholders 6. Design Requirements 6.1 Design Standards To ensure the new PDS meets industry best practices and regulatory requirements, the following design standards were referenced in the design process:\nIEEE Recommended Practice for the Design and Application of Power Electronics in Electrical Power Systems (IEEE Std 1709-2010) [4].\nThis standard provides comprehensive guidelines for designing power electronic systems in maritime applications, covering aspects such as electrical safety, electromagnetic compatibility, thermal management, and environmental considerations.\n6.2 Technical Specifications As a starting point, the new PDS must at least match the technical performance of the existing system. Based on an evaluation of the current PDS capabilities as well as suggestions given by the ST USV engineering team, the following technical requirements were identified:\nTechnical Capabilities Specifications Physical Dimension \u003c 445mm x 600mm x 133mm Number of Channels 26 Application Voltage 12V and 24V DC Maximum Continuous Current per channel 20A Maximum Transient Current per channel 30A Fault Protection Overvoltage/Undervoltage/Overcurrent Power System Monitoring Power Consumption, Power Good(PG), Fault Status Communication Protocol Digital/Analog/CAN 2.0 Table 4: Core Technical Requirements for the New PDS The rationale for the these technical specifications will be presented in their respective sections below.\n6.3 Functional Sub-goals In addition to meeting the technical specifications, the new PDS must achieve three key functionalities to satisfy user requirements. Each of these is described in detail in the corresponding section below.\nKey Functionalities Section Number Compact and robust power-switching solutions for each channel Section 6 Integrated power-line protection for transient and fault conditions Section 7 Real-time monitoring and reporting of power status and current consumption for each channel Section 8 Table 5: PDS System Functionalities and the Corresponding Report Sections 6.4 Environmental constraints Since this product is intended for use in maritime environments, the following environmental parameters were identified from the design standard mentioned above and will be used as a reference in the design and testing of the new PDS.\nParameters Constraint Ambient Temperature ≤ 50°C Vibration ≥ 22 Hz Humidity Approximately 80% Table 6: Environmental condition for the PDS operation 6.5 Performance Criteria The following performance criteria are defined to evaluate the new PDS against the technical specifications and functional sub-goals outlined above. These criteria will be directly assessed during the prototyping and testing phases of the project.\nType Performance Criterion Target Value Measurement Method Power Distribution Stability Power Switching Capability Ability to response to power channel control signal (ON/OFF) from the vehicle’s control system Correct switching behaviour; Response time \u003c 1ms Conduct repeated switching tests under various load conditions and record the results Power Monitoring Accuracy Details in Section 10.3 Power Protection Effectiveness Ability to effectively protect the power lines from transient fault conditions; Ability to identify the type of fault (e.g., overcurrent, short circuit) Correct fault type identification; Protection trigger time \u003c 1ms 7. System Overview The proposed new PDS consists of three main subsystems of PCBs: the Relay PCB system, the MCU PCB, and the Power Backplane PCB. Each subsystem is designed to address specific functional requirements while ensuring seamless integration with the overall system architecture.\nFigure 6: Summarised System Architecture of the developed PDS 8. Relay PCB System The Relay PCB system is the core of the proposed PDS. It consists of 26 individual relay PCBs, each controls and monitors a single DC power channel. This section of the report will introduce the design of the this PCB system based on its contribution to the three key functionalities mentioned in Section 6.3\n8.1. Power Switching One important feature of the relay PCB is to provide compact and robust power switching control for each power channel. This is achieved through two main solutions: Moving from Relay and PLC system to Relay PCB backplane system \u0026 Modifying the power switching logic.\n8.1.1 Moving towards PCBs As mentioned in Section 3.2, the current PDS adapted in ST Engineering USV consists of a combination of PLC and multiple SSRs to perform power switching. This is also the common approach used in many conventioanl USV in the marintime industry. In this project, a MCU + Relay PCB system was explored as an alternative to this traditional approach.\nThe below table summarises the key advantages and disadvntages between the two approaches:\nAspect PLC + Relay Modules MCU + Relay PCB Size and Weight - Bulky and heavy due to discrete components\n- Requires additional space for wiring and terminal blocks\n- Compact and lightweight with integrated circuit design\n- Reduces wiring complexity and space requirements\nReliability and Durability - Certified for maritime usage\n- proper insulation and protection done based on industrial standards\n- Large efforts are required to design for robustness Customisability and Scalability - Limited customisation - Easily scalable by adding or modifying Relay/PLC modules\n- Highly customisable to specific requirements\n- More difficult to change/scale up Table 7: Comparison Between PLC + Relay and MCU + Relay PCB System While the MCU + Relay PCB system offers significant advantages in achieving size reduction, it also presents the above mentioned limitations that need to be addressed. As a result, several design improvements were made in this project to target these constraints:\nCustomisability and Scalability:\nTo address this challenge, a PCB backplane architecture was adopted for the system, in which the MCU and Relay PCBs are implemented as modular plug-in cards while the base backplane contains only the connectors and copper traces for power transmission purposes. This modular approach enables easy replacement and upgrading of individual relay PCB cards, allowing users to customise and scale the PDS based on their specific requirements without undertaking a full redesign.\nReliability and Durability:\nTo enhance system reliability and durability, the PLC will not be removed from the proposed PDS; instead, it will remain as the powerswitching controller, while the MCU handles only the power monitoring and data collection. This hybrid approach leverages the strengths of both PLCs and MCUs, ensuring robust and fail-resistant operation without compromising the compactness of the PCB design.\nFigure 7: Control Signal Flow in the new PDS 8.1.2 Improved Power Switching Logic As mentioned in Section 3.2, the current PDS control of the ST Engineering USV relies on a continuous signal from the PLC, which creates a risk of complete power-line disconnection in the event of a PLC failure or loose connection. In this project, a new control logic using an ON signal latching design is introduced to solved this problem.\nThe diagrams below illustrate the current control logic flow and the proposed new control logic.\nFigure 8: Current Control Logic in the PDS Figure 9: New Control Logic proposed The key difference between the two control logics lies in how the power channel’s ON state is maintained. In the current system, the ON state is sustained by a continuous digital HIGH signal from the PLC. In contrast, the new control logic employs a latching mechanism: a momentary HIGH signal from the MCU toggles and latch the power channel ON at startup, and subsequent continuous HIGH signal will keep the channel OFF. This design ensures that a signal loss from PLC will only turn existing OFF power channel to ON instead of ON power channel to OFF. This significantly enhances fault tolerance, as transient or permanant PLC/MCU failures will not disrupt power delivery to critical subsystems during missions.\nIn the interim report, it is mentioned that a separate PCB will be designed to implement this latching mechanism while remaining pluggable from the Relay PCB. However, after further review and consultation with the ST Engineering USV team, the latching circuit will be integrated into the Relay PCB, which is a more compact and cost-effective approach. The schematic and layout of the latching circuit is shown below.\nFigure 10: Latch section Schematic and Layout An LTspice simulation has also been conducted with the designed circuit to validate its functionality. The simulation results are included in the appendix section of this report.\n8.2 Power Protection Power protection features are crucial in ensuring the safety and reliability of PDS. Current PDS in ST Engineering USV lacks adequate protection features, making it vulnerable to transient and fault situations.The Relay PCB design explained below will target this issue.\n8.2.1 Protection Requirements The types of faults that the new PDS should be able to protect against are identified from the design standards outlined in Section 6.1. These include Overvoltage (OV), Undervoltage (UV) and Overcurrent (OC) faults.\n8.2.2 Choice of MOSFET Gate Driver IC - TPS4800 MOSFET gate driver is an electronic device designed to efficiently control the gate terminal of a MOSFET, enabling rapid switching between its ON and OFF states. It is the main compnent that enables the power channel switching functionality in the Relay PCB.\nIn this project, the MOSFET gate driver IC TPS4800 from Texas Instruments (TI) is selected for its ability to achieve all the above required fault protection while satisfying the technical specifications mentioned in Section 6.2. The key features of the TPS4800 are summarised in the appendix section.\nBesides, during the design of the circuit associated with the MOSFET gate driver, multiple considerations were taken to meet the technical and protection specifications. These considerations are mentioned in the appendix section as well.\n8.2.3 User-configurable Protection Thresholds To further enhance the capabilities and modularity of the Relay PCB, the protection thresholds for OC condition is made user-configurable in the design\nThis threshold can be configured through a DIP switch interface on the PCB, providng a simple and intuitive way for users to adjust the setting without needing to modify the hardware and refabricate. The avaliable threshold options are 5A, 10A, 20A and 30A, which are the 4 most common current ratings of the devices connected to the system. During PCB operation, the state of this DIP switch will be read by the MCU to identify the OC threshold setting on each channel. This information will then be used to identify the type of fault triggered in that power channel (explained further in section 8.4).\n8.3 Power Monitoring The power monitoring section of the Relay PCB is responsible for monitoring and reporting power status and consumptions statistics in each channel. This section will detail the various features implemented to achieve this functionality.\n8.3.1 Power Good Status The Power Good (PG) status is a critical indicator of the health of power supply. It provides the most direct feedback on the power condition of each channel, allowing the system to quickly identify the occurance of any power loss issues.\nTo achieve this functionality, a TPS3711DDCR voltage supervisor from TI is installed on the PCB. The IC monitors the output voltage and asserts the PG signal high when the voltage is within a specified range. In this project, the range is set to 10 - 30V which is the acceptable operating voltage range of the PDS.\n8.3.2 Fault Reporting As mentioned in Section 8.2.1, the MOSFET gate driver IC TPS4800 is selected for its built-in protection features. Besides, when these protection features are triggered, the IC will assert a fault signal low, which can then be used to report the fault status of each channel.\nHowever, this fault signal is a simple digital signal that only indicates whether a fault has occurred, without providing specific information about the type of fault. TI’s INA228 current shunt monitor is hence used to address this limitation, which will be explained with more detail in the following sections.\n8.3.3 Power Consumption Statistics Accurate power consumption monitoring is essential for identifying abnormal power situations in each channel. Here are some measurement requirements for the power consumption monitoring system in the new PDS:\nParameter Requirement Current/Voltage Measurement Accuracy ±1% of the actual value or better Voltage Measurement Resolution 100mV or better Voltage Measurement Range 0V to 30V (to cover both 12V and 24V systems) Current Measurement Resolution 0.01A or better Current Measurement Range 0A to 30A (to cover the maximum transient current) Table 8: Power Consumption Monitoring Requirements As mentioned above, the INA228 current monitoring IC from TI is the choice for this relay PCB design. It provides high-precision power statistics measurements with an integrated 20-bit ADC that satisfy the above resolution and accuracy requirements. At the same time, it supports I2C communication which can be used for real-time data reporting to the MCU\nWhat is more, the IC also features programmable alert thresholds for abnormal power conditions, which can coordinate with the fault signals coming from TPS4800 to provide more detailed insights into the nature of any faults that occur.\n8.3.4 Fault Analysis Logic To make use of the above mentioned alert signals, a fault analysis logic, illustrated in the figure below, is implemented in the new PDS. With this logic, the system can distinguish between the types of faults occurred and report this information to the USV’s power PLC for further investigations\nFigure 12: Fault Analysis Logic Flow 8.3.5 Overcurrent Protection Thresholds Sensing 9. MCU PCB System The MCU PCB serves as an important processing unit in the new PDS, responsible for collecting power monitoring data and facilitating communication with the USV’s power PLC. The schematic and layout of the MCU PCB is shown below.\nFigure 14: MCU PCB Schematic and Layout 9.1 Choice of MCU - STM32G474QET6 The MCU selected for this PCB is from the STMicroelectronics STM32G4 series, in particular the STM32G474QET6, which offers a powerful ARM Cortex-M4 core, ample memory resources, and most importantly, a wide range of peripherals sufficient for the new PDS requirements.\nThe MCU contains up to 107 fast GPIOs, 5 ADC Channels, and 5 I2C buses, making it enough for collecting data from the 26 relay PCB channels, which outputs in total 78 digital signals, 26 analog signals, and 26 I2C signals. The MCU also features a built-in CAN controller, which reduce the overall PCB footprint by avoiding the need for a separate CAN controller implementation.\n9.2 Data Reporting Peripheral Design As mentioned above, from the MCU PCB, communication with the USV’s power PLC is carried out via the Controller Area Network (CAN) bus. This communication protocol is chosen here because of its robustness, reliability, and suitability for high-speed data transmission in noisy environments, making it ideal for the maritime environment of this project. This approach also reduces overall wiring complexity, as only two wires are required for CAN communication.\nBelow is an overall data flow diagram showing how the power monitoring data is collected and reported in the new PDS. Figure 13: Power Data Flow in the new PDS 10. Power Backplane As mentioned in Section 9.1, the power backplane is designed to provide a robust and scalable platform for integrating the Relay PCBs, the MCU PCB and other components in the new PDS (e.g. fuses, power convertors). The backplane includes high-current connectors for power delivery, as well as signal connectors for CAN communication between the MCU PCB and the USV’s power PLC. Below is the schematic and layout of the power backplane.\nFigure 15: Power Backplane Schematic and Layout 10.1 Vibration Simulation for Board to Board Connectors Selection To ensure the mechanical integrity of the board-to-board connectors used for connecting the Relay PCBs to the power backplane, a vibration simulation using SolidWorks was conducted to evaluate the mechanical stress exerted on the connector chosen, which is the TE Connectivity MULTI-BEAM Connector 6450120-2 (referred to the interim report for the selection process) The vibration profile used in this simulation is obtained from the on-board IMU data of ST Engineering’s USV during a sea trail happened on March 10th 2026.\nFigure 15: Vibration Simulation Results The simulation results showed that the connector can withstand the expected vibration levels without experiencing significant mechanical stress or failure, making it a suitable choice for the PCB connectors.\nMore considerations regarding the design of the power backplane such as current carrying capacity, thermal management and mechanical robustness will be provided in the appendix of this report.\n11. Firmware Development 11.1 Relay PCB Firmware For developing the firmware for the Relay PCB, the main focus is on implementing the fault protection and reporting features. The firmware is designed to interface the MCU and the current shunt monitor INA228AIDGSR to achieve these functionalities.\nKey considerations of the design involves:\nConfiguring the conversion time of INA228 to response to transient faults Setting the sensor sampling rate to ensure accuracy in continuous power monitoring Allocating the I2C static address for multiple channels. 11.2 MCU Firmware The firmware for the MCU PCB is responsible for collecting data from the Relay PCB and communicating with the USV’s power PLC via CAN bus. Detail tasks of the MCU firmware include:\nReading the PG status, fault status, and power consumption data from the Relay PCB. Processing the collected data to determine the fault types if any faults are detected. Sending the processed data to the USV’s power PLC via CAN communication. 12. Subsystem Prototyping and Testing Before integrating the MOSFET PCB, MCU PCB, and power backplane into a complete PDS, each subsystem will be prototyped and tested separately to validate their functionality and performance against the technical specifications outlined in Section 5.2 and the design requirements in Section 5.3.\n12.1 Relay PCB Prototyping and Testing In this project, the relay PCB has gone through 3 major iterations, which was designed to be tested alone, with T\u0026C PCB and with the power backplane resepctively.This report will go through briefly the first 2 iterations and focus on discussing the test result of the final iteration, which reflects the best performance of this series of PCB prototypes.\n12.1.1 1st Iteration Relay PCB Testing The 1st iteration of the relay PCB is designed with Wago 221-412 terminal blocks as power input and output connectors, which allow it to be tested seperately through cable connections. The testing of this iteration involves basic power channel switching, protection features testing and power monitoring testing. The testing results of this iteration are used to validate the basic functionalities of the relay PCB and identify areas for improvement in the subsequent iterations.\n12.1.2 Testing and Commissioning (T\u0026C) PCB Prototyping and Testing Before carrying out the design of a full power distribution system. a single channel T\u0026C PCB was designed and tested to validate the core functionalities, including power switching, fault protection, and power monitoring when the relay PCB is integrated with the MCU. This prototype will serve as a proof of concept for the overall system design and allow for iterative improvements before scaling up to the full 26-channel implementation. The schematic and layout of the T\u0026C PCB is shown below.\nFigure 16: Testing and Commissioning PCB Schematic and Layout Besides serving as a preliminary testing platform for the relay PCB, the T\u0026C PCB is also used to conduct a commissioning test for the relay PCB produced. This test involves connecting the relay PCB to the T\u0026C PCB and verifying that all functionalities are working as intended. The test will also validate overcurrent threshold and static I2C ID set by the DIP switch, which are important features for the final system. Below is a figure showing the commissioning test procedures and intended outcomes:\nFigure 17: Relay PCB Commissioning Test Procedures and Intended Outcomes 12.1.3 2nd Iteration Relay PCB \u0026 T\u0026C PCB Integrated Testing Developing upon the 1st iteration, the 2nd iteration of the relay PCB is designed with the high-current PCB board to board connectors mentioned above. This means that it cannot be tested alone with cable connections. A T\u0026C PCB is thus developed (mentioned with greater detail in Section 12.4) and used for the testing of this iteration. Other than what is conducted in the previous iteration, extra testing is also performed on board start-up procedures, MCU interaction as well as data collection and reporting.\n12.1.4 Final Iteration Relay PCB Testing This iteration of the PCB mainly focus on improving some issues on the previous iteration such as addition of signal regulators for PLC control signals. After the fabrication and assembly of this iteration, a throughout testing and evaluation is conducted on the prototype, which is summaried in the table below:\nTested Functionality Test Procedures Expected Outcome Actual Outcome Pass/Fail Power Channel Switching at no load PASS Power Channel Switching at 20A continuous current drawn PASS Power Channel Protection at 30A transient current drawn PASS Power Channel Protection at 9V voltage input PASS Power Channel Protection at 32V voltage input PASS Power Channel Protection at 0.06A continuous current drawn (smallest load in ST Engineering USV) PASS Power Channel Monitoring at 20A continuous current drawn PASS Power Channel Monitoring at 12V Voltage Input PASS Table 16: Final Iteration Testing Results Summary Figure 18: Test Setup for Final Iteration of the Relay PCB 12.2 MCU PCB Prototyping and Testing The MCU PCB is prototyped with reference to the MCU section of the T\u0026C PCB. The testing of the MCU PCB focuses on validating its data collection and reporting functionalities, especially under multi-channel operation.\n12.3 Power Backplane Prototyping and Testing The power backplane is prototyped by expanding the single channel Relay PCB Connector section of the T\u0026C PCB to a full 26 channels backplane design. The testing of the power backplane focuses on validating its power transmission capabilities.\n13. Overall System Integration and Testing After the separate testing of the cards and backplane, the next step is to integrate the subsystems and conduct comprehensive testing to validate the overall functionality and performance of the new PDS.\nHowever, due to time constraint, this project will only cover the initial integration phases, which include in lab functionality testing and thermal testing. The final on-boat testing phase will be carried out by the ST Engineering USV team after the completion of this project.\n13.1 Functionality Testing Functionality testing will be conducted to verify that the new PDS meets all technical specifications and functional requirements outlined in Section 5. This will involve testing the power switching capabilities, fault protection features, and power monitoring functionalities under various load conditions and fault scenarios. The testing will be performed in a controlled laboratory environment using power supply and electronic load tester. The tests conducted is similar to the ones performed during the final iteration testing of the relay PCB, but on a full 26 channel power backplane with 10 operating channel.\nFigure 18: Test Setup for functionality testing of 10 Operating Channels 13.2 Thermal Testing Thermal testing is conducted to evaluate the heat dissipation capabilities of the new PDS under various load conditions. This overall system thermal testing will be conducted bymonitoring the temperature of 10 loaded channels. The testing will be performed using thermal imaging cameras and temperature sensors to capture real-time temperature data during the operation of the PDS. Below is a summary of the thermal testing results:\nLoad Condition Component Hotest Spot Steady State Temperature Within Accepted Range? 0A MOSFETs 0A Shunt Resistor 30A MOSFETs 30A Shunt Resistor Table 18: Thermal Testing Results Summary for 10 Loaded Channels Figure 19: Test Setup for thermal testing of 10 Loaded Channels 14. Conclusion 14.1 Limitations The first limitation of this project is the lack of testing under actual operational conditions. While the functionality and thermal testing conducted in the laboratory provide valuable insights into the performance of the new PDS, they may not fully capture the complexities and challenges of real-world maritime environments, such as exposure to saltwater, temperature fluctuations, and mechanical vibrations. As a result, the system’s performance and reliability under these conditions remain unverified. This limitation hopefully will be solved by more follow-up testing after the completion of this project.\nAnother limitation is associated with the technical constraints of the design. The current PDS PCBs are only suitable for DC power operation but not functional under AC load. This is a significant limitation, as many maritime system components (e.g. Servers/Switches, Induction motors) still operate on AC power. This limitation highlights the need for future iterations of the PDS to expand its capabilities to support a wider range of power types and applications.\n14.2 Possible Future Improvements As mentioned in the limitations section, one potential improvement for the new PDS is to expand its capabilities to support AC power loads. This would involve redesigning the power switching components to handle AC currents, implementing appropriate protection features for AC faults, and modifying the monitoring system to accurately measure AC power consumption. This improvement would significantly enhance the versatility and applicability of the PDS in maritime environments, allowing it to support a wider range of systems and components.\nOther than more hardware developments, possible improvements can also be made in the software aspect of the PDS. For example, the data collected by the MCU can be further processed using machine learning algorithms to predict potential faults before they occur, enabling proactive maintenance and reducing downtime. Additionally, the user interface for monitoring the PDS could be enhanced to provide more intuitive and actionable insights for operators.\nReferences Abraham Sachin, “Marine Electrical Distribution,” 22 June 2018. [Online] Avaliable: teckhmarine.blogspot.com/2018/06/marine-electrical-distribution.html. ABB, “Unmanned Surface Vehicles/Vessel (USV) Reliable Power and Propulsion Architecture Characterization,” 2020. [Online]. Available: https://new.abb.com/docs/librariesprovider15/gov/usv-abb-white-paper-20200830.pdf?sfvrsn=6369e809_2 ST Engineering, “Unmanned Surface Vehicle (USV) Solutions,” [Online]. Available: https://www.stengg.com/en/solutions/unmanned-surface-vehicle-usv-solutions.html IEEE Std 1709-2010, “IEEE Recommended Practice for the Design and Application of Power Electronics in Electrical Power Systems,” pp.1-50, 2010. Omron, “G3NA-210B-UTU DC5-24 Solid State Relay Datasheet,” [Online]. Available: https://www.ia.omron.com/product/item/7692/ Texas Instruments, “TPS4800-Q1 High-Side and Low-Side N-Channel MOSFET Driver with Integrated Protection Features,” [Online]. Available: https://www.ti.com/product/TPS4800-Q1 Texas Instruments, “TPS3711 Voltage Supervisor with Power-Good Output,” [Online]. Available: https://www.ti.com/product/TPS3711 Texas Instruments, “AMC1301 Isolated Delta-Sigma Modulator for Current Sensing,” [Online]. Available: https://www.ti.com/product/AMC1301 IPC-2152, “Standard for Determining Current-Carrying Capacity in Printed Board Design,” pp.1-60, 2017. Appendix A: Technical Specifications Rationale The 30 A transient current limit is derived from the maximum expected per-channel transient DC load — 24 A as specified in the searchlight datasheet — with an additional 50% design margin to provide sufficient headroom for short-duration overloads. A power-consumption chart was also prepared to verify that these power-level specifications are adequate for all required loads; this chart is included in the Appendix.\nThe fault-response requirement is selected to match the operating characteristics of the G3NA-210B-UTU DC5–24 relay used in the current PDS, which has a specified operation time of up to 1 ms.\nAppendix B: TPS4800 Key Features Key Features Specifications Operating Voltage 3.5V to 95V DC Overvoltage Protection Threshold Adjustable between 10V to 60V DC Undervoltage Protection Threshold Adjustable between 6V to 54V DC Overcurrent Protection Threshold Adjustable between 5A to 50A Overcurrent Protection Response Time \u003c1ms (adjustable) Key Features of TPS4800 MOSFET Gate Driver IC Appendix C: Design MOSFET PCB to Meet Technical and Protection Specifications Several design considerations were taken during the MOSFET PCB design to ensure that the technical specifications and protection requirements mentioned in Section 5.2 and Section 7.1 are met:\nCurrent Tolerance: To handle the maximum continuous current of 20 A and transient current of 30 A, the MOSFET PCB adopts a 4-layer design, with the middle layers dedicated entirely to power and ground. Additionally, the PCB traces are designed with sufficient width and thickness to minimize resistance and heat generation (Calculation done based on design standrad IPC-2152). Thermal vias and copper pours are also incorporated to improve heat dissipation.\nDedicated Power and Ground Plane in the MOSFET PCB Trace Width and Plane Area Calculation for the MOSFET PCB using online IPC-2152 Trace Width Calculator Thermal Vias and Copper Pours in the MOSFET PCB Fault Protection Thresholds: The TPS4800 gate driver IC allows for adjustable fault protection thresholds. Below is a table showing the overvoltage, undervoltage, and overcurrent protection thresholds set for the the most recent prototype, according to the specifications outlined. Resistor dividers and charging capacitors are used to configure these thresholds accurately.\nProtection Type Threshold Setting Overvoltage Protection 30V DC Undervoltage Protection 10V DC Overcurrent Protection 30A Fault Response Time 50μs Table 8: Protection Threshold Settings on the MOSFET PCB Example of the Protection Threshold Configuration Circuit in the MOSFET PCB Appendix D: MOSFET and Latch PCB Schematics MOSFET PCB Schematics Latch PCB Schematics Appendix E: MOSFET and Latch PCB Layouts MOSFET PCB Layouts Latch PCB Layouts Appendix F: Latch PCB Simulation Latch PCB Simulation Results Appendix G: Power Consumption Chart Power Consumption Chart of the USV DC Systems ",
+  "wordCount" : "5528",
+  "inLanguage": "en",
+  "datePublished": "2026-03-29T00:00:00Z",
+  "dateModified": "2026-03-29T00:00:00Z",
+  "author":[{
+    "@type": "Person",
+    "name": "Chen Jiawei"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/website/final/final_report/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "USV Power Distribution System",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/website/favicon.ico"
+    }
+  }
+}
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: "\\begin{equation}", right: "\\end{equation}", display: true},
+            {left: "\\begin{equation*}", right: "\\end{equation*}", display: true},
+            {left: "\\begin{align}", right: "\\end{align}", display: true},
+            {left: "\\begin{align*}", right: "\\end{align*}", display: true},
+            {left: "\\begin{alignat}", right: "\\end{alignat}", display: true},
+            {left: "\\begin{gather}", right: "\\end{gather}", display: true},
+            {left: "\\begin{CD}", right: "\\end{CD}", display: true},
+          ],
+          throwOnError : false
+        });
+    });
+</script>
+ 
+
+
+</head>
+
+<body class="" id="top">
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/website/" accesskey="h" title="USV Power Distribution System">
+                <img src="http://localhost:1313/website/favicon.ico" alt="" aria-label="logo"
+                    height="18"
+                    width="18">USV Power Distribution System</a>
+            <div class="logo-switches">
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/website/interim/" title="Interim Report">
+                    <span>Interim Report</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/website/final/" title="Final Report">
+                    <span>Final Report</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/website/guides/" title="Guides">
+                    <span>Guides</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/website/configurations/" title="Configurations">
+                    <span>Configurations</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+    <main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Development of a Compact Power Distribution System (PDS) for Unmanned Surface Vehicle (USV)
+    </h1>
+    <div class="post-meta"><span title='2026-03-29 00:00:00 +0000 UTC'>March 2026</span>&nbsp;&middot;&nbsp;Chen Jiawei&nbsp;&middot;&nbsp;<a href="https://www.stengg.com/" rel="noopener noreferrer" target="_blank">ST Engineering Company Website</a>
+
+</div>
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#acknowledgements">Acknowledgements</a></li>
+    <li><a href="#list-of-common-acronyms">List of Common Acronyms</a></li>
+    <li><a href="#1-abstract">1. Abstract</a></li>
+    <li><a href="#table-of-contents">Table of Contents</a></li>
+    <li><a href="#2-background">2. Background</a>
+      <ul>
+        <li><a href="#21-introduction">2.1 Introduction</a></li>
+        <li><a href="#22-existing-solutions">2.2 Existing Solutions</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-literature-review">3. Literature Review</a></li>
+    <li><a href="#4-design-statement">4. Design Statement</a></li>
+    <li><a href="#5-value-proposition">5. Value Proposition</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#6-design-requirements">6. Design Requirements</a>
+      <ul>
+        <li><a href="#61-design-standards">6.1 Design Standards</a></li>
+        <li><a href="#62-technical-specifications">6.2 Technical Specifications</a></li>
+        <li><a href="#63-functional-sub-goals">6.3 Functional Sub-goals</a></li>
+        <li><a href="#64-environmental-constraints">6.4 Environmental constraints</a></li>
+        <li><a href="#65-performance-criteria">6.5 Performance Criteria</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-system-overview">7. System Overview</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#8-relay-pcb-system">8. Relay PCB System</a>
+      <ul>
+        <li><a href="#81-power-switching">8.1. Power Switching</a></li>
+        <li><a href="#82-power-protection">8.2 Power Protection</a></li>
+        <li><a href="#83-power-monitoring">8.3 Power Monitoring</a></li>
+      </ul>
+    </li>
+    <li><a href="#9-mcu-pcb-system">9. MCU PCB System</a>
+      <ul>
+        <li></li>
+        <li><a href="#91-choice-of-mcu---stm32g474qet6">9.1 Choice of MCU - STM32G474QET6</a></li>
+        <li><a href="#92-data-reporting-peripheral-design">9.2 Data Reporting Peripheral Design</a></li>
+      </ul>
+    </li>
+    <li><a href="#10-power-backplane">10. Power Backplane</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#11-firmware-development">11. Firmware Development</a>
+      <ul>
+        <li><a href="#111-relay-pcb-firmware">11.1 Relay PCB Firmware</a></li>
+        <li><a href="#112-mcu-firmware">11.2 MCU Firmware</a></li>
+      </ul>
+    </li>
+    <li><a href="#12-subsystem-prototyping-and-testing">12. Subsystem Prototyping and Testing</a>
+      <ul>
+        <li><a href="#121-relay-pcb-prototyping-and-testing">12.1 Relay PCB Prototyping and Testing</a></li>
+        <li><a href="#122-mcu-pcb-prototyping-and-testing">12.2 MCU PCB Prototyping and Testing</a></li>
+        <li><a href="#123-power-backplane-prototyping-and-testing">12.3 Power Backplane Prototyping and Testing</a></li>
+      </ul>
+    </li>
+    <li><a href="#13-overall-system-integration-and-testing">13. Overall System Integration and Testing</a>
+      <ul>
+        <li><a href="#131-functionality-testing">13.1 Functionality Testing</a></li>
+        <li><a href="#132-thermal-testing">13.2 Thermal Testing</a></li>
+      </ul>
+    </li>
+    <li><a href="#14-conclusion">14. Conclusion</a>
+      <ul>
+        <li><a href="#141-limitations">14.1 Limitations</a></li>
+        <li><a href="#142-possible-future-improvements">14.2 Possible Future Improvements</a></li>
+      </ul>
+    </li>
+    <li><a href="#references">References</a></li>
+    <li><a href="#appendix-a-technical-specifications-rationale">Appendix A: Technical Specifications Rationale</a></li>
+    <li><a href="#appendix-b-tps4800-key-features">Appendix B: TPS4800 Key Features</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#appendix-c-design-mosfet-pcb-to-meet-technical-and-protection-specifications">Appendix C: Design MOSFET PCB to Meet Technical and Protection Specifications</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#appendix-d-mosfet-and-latch-pcb-schematics">Appendix D: MOSFET and Latch PCB Schematics</a></li>
+    <li><a href="#appendix-e-mosfet-and-latch-pcb-layouts">Appendix E: MOSFET and Latch PCB Layouts</a></li>
+    <li><a href="#appendix-f-latch-pcb-simulation">Appendix F: Latch PCB Simulation</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#appendix-g-power-consumption-chart">Appendix G: Power Consumption Chart</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="acknowledgements">Acknowledgements<a hidden class="anchor" aria-hidden="true" href="#acknowledgements">#</a></h2>
+<p>Firstly, I would like to thank ST Engineering for giving me the opportunity to work on this project. This project would not have been possible without the support of many dedicated ST Engineering members. I am especially grateful to Ang Ming Xiang and Teo Xuen, my ST Engineering supervisors and Nathanel Tan, the Head of ST engineering Unmaned &amp; Integrated System Department for providing the guidance and technical input for this project.</p>
+<p>I also wish to acknowledge the support provided by the NUS College of Engineering, particularly Mr Royston, and Mr Graham from the Engineering Design and Innovation Centre. I would also like to thank Mr Eugene Ee for taking the time to review my project and provide valuable advices.</p>
+<h2 id="list-of-common-acronyms">List of Common Acronyms<a hidden class="anchor" aria-hidden="true" href="#list-of-common-acronyms">#</a></h2>
+<div align="center">
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: center"><strong>Acronym</strong></th>
+          <th style="text-align: center"><strong>Definition</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center"><strong>USV</strong></td>
+          <td style="text-align: center">Unmanned Surface Vessel</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>PDS</strong></td>
+          <td style="text-align: center">Power Distribution System</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>PCB</strong></td>
+          <td style="text-align: center">Printed Circuit Board</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>PLC</strong></td>
+          <td style="text-align: center">Programmable Logic Controller</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>SSR</strong></td>
+          <td style="text-align: center">Solid State Relay</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>MCU</strong></td>
+          <td style="text-align: center">Microcontroller</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>DC</strong></td>
+          <td style="text-align: center">Direct Current</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>MTBF</strong></td>
+          <td style="text-align: center">Mean Time Before Failure</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>MTTR</strong></td>
+          <td style="text-align: center">Mean Time To Repair</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>MOSFET</strong></td>
+          <td style="text-align: center">Metal-Oxide-Semiconductor Field-Effect Transistor</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>TI</strong></td>
+          <td style="text-align: center">Texas Instruments</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>PG</strong></td>
+          <td style="text-align: center">Power Good</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>IC</strong></td>
+          <td style="text-align: center">Integrated Circuit</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>GPIO</strong></td>
+          <td style="text-align: center">General Purpose Input/Output</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>ADC</strong></td>
+          <td style="text-align: center">Analog to Digital Converter</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>I2C</strong></td>
+          <td style="text-align: center">Inter-Integrated Circuit</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>CAN</strong></td>
+          <td style="text-align: center">Controller Area Network</td>
+      </tr>
+  </tbody>
+</table>
+</div>
+<h2 id="1-abstract">1. Abstract<a hidden class="anchor" aria-hidden="true" href="#1-abstract">#</a></h2>
+<p>This project focuses on developing a compact Power Distribution System (PDS) for ST Engineering&rsquo;s Unmanned Surface Vehicle. The PDS is a critical component of the vehicle’s electrical system, designed to distribute and control the power to different parts of the vehicle.</p>
+<p>The new PDS developed mainly consists of serveral compact and robust printed circuit board (PCB) solutions as well as the firmware associated with them. The solutions includes key features such as power line switching, protection and accurate power status monitoring and reporting, to ensure its functionality even after a power line fault has occured.</p>
+<h2 id="table-of-contents">Table of Contents<a hidden class="anchor" aria-hidden="true" href="#table-of-contents">#</a></h2>
+<ul>
+<li><a href="#2-Background">Background</a></li>
+<li><a href="#3-literature-review">Literature Review</a></li>
+<li><a href="#4-design-statement">Design Statement</a></li>
+<li><a href="#5-value-proposition">Value Proposition</a></li>
+<li><a href="#6-design-requirments">Design Requirements</a></li>
+<li><a href="#7-system-overview">System Overview</a></li>
+<li><a href="#8-power-switching">Power Switching</a></li>
+<li><a href="#9-power-protection">Power Protection</a></li>
+<li><a href="#10-power-monitoring">Power Monitoring</a></li>
+<li><a href="#11-mcu-pcb">MCU PCB</a></li>
+<li><a href="#12-power-backplane">Power Backplane</a></li>
+<li><a href="#13-individual-system-prototyping-and-testing">Individual System Prototyping and Testing</a></li>
+<li><a href="#14-overall-integration-and-testing">Overall Integration and Testing</a></li>
+<li><a href="#15-conclusion">Conclusion</a></li>
+</ul>
+<h2 id="2-background">2. Background<a hidden class="anchor" aria-hidden="true" href="#2-background">#</a></h2>
+<h3 id="21-introduction">2.1 Introduction<a hidden class="anchor" aria-hidden="true" href="#21-introduction">#</a></h3>
+<p>*<strong>For a detailed introduction to the background of this project, please refer to the interim report. Below is a brief summary of the key points.</strong></p>
+<ul>
+<li>
+<p><strong>Unmanned Surface Vehicles (USVs)</strong> are boats or ships that operate on the water surface without an onboard crew.</p>
+</li>
+<li>
+<p>Medium-sized USVs—typically 2 to 24 meters in length—are the target vehicle of this project.</p>
+</li>
+<li>
+<p>In current USV market, more than half of all vessels are small or medium-size categories.</p>
+</li>
+<li>
+<p>These USV&rsquo;s <strong>Power Distribution System (PDS)</strong> — the central focus of this project.</p>
+</li>
+</ul>
+<h3 id="22-existing-solutions">2.2 Existing Solutions<a hidden class="anchor" aria-hidden="true" href="#22-existing-solutions">#</a></h3>
+<p>Most USVs today still adopt PDS designs similar to those used in conventional manned vessels, which were not specifically designed for autonomous operations.</p>
+<p>Common components found in such PDS setups include transformers, DC converters, Programmable Logic Controllers (PLCs), Relays Module, Fuses, and Circuit Breakers. These components are interconnected using cables, terminal blocks, and wiring harnesses to form the overall electrical network.</p>
+<p><img loading="lazy" src="conventional.png" alt="Conventional PDS Architecture"  />
+</p>
+<h5 id="figure-3-conventional-marine-direct-current-dc-pds-architecture">Figure 3: Conventional Marine Direct Current (DC) PDS Architecture<a hidden class="anchor" aria-hidden="true" href="#figure-3-conventional-marine-direct-current-dc-pds-architecture">#</a></h5>
+<h2 id="3-literature-review">3. Literature Review<a hidden class="anchor" aria-hidden="true" href="#3-literature-review">#</a></h2>
+<p>To better understand the challenges that may arise when conventional PDS designes are applied to medium-sized USVs, analysis on two representative case studies will be discussed in this report. The first is a literature review of Onboard DC Grid™, a marine power system developed by ABB, one of the leading power system providers in the maritime industry. The second is a real-world examination of the PDS currently used in ST Engineering’s medium-sized USVs.</p>
+<p><strong>Please refer to the interim report for the detailed literature review of the above mentioned cases</strong></p>
+<p>Below is a brief summary of the existing problems identified in the literature review:</p>
+<ul>
+<li>
+<p>The impact on the autonomous mission success: higher system MTBF lead to more frequent power faults, which can significantly disrupt the USV&rsquo;s operations and reduce its mission success rates.</p>
+</li>
+<li>
+<p>Size Constraint: Limits the available space for other essential components and makes maintenance tasks more cumbersome.</p>
+</li>
+<li>
+<p>Existance of Single Pont of Failure: The loss of PLC signal immediately de-energises all relays, presenting a significant operational risk to the USV.</p>
+</li>
+<li>
+<p>Lack of power line monitoring and reporting: Early signs of degradation or minor malfunctions can easily be missed and gradually escalate, eventually developing into critical failures.</p>
+</li>
+</ul>
+<h2 id="4-design-statement">4. Design Statement<a hidden class="anchor" aria-hidden="true" href="#4-design-statement">#</a></h2>
+<p>Targeting the above identified problems, the design statement of this project are summarised as:</p>
+<div align="center">
+    <b>
+      Design a Power Distribution System, to reduce the size of the current medium USV power system while increasing the vehicle's mission success rate by improving its fault tolerance and power system monitoring
+    </b>
+</div>
+<h2 id="5-value-proposition">5. Value Proposition<a hidden class="anchor" aria-hidden="true" href="#5-value-proposition">#</a></h2>
+<p><strong>For detailed discussion on the value proposition of this project, please refer to the interim report. Below is a brief summary of the key points.</strong></p>
+<p>The new PDS offers several key benefits to its stakeholders::</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left"><strong>Benefits</strong></th>
+          <th style="text-align: center"><strong>Rationale</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Compact Design</td>
+          <td style="text-align: center">A smaller PDS footprint allows more efficient use of space within the USV’s equipment racks. This increases design flexibility and scalability across different USV sizes and configurations.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Enhanced Fault Tolerance</td>
+          <td style="text-align: center">A more robust PDS reduces the impact of component failures, improving overall system reliability and increasing mission success rates.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Advanced Power Monitoring and Reporting</td>
+          <td style="text-align: center">Real-time power-status insights   support early detection of abnormal conditions. This enables proactive maintenance, prevents minor issues from escalating into critical faults, and reduces repair costs and downtime.</td>
+      </tr>
+  </tbody>
+</table>
+<h5 id="table-3-key-benefits-of-the-new-pds-to-stakeholders">Table 3: Key Benefits of the New PDS to Stakeholders<a hidden class="anchor" aria-hidden="true" href="#table-3-key-benefits-of-the-new-pds-to-stakeholders">#</a></h5>
+<h2 id="6-design-requirements">6. Design Requirements<a hidden class="anchor" aria-hidden="true" href="#6-design-requirements">#</a></h2>
+<h3 id="61-design-standards">6.1 Design Standards<a hidden class="anchor" aria-hidden="true" href="#61-design-standards">#</a></h3>
+<p>To ensure the new PDS meets industry best practices and regulatory requirements, the following design standards were referenced in the design process:</p>
+<p><em>IEEE Recommended Practice for the Design and Application of Power Electronics in Electrical Power Systems</em>
+(IEEE Std 1709-2010) [4].</p>
+<p>This standard provides comprehensive guidelines for designing power electronic systems in maritime applications, covering aspects such as electrical safety, electromagnetic compatibility, thermal management, and environmental considerations.</p>
+<h3 id="62-technical-specifications">6.2 Technical Specifications<a hidden class="anchor" aria-hidden="true" href="#62-technical-specifications">#</a></h3>
+<p>As a starting point, the new PDS must at least match the technical performance of the existing system. Based on an evaluation of the current PDS capabilities as well as suggestions given by the ST USV engineering team, the following technical requirements were identified:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left"><strong>Technical Capabilities</strong></th>
+          <th style="text-align: left"><strong>Specifications</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Physical Dimension</td>
+          <td style="text-align: left">&lt; 445mm x 600mm x 133mm</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Number of Channels</td>
+          <td style="text-align: left">26</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Application Voltage</td>
+          <td style="text-align: left">12V and 24V DC</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Maximum Continuous Current  per channel</td>
+          <td style="text-align: left">20A</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Maximum Transient Current   per channel</td>
+          <td style="text-align: left">30A</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Fault Protection</td>
+          <td style="text-align: left">Overvoltage/Undervoltage/Overcurrent</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Power System Monitoring</td>
+          <td style="text-align: left">Power Consumption, Power Good(PG), Fault Status</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Communication Protocol</td>
+          <td style="text-align: left">Digital/Analog/CAN 2.0</td>
+      </tr>
+  </tbody>
+</table>
+<h5 id="table-4-core-technical-requirements-for-the-new-pds">Table 4: Core Technical Requirements for the New PDS<a hidden class="anchor" aria-hidden="true" href="#table-4-core-technical-requirements-for-the-new-pds">#</a></h5>
+<p>The rationale for the these technical specifications will be presented in their respective sections below.</p>
+<h3 id="63-functional-sub-goals">6.3 Functional Sub-goals<a hidden class="anchor" aria-hidden="true" href="#63-functional-sub-goals">#</a></h3>
+<p>In addition to meeting the technical specifications, the new PDS must achieve three key functionalities to satisfy user requirements. Each of these is described in detail in the corresponding section below.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left"><strong>Key Functionalities</strong></th>
+          <th style="text-align: center"><strong>Section Number</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Compact and robust power-switching solutions for each channel</td>
+          <td style="text-align: center"><a href="#6-Power-Switching">Section 6</a></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Integrated power-line protection for transient and fault conditions</td>
+          <td style="text-align: center"><a href="#7-Power-Protection">Section 7</a></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Real-time monitoring and reporting of power status and current consumption for each channel</td>
+          <td style="text-align: center"><a href="#8-Power-Monitoring">Section 8</a></td>
+      </tr>
+  </tbody>
+</table>
+<h5 id="table-5-pds-system-functionalities-and-the-corresponding-report-sections">Table 5: PDS System Functionalities and the Corresponding Report Sections<a hidden class="anchor" aria-hidden="true" href="#table-5-pds-system-functionalities-and-the-corresponding-report-sections">#</a></h5>
+<h3 id="64-environmental-constraints">6.4 Environmental constraints<a hidden class="anchor" aria-hidden="true" href="#64-environmental-constraints">#</a></h3>
+<p>Since this product is intended for use in maritime environments, the following environmental parameters were identified from the design standard mentioned above and will be used as a reference in the design and testing of the new PDS.</p>
+<table>
+  <thead>
+      <tr>
+          <th><strong>Parameters</strong></th>
+          <th><strong>Constraint</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Ambient Temperature</td>
+          <td>≤ 50°C</td>
+      </tr>
+      <tr>
+          <td>Vibration</td>
+          <td>≥ 22 Hz</td>
+      </tr>
+      <tr>
+          <td>Humidity</td>
+          <td>Approximately 80%</td>
+      </tr>
+  </tbody>
+</table>
+<h5 id="table-6-environmental-condition-for-the-pds-operation">Table 6: Environmental condition for the PDS operation<a hidden class="anchor" aria-hidden="true" href="#table-6-environmental-condition-for-the-pds-operation">#</a></h5>
+<h3 id="65-performance-criteria">6.5 Performance Criteria<a hidden class="anchor" aria-hidden="true" href="#65-performance-criteria">#</a></h3>
+<!--[Define the measurable targets the solution must achieve. Be precise about target values and measurement methods -- these will be assessed directly in Chapter 5.]-->
+<p>The following performance criteria are defined to evaluate the new PDS against the technical specifications and functional sub-goals outlined above. These criteria will be directly assessed during the prototyping and testing phases of the project.</p>
+<table>
+  <thead>
+      <tr>
+          <th>Type</th>
+          <th>Performance Criterion</th>
+          <th>Target Value</th>
+          <th>Measurement Method</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Power Distribution Stability</td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>Power Switching Capability</td>
+          <td>Ability to response to power channel control signal (ON/OFF) from the vehicle&rsquo;s control system</td>
+          <td>Correct switching behaviour; Response time &lt; 1ms</td>
+          <td>Conduct repeated switching tests under various load conditions and record the results</td>
+      </tr>
+      <tr>
+          <td>Power Monitoring Accuracy</td>
+          <td>Details in <a href="#103-power-consumption-statistics">Section 10.3</a></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>Power Protection Effectiveness</td>
+          <td>Ability to effectively protect the power lines from transient fault conditions; Ability to identify the type of fault (e.g., overcurrent, short circuit)</td>
+          <td>Correct fault type identification; Protection trigger time &lt; 1ms</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="7-system-overview">7. System Overview<a hidden class="anchor" aria-hidden="true" href="#7-system-overview">#</a></h2>
+<p>The proposed new PDS consists of three main subsystems of PCBs: the Relay PCB system, the MCU PCB, and the Power Backplane PCB. Each subsystem is designed to address specific functional requirements while ensuring seamless integration with the overall system architecture.</p>
+<p><img loading="lazy" src="powerarch.png" alt="Summarised Power Architecture of PDS"  />
+</p>
+<h5 id="figure-6-summarised-system-architecture-of-the-developed-pds">Figure 6: Summarised System Architecture of the developed PDS<a hidden class="anchor" aria-hidden="true" href="#figure-6-summarised-system-architecture-of-the-developed-pds">#</a></h5>
+<h2 id="8-relay-pcb-system">8. Relay PCB System<a hidden class="anchor" aria-hidden="true" href="#8-relay-pcb-system">#</a></h2>
+<p>The Relay PCB system is the core of the proposed PDS. It consists of 26 individual relay PCBs, each controls and monitors a single DC power channel. This section of the report will introduce the design of the this PCB system based on its contribution to the three key functionalities mentioned in <a href="#63-functional-sub-goals">Section 6.3</a></p>
+<h3 id="81-power-switching">8.1. Power Switching<a hidden class="anchor" aria-hidden="true" href="#81-power-switching">#</a></h3>
+<p>One important feature of the relay PCB is to provide compact and robust power switching control for each power channel. This is achieved through two main solutions: <strong>Moving from Relay and PLC system to Relay PCB backplane system</strong> &amp; <strong>Modifying the power switching logic</strong>.</p>
+<h4 id="811-moving-towards-pcbs">8.1.1 Moving towards PCBs<a hidden class="anchor" aria-hidden="true" href="#811-moving-towards-pcbs">#</a></h4>
+<p>As mentioned in <a href="#32-st-engineering-usv-pds">Section 3.2</a>, the current PDS adapted in ST Engineering USV consists of a combination of PLC and multiple SSRs to perform power switching. This is also the common approach used in many conventioanl USV in the marintime industry. In this project, a MCU + Relay PCB system was explored as an alternative to this traditional approach.</p>
+<p>The below table summarises the key advantages and disadvntages between the two approaches:</p>
+<table>
+  <thead>
+      <tr>
+          <th><strong>Aspect</strong></th>
+          <th><strong>PLC + Relay Modules</strong></th>
+          <th><strong>MCU + Relay PCB</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Size and Weight</td>
+          <td>- Bulky and heavy due to discrete components<br>- Requires additional space for wiring and terminal blocks<br></td>
+          <td>- Compact and lightweight with integrated circuit design<br>- Reduces wiring complexity and space requirements<br></td>
+      </tr>
+      <tr>
+          <td>Reliability and Durability</td>
+          <td>- Certified for maritime usage<br> - proper insulation and protection done based on industrial standards<br></td>
+          <td>- Large efforts are required to design for robustness</td>
+      </tr>
+      <tr>
+          <td>Customisability and Scalability</td>
+          <td>- Limited customisation <br>- Easily scalable by adding or modifying Relay/PLC modules<br></td>
+          <td>- Highly customisable to specific requirements<br>- More difficult to change/scale up</td>
+      </tr>
+  </tbody>
+</table>
+<h5 id="table-7-comparison-between-plc--relay-and-mcu--relay-pcb-system">Table 7: Comparison Between PLC + Relay and MCU + Relay PCB System<a hidden class="anchor" aria-hidden="true" href="#table-7-comparison-between-plc--relay-and-mcu--relay-pcb-system">#</a></h5>
+<p>While the MCU + Relay PCB system offers significant advantages in achieving size reduction, it also presents the above mentioned limitations that need to be addressed. As a result, several design improvements were made in this project to target these constraints:</p>
+<p><strong>Customisability and Scalability:</strong></p>
+<p>To address this challenge, a PCB backplane architecture was adopted for the system, in which the MCU and Relay PCBs are implemented as modular plug-in cards while the base backplane contains only the connectors and copper traces for power transmission purposes. This modular approach enables easy replacement and upgrading of individual relay PCB cards, allowing users to customise and scale the PDS based on their specific requirements without undertaking a full redesign.</p>
+<p><strong>Reliability and Durability:</strong></p>
+<p>To enhance system reliability and durability, the PLC will not be removed from the proposed PDS; instead, it will remain as the powerswitching controller, while the MCU handles only the power monitoring and data collection. This hybrid approach leverages the strengths of both PLCs and MCUs, ensuring robust and fail-resistant operation without compromising the compactness of the PCB design.</p>
+<p><img loading="lazy" src="CSF.png" alt="Control Signal Flow"  />
+</p>
+<h5 id="figure-7-control-signal-flow-in-the-new-pds">Figure 7: Control Signal Flow in the new PDS<a hidden class="anchor" aria-hidden="true" href="#figure-7-control-signal-flow-in-the-new-pds">#</a></h5>
+<h4 id="812-improved-power-switching-logic">8.1.2 Improved Power Switching Logic<a hidden class="anchor" aria-hidden="true" href="#812-improved-power-switching-logic">#</a></h4>
+<p>As mentioned in <a href="#32-st-engineering-usv-pds">Section 3.2</a>, the current PDS control of the ST Engineering USV relies on a continuous signal from the PLC, which creates a risk of complete power-line disconnection in the event of a PLC failure or loose connection. In this project, a new control logic using an ON signal latching design is introduced to solved this problem.</p>
+<p>The diagrams below illustrate the current control logic flow and the proposed new control logic.</p>
+<p><img loading="lazy" src="CCL.png" alt="Current Control Logic"  />
+</p>
+<h5 id="figure-8-current-control-logic-in-the-pds">Figure 8: Current Control Logic in the PDS<a hidden class="anchor" aria-hidden="true" href="#figure-8-current-control-logic-in-the-pds">#</a></h5>
+<p><img loading="lazy" src="NCL.png" alt="New Control Logic"  />
+</p>
+<h5 id="figure-9-new-control-logic-proposed">Figure 9: New Control Logic proposed<a hidden class="anchor" aria-hidden="true" href="#figure-9-new-control-logic-proposed">#</a></h5>
+<p>The key difference between the two control logics lies in how the power channel’s ON state is maintained. In the current system, the ON state is sustained by a continuous digital HIGH signal from the PLC. In contrast, the new control logic employs a latching mechanism: a momentary HIGH signal from the MCU toggles and latch the power channel ON at startup, and subsequent continuous HIGH signal will keep the channel OFF. This design ensures that a signal loss from PLC will only turn existing OFF power channel to ON instead of ON power channel to OFF. This significantly enhances fault tolerance, as transient or permanant PLC/MCU failures will not disrupt power delivery to critical subsystems during missions.</p>
+<p>In the interim report, it is mentioned that a separate PCB will be designed to implement this latching mechanism while remaining pluggable from the  Relay PCB. However, after further review and consultation with the ST Engineering USV team, the latching circuit will be integrated into the Relay PCB, which is a more compact and cost-effective approach. The schematic and layout of the latching circuit is shown below.</p>
+<p><img loading="lazy" src="latching_circuit.png" alt="Latching Circuit"  />
+</p>
+<h5 id="figure-10-latch-section-schematic-and-layout">Figure 10: Latch section Schematic and Layout<a hidden class="anchor" aria-hidden="true" href="#figure-10-latch-section-schematic-and-layout">#</a></h5>
+<p>An LTspice simulation has also been conducted with the designed circuit to validate its functionality. The simulation results are included in the appendix section of this report.</p>
+<h3 id="82-power-protection">8.2 Power Protection<a hidden class="anchor" aria-hidden="true" href="#82-power-protection">#</a></h3>
+<p>Power protection features are crucial in ensuring the safety and reliability of PDS. Current PDS in ST Engineering USV lacks adequate protection features, making it vulnerable to transient and fault situations.The Relay PCB design explained below will target this issue.</p>
+<h4 id="821-protection-requirements">8.2.1 Protection Requirements<a hidden class="anchor" aria-hidden="true" href="#821-protection-requirements">#</a></h4>
+<p>The types of faults that the new PDS should be able to protect against are identified from the design standards outlined in <a href="#61-design-standards">Section 6.1</a>. These include <strong>Overvoltage</strong> (OV), <strong>Undervoltage</strong> (UV) and <strong>Overcurrent</strong> (OC) faults.</p>
+<h4 id="822-choice-of-mosfet-gate-driver-ic---tps4800">8.2.2 Choice of MOSFET Gate Driver IC - TPS4800<a hidden class="anchor" aria-hidden="true" href="#822-choice-of-mosfet-gate-driver-ic---tps4800">#</a></h4>
+<p><strong>MOSFET gate driver</strong> is an electronic device designed to efficiently control the gate terminal of a MOSFET, enabling rapid switching between its ON and OFF states. It is the main compnent that enables the power channel switching functionality in the Relay PCB.</p>
+<p>In this project, the MOSFET gate driver IC TPS4800 from Texas Instruments (TI) is selected for its ability to achieve all the above required fault protection while satisfying the technical specifications mentioned in <a href="#62-technical-specifications">Section 6.2</a>. The key features of the TPS4800 are summarised in the appendix section.</p>
+<p>Besides, during the design of the circuit associated with the MOSFET gate driver, multiple considerations were taken to meet the technical and protection specifications. These considerations are mentioned in the appendix section as well.</p>
+<h4 id="823-user-configurable-protection-thresholds">8.2.3 User-configurable Protection Thresholds<a hidden class="anchor" aria-hidden="true" href="#823-user-configurable-protection-thresholds">#</a></h4>
+<p>To further enhance the capabilities and modularity of the Relay PCB, the protection thresholds for OC condition is made user-configurable in the design</p>
+<p>This threshold can be configured through a DIP switch interface on the PCB, providng a simple and intuitive way for users to adjust the setting without needing to modify the hardware and refabricate. The avaliable threshold options are 5A, 10A, 20A and 30A, which are the 4 most common current ratings of the devices connected to the system. During PCB operation, the state of this DIP switch will be read by the MCU to identify the OC threshold setting on each channel. This information will then be used to identify the type of fault triggered in that power channel (explained further in <a href="#84-fault-analysis-logic">section 8.4</a>).</p>
+<h3 id="83-power-monitoring">8.3 Power Monitoring<a hidden class="anchor" aria-hidden="true" href="#83-power-monitoring">#</a></h3>
+<p>The power monitoring section of the Relay PCB is responsible for monitoring and reporting power status and consumptions statistics in each channel. This section will detail the various features implemented to achieve this functionality.</p>
+<h4 id="831-power-good-status">8.3.1 Power Good Status<a hidden class="anchor" aria-hidden="true" href="#831-power-good-status">#</a></h4>
+<p>The Power Good (PG) status is a critical indicator of the health of power supply. It provides the most direct feedback on the power condition of each channel, allowing the system to quickly identify the occurance of any power loss issues.</p>
+<p>To achieve this functionality, a TPS3711DDCR voltage supervisor from TI is installed on the PCB. The IC monitors the output voltage and asserts the PG signal high when the voltage is within a specified range. In this project, the range is set to 10 - 30V which is the acceptable operating voltage range of the PDS.</p>
+<h4 id="832-fault-reporting">8.3.2 Fault Reporting<a hidden class="anchor" aria-hidden="true" href="#832-fault-reporting">#</a></h4>
+<p>As mentioned in <a href="#821-protection-requirements">Section 8.2.1</a>, the MOSFET gate driver IC TPS4800 is selected for its built-in protection features. Besides, when these protection features are triggered, the IC will assert a fault signal low, which can then be used to report the fault status of each channel.</p>
+<p>However, this fault signal is a simple digital signal that only indicates whether a fault has occurred, without providing specific information about the type of fault. TI&rsquo;s INA228 current shunt monitor is hence used to address this limitation, which will be explained with more detail in the following sections.</p>
+<h4 id="833-power-consumption-statistics">8.3.3 Power Consumption Statistics<a hidden class="anchor" aria-hidden="true" href="#833-power-consumption-statistics">#</a></h4>
+<p>Accurate power consumption monitoring is essential for identifying abnormal power situations in each channel. Here are some measurement requirements for the power consumption monitoring system in the new PDS:</p>
+<table>
+  <thead>
+      <tr>
+          <th><strong>Parameter</strong></th>
+          <th><strong>Requirement</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Current/Voltage Measurement Accuracy</td>
+          <td>±1% of the actual value or better</td>
+      </tr>
+      <tr>
+          <td>Voltage Measurement Resolution</td>
+          <td>100mV or better</td>
+      </tr>
+      <tr>
+          <td>Voltage Measurement Range</td>
+          <td>0V to 30V (to cover both 12V and 24V systems)</td>
+      </tr>
+      <tr>
+          <td>Current Measurement Resolution</td>
+          <td>0.01A or better</td>
+      </tr>
+      <tr>
+          <td>Current Measurement Range</td>
+          <td>0A to 30A (to cover the maximum transient current)</td>
+      </tr>
+  </tbody>
+</table>
+<h5 id="table-8-power-consumption-monitoring-requirements">Table 8: Power Consumption Monitoring Requirements<a hidden class="anchor" aria-hidden="true" href="#table-8-power-consumption-monitoring-requirements">#</a></h5>
+<p>As mentioned above, the INA228 current monitoring IC from TI is the choice for this relay PCB design. It provides high-precision power statistics measurements with an integrated 20-bit ADC that satisfy the above resolution and accuracy requirements. At the same time, it supports I2C communication which can be used for real-time data reporting to the MCU</p>
+<p>What is more, the IC also features programmable alert thresholds for abnormal power conditions, which can coordinate with the fault signals coming from TPS4800 to provide more detailed insights into the nature of any faults that occur.</p>
+<h4 id="834-fault-analysis-logic">8.3.4 Fault Analysis Logic<a hidden class="anchor" aria-hidden="true" href="#834-fault-analysis-logic">#</a></h4>
+<p>To make use of the above mentioned alert signals, a fault analysis logic, illustrated in the figure below, is implemented in the new PDS. With this logic, the system can distinguish between the types of faults occurred and report this information to the USV&rsquo;s power PLC for further investigations</p>
+<p><img loading="lazy" src="faultlogic.png" alt="Fault Analysis Logic Flow"  />
+</p>
+<h5 id="figure-12-fault-analysis-logic-flow">Figure 12: Fault Analysis Logic Flow<a hidden class="anchor" aria-hidden="true" href="#figure-12-fault-analysis-logic-flow">#</a></h5>
+<h4 id="835-overcurrent-protection-thresholds-sensing">8.3.5 Overcurrent Protection Thresholds Sensing<a hidden class="anchor" aria-hidden="true" href="#835-overcurrent-protection-thresholds-sensing">#</a></h4>
+<h2 id="9-mcu-pcb-system">9. MCU PCB System<a hidden class="anchor" aria-hidden="true" href="#9-mcu-pcb-system">#</a></h2>
+<p>The MCU PCB serves as an important processing unit in the new PDS, responsible for collecting power monitoring data and facilitating communication with the USV’s power PLC. The schematic and layout of the MCU PCB is shown below.</p>
+<p><img loading="lazy" src="MCU_PCB.png" alt="MCU PCB Schematic and Layout"  />
+</p>
+<h5 id="figure-14-mcu-pcb-schematic-and-layout">Figure 14: MCU PCB Schematic and Layout<a hidden class="anchor" aria-hidden="true" href="#figure-14-mcu-pcb-schematic-and-layout">#</a></h5>
+<h3 id="91-choice-of-mcu---stm32g474qet6">9.1 Choice of MCU - STM32G474QET6<a hidden class="anchor" aria-hidden="true" href="#91-choice-of-mcu---stm32g474qet6">#</a></h3>
+<p>The MCU selected for this PCB is from the STMicroelectronics STM32G4 series, in particular the STM32G474QET6, which offers a powerful ARM Cortex-M4 core, ample memory resources, and most importantly, a wide range of peripherals sufficient for the new PDS requirements.</p>
+<p>The MCU contains up to 107 fast GPIOs, 5 ADC Channels, and 5 I2C buses, making it enough for collecting data from the 26 relay PCB channels, which outputs in total 78 digital signals, 26 analog signals, and 26 I2C signals. The MCU also features a built-in CAN controller, which reduce the overall PCB footprint by avoiding the need for a separate CAN controller implementation.</p>
+<h3 id="92-data-reporting-peripheral-design">9.2 Data Reporting Peripheral Design<a hidden class="anchor" aria-hidden="true" href="#92-data-reporting-peripheral-design">#</a></h3>
+<p>As mentioned above, from the MCU PCB, communication with the USV’s power PLC is carried out via the Controller Area Network (CAN) bus. This communication protocol is chosen here because of its robustness, reliability, and suitability for high-speed data transmission in noisy environments, making it ideal for the maritime environment of this project. This approach also reduces overall wiring complexity, as only two wires are required for CAN communication.</p>
+<p>Below is an overall data flow diagram showing how the power monitoring data is collected and reported in the new PDS.
+<img loading="lazy" src="PDF.png" alt="Power Data Flow"  />
+</p>
+<h5 id="figure-13-power-data-flow-in-the-new-pds">Figure 13: Power Data Flow in the new PDS<a hidden class="anchor" aria-hidden="true" href="#figure-13-power-data-flow-in-the-new-pds">#</a></h5>
+<h2 id="10-power-backplane">10. Power Backplane<a hidden class="anchor" aria-hidden="true" href="#10-power-backplane">#</a></h2>
+<p>As mentioned in <a href="#91-choice-of-mcu---stm32g474qet6">Section 9.1</a>, the power backplane is designed to provide a robust and scalable platform for integrating the Relay PCBs, the MCU PCB and other components in the new PDS (e.g. fuses, power convertors). The backplane includes high-current connectors for power delivery, as well as signal connectors for CAN communication between the MCU PCB and the USV’s power PLC. Below is the schematic and layout of the power backplane.</p>
+<p><img loading="lazy" src="Backplane_PCB.png" alt="Power Backplane Schematic and Layout"  />
+</p>
+<h5 id="figure-15-power-backplane-schematic-and-layout">Figure 15: Power Backplane Schematic and Layout<a hidden class="anchor" aria-hidden="true" href="#figure-15-power-backplane-schematic-and-layout">#</a></h5>
+<h4 id="101-vibration-simulation-for-board-to-board-connectors-selection">10.1 Vibration Simulation for Board to Board Connectors Selection<a hidden class="anchor" aria-hidden="true" href="#101-vibration-simulation-for-board-to-board-connectors-selection">#</a></h4>
+<p>To ensure the mechanical integrity of the board-to-board connectors used for connecting the Relay PCBs to the power backplane, a vibration simulation using SolidWorks was conducted to evaluate the mechanical stress exerted on the connector chosen, which is the TE Connectivity MULTI-BEAM Connector 6450120-2 (referred to the interim report for the selection process) The vibration profile used in this simulation is obtained from the on-board IMU data of ST Engineering’s USV during a sea trail happened on March 10th 2026.</p>
+<p><img loading="lazy" src="vibration.png" alt="Vibration Simulation Results"  />
+</p>
+<h5 id="figure-15-vibration-simulation-results">Figure 15: Vibration Simulation Results<a hidden class="anchor" aria-hidden="true" href="#figure-15-vibration-simulation-results">#</a></h5>
+<p>The simulation results showed that the connector can withstand the expected vibration levels without experiencing significant mechanical stress or failure, making it a suitable choice for the PCB connectors.</p>
+<p>More considerations regarding the design of the power backplane such as current carrying capacity, thermal management and mechanical robustness will be provided in the appendix of this report.</p>
+<h2 id="11-firmware-development">11. Firmware Development<a hidden class="anchor" aria-hidden="true" href="#11-firmware-development">#</a></h2>
+<h3 id="111-relay-pcb-firmware">11.1 Relay PCB Firmware<a hidden class="anchor" aria-hidden="true" href="#111-relay-pcb-firmware">#</a></h3>
+<p>For developing the firmware for the Relay PCB, the main focus is on implementing the fault protection and reporting features. The firmware is designed to interface the MCU and the current shunt monitor INA228AIDGSR to achieve these functionalities.</p>
+<p>Key considerations of the design involves:</p>
+<ul>
+<li>Configuring the conversion time of INA228 to response to transient faults</li>
+<li>Setting the sensor sampling rate to ensure accuracy in continuous power monitoring</li>
+<li>Allocating the I2C static address for multiple channels.</li>
+</ul>
+<h3 id="112-mcu-firmware">11.2 MCU Firmware<a hidden class="anchor" aria-hidden="true" href="#112-mcu-firmware">#</a></h3>
+<p>The firmware for the MCU PCB is responsible for collecting data from the Relay PCB and communicating with the USV’s power PLC via CAN bus. Detail tasks of the MCU firmware include:</p>
+<ul>
+<li>Reading the PG status, fault status, and power consumption data from the Relay PCB.</li>
+<li>Processing the collected data to determine the fault types if any faults are detected.</li>
+<li>Sending the processed data to the USV’s power PLC via CAN communication.</li>
+</ul>
+<h2 id="12-subsystem-prototyping-and-testing">12. Subsystem Prototyping and Testing<a hidden class="anchor" aria-hidden="true" href="#12-subsystem-prototyping-and-testing">#</a></h2>
+<p>Before integrating the MOSFET PCB, MCU PCB, and power backplane into a complete PDS, each subsystem will be prototyped and tested separately to validate their functionality and performance against the technical specifications outlined in <a href="#52-technical-specifications">Section 5.2</a> and the design requirements in <a href="#53-functional-sub-goals">Section 5.3</a>.</p>
+<h3 id="121-relay-pcb-prototyping-and-testing">12.1 Relay PCB Prototyping and Testing<a hidden class="anchor" aria-hidden="true" href="#121-relay-pcb-prototyping-and-testing">#</a></h3>
+<p>In this project, the relay PCB has gone through 3 major iterations, which was designed to be tested alone, with T&amp;C PCB and with the power backplane resepctively.This report will go through briefly the first 2 iterations and focus on discussing the test result of the final iteration, which reflects the best performance of this series of PCB prototypes.</p>
+<h4 id="1211-1st-iteration-relay-pcb-testing">12.1.1 1<sup>st</sup> Iteration Relay PCB Testing<a hidden class="anchor" aria-hidden="true" href="#1211-1st-iteration-relay-pcb-testing">#</a></h4>
+<p>The 1<sup>st</sup> iteration of the relay PCB is designed with Wago 221-412 terminal blocks as power input and output connectors, which allow it to be tested seperately through cable connections. The testing of this iteration involves basic power channel switching, protection features testing and power monitoring testing. The testing results of this iteration are used to validate the basic functionalities of the relay PCB and identify areas for improvement in the subsequent iterations.</p>
+<h4 id="1212-testing-and-commissioning-tc-pcb-prototyping-and-testing">12.1.2 Testing and Commissioning (T&amp;C) PCB Prototyping and Testing<a hidden class="anchor" aria-hidden="true" href="#1212-testing-and-commissioning-tc-pcb-prototyping-and-testing">#</a></h4>
+<p>Before carrying out the design of a full power distribution system. a single channel T&amp;C PCB was designed and tested to validate the core functionalities, including power switching, fault protection, and power monitoring when the relay PCB is integrated with the MCU. This prototype will serve as a proof of concept for the overall system design and allow for iterative improvements before scaling up to the full 26-channel implementation. The schematic and layout of the T&amp;C PCB is shown below.</p>
+<p><img loading="lazy" src="Testing_PCB.png" alt="Testing and Commissioning PCB Schematic and Layout"  />
+</p>
+<h5 id="figure-16-testing-and-commissioning-pcb-schematic-and-layout">Figure 16: Testing and Commissioning PCB Schematic and Layout<a hidden class="anchor" aria-hidden="true" href="#figure-16-testing-and-commissioning-pcb-schematic-and-layout">#</a></h5>
+<p>Besides serving as a preliminary testing platform for the relay PCB, the T&amp;C PCB is also used to conduct a commissioning test for the relay PCB produced. This test involves connecting the relay PCB to the T&amp;C PCB and verifying that all functionalities are working as intended. The test will also validate overcurrent threshold and static I2C ID set by the DIP switch, which are important features for the final system. Below is a figure showing the commissioning test procedures and intended outcomes:</p>
+<p><img loading="lazy" src="commissioning.png" alt="Relay PCB Commissioning Test Procedures"  />
+</p>
+<h5 id="figure-17-relay-pcb-commissioning-test-procedures-and-intended-outcomes">Figure 17: Relay PCB Commissioning Test Procedures and Intended Outcomes<a hidden class="anchor" aria-hidden="true" href="#figure-17-relay-pcb-commissioning-test-procedures-and-intended-outcomes">#</a></h5>
+<h4 id="1213-2nd-iteration-relay-pcb--tc-pcb-integrated-testing">12.1.3 2<sup>nd</sup> Iteration Relay PCB &amp; T&amp;C PCB Integrated Testing<a hidden class="anchor" aria-hidden="true" href="#1213-2nd-iteration-relay-pcb--tc-pcb-integrated-testing">#</a></h4>
+<p>Developing upon the 1st iteration, the 2nd iteration of the relay PCB is designed with the high-current PCB board to board connectors mentioned above. This means that it cannot be tested alone with cable connections. A T&amp;C PCB is thus developed (mentioned with greater detail in <a href="#124-testing-and-commissioning-tc-pcb-prototyping-and-testing">Section 12.4</a>) and used for the testing of this iteration. Other than what is conducted in the previous iteration, extra testing is also performed on board start-up procedures, MCU interaction  as well as data collection and reporting.</p>
+<h4 id="1214-final-iteration-relay-pcb-testing">12.1.4 Final Iteration Relay PCB Testing<a hidden class="anchor" aria-hidden="true" href="#1214-final-iteration-relay-pcb-testing">#</a></h4>
+<p>This iteration of the PCB mainly focus on improving some issues on the previous iteration such as addition of signal regulators for PLC control signals. After the fabrication and assembly of this iteration, a throughout testing and evaluation is conducted on the prototype, which is summaried in the table below:</p>
+<table>
+  <thead>
+      <tr>
+          <th><strong>Tested Functionality</strong></th>
+          <th><strong>Test Procedures</strong></th>
+          <th><strong>Expected Outcome</strong></th>
+          <th><strong>Actual Outcome</strong></th>
+          <th><strong>Pass/Fail</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Power Channel Switching at no load</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>PASS</td>
+      </tr>
+      <tr>
+          <td>Power Channel Switching at 20A continuous current drawn</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>PASS</td>
+      </tr>
+      <tr>
+          <td>Power Channel Protection at 30A transient current drawn</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>PASS</td>
+      </tr>
+      <tr>
+          <td>Power Channel Protection at 9V voltage input</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>PASS</td>
+      </tr>
+      <tr>
+          <td>Power Channel Protection at 32V voltage input</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>PASS</td>
+      </tr>
+      <tr>
+          <td>Power Channel Protection at 0.06A continuous current drawn (smallest load in ST Engineering USV)</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>PASS</td>
+      </tr>
+      <tr>
+          <td>Power Channel Monitoring at 20A continuous current drawn</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>PASS</td>
+      </tr>
+      <tr>
+          <td>Power Channel Monitoring at 12V Voltage Input</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>PASS</td>
+      </tr>
+  </tbody>
+</table>
+<h5 id="table-16-final-iteration-testing-results-summary">Table 16: Final Iteration Testing Results Summary<a hidden class="anchor" aria-hidden="true" href="#table-16-final-iteration-testing-results-summary">#</a></h5>
+<p><img loading="lazy" src="final_test_setup.png" alt="Test Setup for Final Iteration"  />
+</p>
+<h5 id="figure-18-test-setup-for-final-iteration-of-the-relay-pcb">Figure 18: Test Setup for Final Iteration of the Relay PCB<a hidden class="anchor" aria-hidden="true" href="#figure-18-test-setup-for-final-iteration-of-the-relay-pcb">#</a></h5>
+<h3 id="122-mcu-pcb-prototyping-and-testing">12.2 MCU PCB Prototyping and Testing<a hidden class="anchor" aria-hidden="true" href="#122-mcu-pcb-prototyping-and-testing">#</a></h3>
+<p>The MCU PCB is prototyped with reference to the MCU section of the T&amp;C PCB. The testing of the MCU PCB focuses on validating its data collection and reporting functionalities, especially under multi-channel operation.</p>
+<h3 id="123-power-backplane-prototyping-and-testing">12.3 Power Backplane Prototyping and Testing<a hidden class="anchor" aria-hidden="true" href="#123-power-backplane-prototyping-and-testing">#</a></h3>
+<p>The power backplane is prototyped by expanding the single channel Relay PCB Connector section of the T&amp;C PCB to a full 26 channels backplane design. The testing of the power backplane focuses on validating its power transmission capabilities.</p>
+<h2 id="13-overall-system-integration-and-testing">13. Overall System Integration and Testing<a hidden class="anchor" aria-hidden="true" href="#13-overall-system-integration-and-testing">#</a></h2>
+<p>After the separate testing of the cards and backplane, the next step is to integrate the subsystems and conduct comprehensive testing to validate the overall functionality and performance of the new PDS.</p>
+<p>However, due to time constraint, this project will only cover the initial integration phases, which include in lab functionality testing and thermal testing. The final on-boat testing phase will be carried out by the ST Engineering USV team after the completion of this project.</p>
+<h3 id="131-functionality-testing">13.1 Functionality Testing<a hidden class="anchor" aria-hidden="true" href="#131-functionality-testing">#</a></h3>
+<p>Functionality testing will be conducted to verify that the new PDS meets all technical specifications and functional requirements outlined in <a href="#5-Design-Requirments">Section 5</a>. This will involve testing the power switching capabilities, fault protection features, and power monitoring functionalities under various load conditions and fault scenarios. The testing will be performed in a controlled laboratory environment using power supply and electronic load tester. The tests conducted is similar to the ones performed during the final iteration testing of the relay PCB, but on a full 26 channel power backplane with 10 operating channel.</p>
+<p><img loading="lazy" src="functionality_test_setup.png" alt="Test Setup for Functionality Testing"  />
+</p>
+<h5 id="figure-18-test-setup-for-functionality-testing-of-10-operating-channels">Figure 18: Test Setup for functionality testing of 10 Operating Channels<a hidden class="anchor" aria-hidden="true" href="#figure-18-test-setup-for-functionality-testing-of-10-operating-channels">#</a></h5>
+<h3 id="132-thermal-testing">13.2 Thermal Testing<a hidden class="anchor" aria-hidden="true" href="#132-thermal-testing">#</a></h3>
+<p>Thermal testing is conducted to evaluate the heat dissipation capabilities of the new PDS under various load conditions. This overall system thermal testing will be conducted bymonitoring the temperature of 10 loaded channels. The testing will be performed using thermal imaging cameras and temperature sensors to capture real-time temperature data during the operation of the PDS. Below is a summary of the thermal testing results:</p>
+<table>
+  <thead>
+      <tr>
+          <th><strong>Load Condition</strong></th>
+          <th><strong>Component</strong></th>
+          <th></th>
+          <th><strong>Hotest Spot Steady State Temperature</strong></th>
+          <th><strong>Within Accepted Range?</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>0A</td>
+          <td>MOSFETs</td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>0A</td>
+          <td>Shunt Resistor</td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>30A</td>
+          <td>MOSFETs</td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>30A</td>
+          <td>Shunt Resistor</td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<h5 id="table-18-thermal-testing-results-summary-for-10-loaded-channels">Table 18: Thermal Testing Results Summary for 10 Loaded Channels<a hidden class="anchor" aria-hidden="true" href="#table-18-thermal-testing-results-summary-for-10-loaded-channels">#</a></h5>
+<p><img loading="lazy" src="thermal_test_setup.png" alt="Test Setup for Thermal Testing"  />
+</p>
+<h5 id="figure-19-test-setup-for-thermal-testing-of-10-loaded-channels">Figure 19: Test Setup for thermal testing of 10 Loaded Channels<a hidden class="anchor" aria-hidden="true" href="#figure-19-test-setup-for-thermal-testing-of-10-loaded-channels">#</a></h5>
+<h2 id="14-conclusion">14. Conclusion<a hidden class="anchor" aria-hidden="true" href="#14-conclusion">#</a></h2>
+<h3 id="141-limitations">14.1 Limitations<a hidden class="anchor" aria-hidden="true" href="#141-limitations">#</a></h3>
+<!-- [What aspects of the system were not tested? What conditions were not representative of real deployment? What technical constraints remain?] -->
+<p>The first limitation of this project is the lack of testing under actual operational conditions. While the functionality and thermal testing conducted in the laboratory provide valuable insights into the performance of the new PDS, they may not fully capture the complexities and challenges of real-world maritime environments, such as exposure to saltwater, temperature fluctuations, and mechanical vibrations. As a result, the system&rsquo;s performance and reliability under these conditions remain unverified. This limitation hopefully will be solved by more follow-up testing after the completion of this project.</p>
+<p>Another limitation is associated with the technical constraints of the design. The current PDS PCBs are only suitable for DC power operation but not functional under AC load. This is a significant limitation, as many maritime system components (e.g. Servers/Switches, Induction motors) still operate on AC power. This limitation highlights the need for future iterations of the PDS to expand its capabilities to support a wider range of power types and applications.</p>
+<h3 id="142-possible-future-improvements">14.2 Possible Future Improvements<a hidden class="anchor" aria-hidden="true" href="#142-possible-future-improvements">#</a></h3>
+<!-- [What are some potential improvements that could be made to the system? What are some possible future directions for this project?] -->
+<p>As mentioned in the limitations section, one potential improvement for the new PDS is to expand its capabilities to support AC power loads. This would involve redesigning the power switching components to handle AC currents, implementing appropriate protection features for AC faults, and modifying the monitoring system to accurately measure AC power consumption. This improvement would significantly enhance the versatility and applicability of the PDS in maritime environments, allowing it to support a wider range of systems and components.</p>
+<p>Other than more hardware developments, possible improvements can also be made in the software aspect of the PDS. For example, the data collected by the MCU can be further processed using machine learning algorithms to predict potential faults before they occur, enabling proactive maintenance and reducing downtime. Additionally, the user interface for monitoring the PDS could be enhanced to provide more intuitive and actionable insights for operators.</p>
+<h2 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h2>
+<ol>
+<li>Abraham Sachin, &ldquo;Marine Electrical Distribution,&rdquo; 22 June 2018. [Online] Avaliable: teckhmarine.blogspot.com/2018/06/marine-electrical-distribution.html.</li>
+<li>ABB, &ldquo;Unmanned Surface Vehicles/Vessel (USV) Reliable Power and Propulsion Architecture Characterization,&rdquo; 2020. [Online]. Available: <a href="https://new.abb.com/docs/librariesprovider15/gov/usv-abb-white-paper-20200830.pdf?sfvrsn=6369e809_2" target="_blank">https://new.abb.com/docs/librariesprovider15/gov/usv-abb-white-paper-20200830.pdf?sfvrsn=6369e809_2</a></li>
+<li>ST Engineering, &ldquo;Unmanned Surface Vehicle (USV) Solutions,&rdquo; [Online]. Available: <a href="https://www.stengg.com/en/solutions/unmanned-surface-vehicle-usv-solutions.html" target="_blank">https://www.stengg.com/en/solutions/unmanned-surface-vehicle-usv-solutions.html</a></li>
+<li>IEEE Std 1709-2010, &ldquo;IEEE Recommended Practice for the Design and Application of Power Electronics in Electrical Power Systems,&rdquo; pp.1-50, 2010.</li>
+<li>Omron, &ldquo;G3NA-210B-UTU DC5-24 Solid State Relay Datasheet,&rdquo; [Online]. Available: <a href="https://www.ia.omron.com/product/item/7692/" target="_blank">https://www.ia.omron.com/product/item/7692/</a></li>
+<li>Texas Instruments, &ldquo;TPS4800-Q1 High-Side and Low-Side N-Channel MOSFET Driver with Integrated Protection Features,&rdquo; [Online]. Available: <a href="https://www.ti.com/product/TPS4800-Q1" target="_blank">https://www.ti.com/product/TPS4800-Q1</a></li>
+<li>Texas Instruments, &ldquo;TPS3711 Voltage Supervisor with Power-Good Output,&rdquo; [Online]. Available: <a href="https://www.ti.com/product/TPS3711" target="_blank">https://www.ti.com/product/TPS3711</a></li>
+<li>Texas Instruments, &ldquo;AMC1301 Isolated Delta-Sigma Modulator for Current Sensing,&rdquo; [Online]. Available: <a href="https://www.ti.com/product/AMC1301" target="_blank">https://www.ti.com/product/AMC1301</a></li>
+<li>IPC-2152, &ldquo;Standard for Determining Current-Carrying Capacity in Printed Board Design,&rdquo; pp.1-60, 2017.</li>
+</ol>
+<hr>
+<h2 id="appendix-a-technical-specifications-rationale">Appendix A: Technical Specifications Rationale<a hidden class="anchor" aria-hidden="true" href="#appendix-a-technical-specifications-rationale">#</a></h2>
+<p>The 30 A transient current limit is derived from the maximum expected per-channel transient DC load — 24 A as specified in the searchlight datasheet — with an additional 50% design margin to provide sufficient headroom for short-duration overloads. A power-consumption chart was also prepared to verify that these power-level specifications are adequate for all required loads; this chart is included in the Appendix.</p>
+<p>The fault-response requirement is selected to match the operating characteristics of the G3NA-210B-UTU DC5–24 relay used in the current PDS, which has a specified operation time of up to 1 ms.</p>
+<h2 id="appendix-b-tps4800-key-features">Appendix B: TPS4800 Key Features<a hidden class="anchor" aria-hidden="true" href="#appendix-b-tps4800-key-features">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left"><strong>Key Features</strong></th>
+          <th style="text-align: left"><strong>Specifications</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Operating Voltage</td>
+          <td style="text-align: left">3.5V to 95V DC</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Overvoltage Protection Threshold</td>
+          <td style="text-align: left">Adjustable between 10V to 60V DC</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Undervoltage Protection Threshold</td>
+          <td style="text-align: left">Adjustable between 6V to 54V DC</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Overcurrent Protection Threshold</td>
+          <td style="text-align: left">Adjustable between 5A to 50A</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Overcurrent Protection Response Time</td>
+          <td style="text-align: left">&lt;1ms (adjustable)</td>
+      </tr>
+  </tbody>
+</table>
+<h5 id="key-features-of-tps4800-mosfet-gate-driver-ic">Key Features of TPS4800 MOSFET Gate Driver IC<a hidden class="anchor" aria-hidden="true" href="#key-features-of-tps4800-mosfet-gate-driver-ic">#</a></h5>
+<h2 id="appendix-c-design-mosfet-pcb-to-meet-technical-and-protection-specifications">Appendix C: Design MOSFET PCB to Meet Technical and Protection Specifications<a hidden class="anchor" aria-hidden="true" href="#appendix-c-design-mosfet-pcb-to-meet-technical-and-protection-specifications">#</a></h2>
+<p>Several design considerations were taken during the MOSFET PCB design to ensure that the technical specifications and protection requirements mentioned in <a href="#52-technical-specifications">Section 5.2</a> and <a href="#71-protection-requirements">Section 7.1</a> are met:</p>
+<p><strong>Current Tolerance:</strong> To handle the maximum continuous current of 20 A and transient current of 30 A, the MOSFET PCB adopts a 4-layer design, with the middle layers dedicated entirely to power and ground. Additionally, the PCB traces are designed with sufficient width and thickness to minimize resistance and heat generation (Calculation done based on design standrad <em>IPC-2152</em>). Thermal vias and copper pours are also incorporated to improve heat dissipation.</p>
+<p><img loading="lazy" src="Players.png" alt="MOSFET PCB Dedicated Power Plane"  />
+
+<img loading="lazy" src="Glayers.png" alt="MOSFET PCB Dedicated Ground Plane"  />
+</p>
+<h5 id="dedicated-power-and-ground-plane-in-the-mosfet-pcb">Dedicated Power and Ground Plane in the MOSFET PCB<a hidden class="anchor" aria-hidden="true" href="#dedicated-power-and-ground-plane-in-the-mosfet-pcb">#</a></h5>
+<p><img loading="lazy" src="tracecalc.png" alt="MOSFET PCB Trace Width Calculation"  />
+</p>
+<h5 id="trace-width-and-plane-area-calculation-for-the-mosfet-pcb-using-online-ipc-2152-trace-width-calculator">Trace Width and Plane Area Calculation for the MOSFET PCB using online IPC-2152 Trace Width Calculator<a hidden class="anchor" aria-hidden="true" href="#trace-width-and-plane-area-calculation-for-the-mosfet-pcb-using-online-ipc-2152-trace-width-calculator">#</a></h5>
+<p><img loading="lazy" src="thermalvias.png" alt="MOSFET PCB Thermal Vias and Copper pours"  />
+</p>
+<h5 id="thermal-vias-and-copper-pours-in-the-mosfet-pcb">Thermal Vias and Copper Pours in the MOSFET PCB<a hidden class="anchor" aria-hidden="true" href="#thermal-vias-and-copper-pours-in-the-mosfet-pcb">#</a></h5>
+<p><strong>Fault Protection Thresholds:</strong> The TPS4800 gate driver IC allows for adjustable fault protection thresholds. Below is a table showing the overvoltage, undervoltage, and overcurrent protection thresholds set for the the most recent prototype, according to the specifications outlined. Resistor dividers and charging capacitors are used to configure these thresholds accurately.</p>
+<table>
+  <thead>
+      <tr>
+          <th><strong>Protection Type</strong></th>
+          <th><strong>Threshold Setting</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Overvoltage Protection</td>
+          <td>30V DC</td>
+      </tr>
+      <tr>
+          <td>Undervoltage Protection</td>
+          <td>10V DC</td>
+      </tr>
+      <tr>
+          <td>Overcurrent Protection</td>
+          <td>30A</td>
+      </tr>
+      <tr>
+          <td>Fault Response Time</td>
+          <td>50μs</td>
+      </tr>
+  </tbody>
+</table>
+<h5 id="table-8-protection-threshold-settings-on-the-mosfet-pcb">Table 8: Protection Threshold Settings on the MOSFET PCB<a hidden class="anchor" aria-hidden="true" href="#table-8-protection-threshold-settings-on-the-mosfet-pcb">#</a></h5>
+<p><img loading="lazy" src="protectioncircuit.png" alt="Protection Threshold Configuration Circuit"  />
+</p>
+<h5 id="example-of-the-protection-threshold-configuration-circuit-in-the-mosfet-pcb">Example of the Protection Threshold Configuration Circuit in the MOSFET PCB<a hidden class="anchor" aria-hidden="true" href="#example-of-the-protection-threshold-configuration-circuit-in-the-mosfet-pcb">#</a></h5>
+<h2 id="appendix-d-mosfet-and-latch-pcb-schematics">Appendix D: MOSFET and Latch PCB Schematics<a hidden class="anchor" aria-hidden="true" href="#appendix-d-mosfet-and-latch-pcb-schematics">#</a></h2>
+<ul>
+<li><a href="mosfetschem.pdf">MOSFET PCB Schematics</a></li>
+<li><a href="latchschem.png">Latch PCB Schematics</a></li>
+</ul>
+<h2 id="appendix-e-mosfet-and-latch-pcb-layouts">Appendix E: MOSFET and Latch PCB Layouts<a hidden class="anchor" aria-hidden="true" href="#appendix-e-mosfet-and-latch-pcb-layouts">#</a></h2>
+<ul>
+<li><a href="mosfetlayout.pdf">MOSFET PCB Layouts</a></li>
+<li><a href="latchlayout.pdf">Latch PCB Layouts</a></li>
+</ul>
+<h2 id="appendix-f-latch-pcb-simulation">Appendix F: Latch PCB Simulation<a hidden class="anchor" aria-hidden="true" href="#appendix-f-latch-pcb-simulation">#</a></h2>
+<p><img loading="lazy" src="latchsim.png" alt="Latching PCB Simulation"  />
+</p>
+<h5 id="latch-pcb-simulation-results">Latch PCB Simulation Results<a hidden class="anchor" aria-hidden="true" href="#latch-pcb-simulation-results">#</a></h5>
+<h2 id="appendix-g-power-consumption-chart">Appendix G: Power Consumption Chart<a hidden class="anchor" aria-hidden="true" href="#appendix-g-power-consumption-chart">#</a></h2>
+<p><img loading="lazy" src="powerchart.png" alt="Power Consumption Chart"  />
+</p>
+<h5 id="power-consumption-chart-of-the-usv-dc-systems">Power Consumption Chart of the USV DC Systems<a hidden class="anchor" aria-hidden="true" href="#power-consumption-chart-of-the-usv-dc-systems">#</a></h5>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2026 <a href="http://localhost:1313/website/">USV Power Distribution System</a></span> ·     
+    <span>
+    Powered by 
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/pmichaillat/hugo-website/" rel="noopener" target="_blank">a modified version</a>
+         of 
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+</html>
