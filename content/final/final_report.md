@@ -128,7 +128,7 @@ As a starting point, the new PDS must at least match the technical performance o
 | Maximum Transient Current   per channel  | 30A                                                                            |
 | Fault Protection     | Overvoltage/Undervoltage/Overcurrent                                                                            |
 | Power System Monitoring                  | Power Consumption, Power Good(PG), Fault Status |
-| Communication Protocol     | Digital/Analog/CAN 2.0      |
+| Communication Protocol     | Digital/I2C/CAN 2.0      |
 
 ##### Table 4: Core Technical Requirements for the New PDS
 
@@ -247,6 +247,9 @@ Before detailing the protection mechanisms, it is important to identify the type
 
 In this project, the MOSFET gate driver IC **TPS4800** from Texas Instruments (TI) is selected for its ability to achieve all the above required fault protection while satisfying the technical specifications mentioned in [Section 6.2](#62-technical-specifications). The key features of the TPS4800 are summarised in the appendix section.
 
+![TPS4800 MOSFET Gate Driver IC](TPS4800.png)
+##### Figure 11: TPS4800 MOSFET Gate Driver IC Operation Circuit
+
 Besides, during the design of the circuit associated with the MOSFET gate driver, multiple considerations were taken to meet its operational requirements. These considerations are also highlighted in the appendix section. 
 
 #### 8.2.3 User Configurable Protection Thresholds
@@ -262,10 +265,16 @@ Power Good (PG) status provides the most direct feedback on the power condition 
 
 A **TPS3711DDCR** voltage supervisor from TI is installed on the Relay PCB for this purpose. The IC monitors the output voltage and asserts the PG signal high when the voltage is within a specified range. In this project, the range is set to 10 - 30V which is the acceptable operating voltage range of the PDS.
 
+![Voltage Supervisor IC](TPS3711.png)
+##### Figure 13: TPS3711DDCR Voltage Supervisor IC Operation Circuit
+
 #### 8.3.2 Fault Reporting
 As mentioned in [Section 8.2.1](#821-protection-requirements), the MOSFET gate driver IC TPS4800 is selected for its built-in protection features. Besides, when these protection features are triggered, the IC will assert a fault signal low, which can then be used to report the fault status of each channel.
 
 However, this fault signal is a simple digital signal that only indicates whether a fault has occurred, without providing specific information about the type of fault. TI's **INA228** current shunt monitor is used to address this limitation, which will be explained with more detail in the following sections.
+
+![Current Shunt Monitor IC](INA228.png)
+##### Figure 14: INA228 Current Shunt Monitor IC Operation Circuit
 
 #### 8.3.3 Power Consumption Statistics
 Accurate power consumption monitoring is essential for identifying abnormal power situations in each channel. Here are some measurement requirements for the power consumption monitoring system in the new PDS:
@@ -293,12 +302,9 @@ To make use of the above mentioned alert signals, a fault analysis logic, illust
 #### 8.3.5 Overcurrent Protection Thresholds Sensing
 
 ## 9. MCU PCB System
-The MCU PCB serves as the processing unit in the new PDS, responsible for collecting power monitoring data and facilitating communication with the USV’s power PLC. The schematic and layout of the MCU PCB is shown below.
+The MCU PCB serves as the processing unit in the new PDS, responsible for collecting power monitoring data and facilitating communication with the USV’s power PLC. 
 
-![MCU PCB Schematic and Layout](MCU_PCB.png)
-##### Figure 14: MCU PCB Schematic and Layout
-
-The remaining part of this section will explain in detail some features in this MCU PCB design, including the choice of MCU and the data reporting peripheral design.
+The remaining part of this section will explain in detail some features in this MCU PCB, including the choice of MCU and the data reporting peripheral design.
 
 ### 9.1 Choice of MCU - STM32G474QET6
 The MCU selected for this PCB is from the STMicroelectronics STM32G4 series, in particular the **STM32G474QET6**, which offers a powerful ARM Cortex-M4 core, ample memory resources, and most importantly, a wide range of peripherals sufficient for the new PDS requirements. 
@@ -313,10 +319,7 @@ Below is an overall data flow diagram showing how the power monitoring data is c
 ##### Figure 13: Power Data Flow in the new PDS
 
 ## 10. Power Backplane
-As mentioned in [Section 8.1.1](#811-moving-towards-pcbs), the power backplane is designed to provide a robust and scalable platform for integrating the Relay PCBs, the MCU PCB and other components in the new PDS (e.g. fuses, power convertors). The backplane includes high-current connectors for power delivery, as well as signal connectors for CAN communication between the MCU PCB and the USV’s power PLC. Below is the schematic and layout of the power backplane. 
-
-![Power Backplane Schematic and Layout](Backplane_PCB.png)
-##### Figure 15: Power Backplane Schematic and Layout
+As mentioned in [Section 8.1.1](#811-moving-towards-pcbs), the power backplane is designed to provide a robust and scalable platform for integrating the Relay PCBs, the MCU PCB and other components in the new PDS (e.g. fuses, power convertors). The backplane includes high-current connectors for power delivery, as well as signal connectors for CAN communication between the MCU PCB and the USV’s power PLC.
 
 #### 10.1 Vibration Simulation for Board to Board Connectors Selection
 
@@ -365,17 +368,17 @@ The 1<sup>st</sup> iteration of the Relay PCB is designed with **Wago 221-412** 
 
 **This iteration of the PCB is also discussed in the Interim Report, refer to it if more detailed design information is needed.*
 
-![1st Iteration Relay PCB](1st_Relay_PCB.png)
+![1st Iteration Relay PCB](1st_Relay_PCB.jpg)
 ##### Figure 15: 1<sup>st</sup> Iteration of the Relay PCB
 
-![Test Setup for 1st Iteration](1st_test_setup.png)
+![Test Setup for 1st Iteration](1st_test_setup.jpg)
 ##### Figure 16: Test Setup for 1<sup>st</sup> Iteration of the Relay PCB
 
 #### 12.1.2 Testing and Commissioning (T&C) PCB
 
 Before carrying out the design of a full Power Backplane. a single channel T&C PCB was designed and tested to validate the integration of the relay PCB with the MCU PCB. This prototype will serve as a proof of concept for the overall PCB subsystem design and allow for iterative improvements before scaling up to the full 26-channel implementation. Below is the designed T&C PCB:
 
-![Testing and Commissioning PCB](Testing_PCB.png)
+![Testing and Commissioning PCB](Testing_PCB.jpg)
 ##### Figure 16: Testing and Commissioning PCB
 
 Besides, the T&C PCB is also used to conduct a commissioning check on the Relay PCB produced and configured before their actual deployment. The check involves verifying all intended functionalities of the connected Relay PCB as well as validating the correct setting of the overcurrent threshold and static I2C ID for communication with the MCU, which are important preventive measures to reduce production errors. Below is a figure showing the commissioning test procedures and their intended outcomes:
@@ -396,11 +399,23 @@ Developing upon the 1st iteration, the 2nd iteration of the relay PCB has replac
 
 The results of these tests have shown the capability of the chosen PCB connectors in handling the maximum continuous current of 20A as well as the transient current of 30A. Besides, the new power monitoring IC choice INA228 is also first introduced in this iteration and validated through these test results. The integration of the Relay PCB with the T&C PCB has further served as a platform for developing the firmware for the various PCB subsystem as mentioned in [Section 11](#11-firmware-development)
 
-![2nd Iteration Relay PCB Integrated with T&C PCB](2nd_Relay_PCB.png)
-##### Figure 18: 2<sup>nd</sup> Iteration of the Relay PCB Integrated with T&C PCB
 
-![Test Setup for 2nd Iteration](2nd_test_setup.png)
+![2nd Iteration Relay PCB Front View](2nd_Relay_PCB_Front.jpg)
+##### Figure 17: Front view of the 2<sup>nd</sup> Iteration Relay PCB
+
+![2nd Iteration Relay PCB Back View](2nd_Relay_PCB_Back.jpg)
+##### Figure 18: Back view of the 2<sup>nd</sup> Iteration Relay PCB
+
+![2nd Iteration Relay PCB Integrated with T&C PCB](2nd_Relay_PCB_Integrated.jpg)
+##### Figure 19: 2<sup>nd</sup> Iteration of the Relay PCB Integrated with T&C PCB
+
+![Test Setup for 2nd Iteration](2nd_test_setup.jpg)
 ##### Figure 20: Test Setup for the Integrated PCBs
+
+Although the main components of the Relay PCB were finalised and validated in this iteration, several issues were identified during testing:
+
+- **PLC input signal compatibility**: The switching signal circuit on this PCB revision is unable to tolerate the 24 V control signal from the PLC. A 24 V-to-3.3 V signal level-shifting stage will therefore be added in the next revision.
+- **Overcurrent threshold accuracy**: The user-configurable overcurrent threshold does not accurately match the actual protection trigger point. This discrepancy is caused by the MOSFET-based resistor selection method used to switch between threshold resistors. To improve reliability and accuracy, the design will be revised to use a mechanical DP3T slide switch for resistor selection.
 
 #### 12.1.4 Final Iteration Relay PCB
 This iteration of the PCB mainly focus on improving issues identified in the previous iteration mentioned above. After the fabrication and assembly of this iteration, a throughout testing and evaluation with the Power Backplane and MCU Board is conducted on this iteration, which will be discussed in the "Overall System Integration and Testing" section of this report ([Section 13](#13-overall-system-integration-and-testing)).
@@ -408,20 +423,28 @@ This iteration of the PCB mainly focus on improving issues identified in the pre
 ![Final Iteration Relay PCB](final_relay_PCB.png)
 ##### Figure 19: Final Iteration of the Relay PCB
 
+**Due to the PCB manufacturing delay, the production of this iteration of the Relay PCB is still ongoing at the time of this report submission. Most latest picture will be updated once the production is complete.*
+
 ### 12.2 Other PCB Subsystem Prototyping and Testing
 
 Other than the Relay PCBs, two more PCB subsystems are prototyped in this project: the MCU PCB and the Power Backplane PCB. 
 
 The MCU PCB is prototyped with reference to the MCU section of the T&C PCB. The testing of the MCU PCB focuses on validating its data collection and reporting functionalities, especially its measuremnet accuracy and resolution under multi-channel operation. 
 
+![MCU PCB Prototype](MCU_PCB.png)
+##### Figure 20: MCU PCB Prototype
+
 Similar to the MCU PCB, the power backplane is prototyped by expanding the single channel Relay PCB connector section of the T&C PCB to a full 26 channels backplane design. The testing of the power backplane focuses on validating its power transmission capabilities. 
+
+![Power Backplane Prototype](Backplane_PCB.jpg)
+##### Figure 21: Power Backplane Prototype
 
 Due to the nature of these PCBs, it is not feasible to test them separately without the integration of the whole system. As a result, the testing of these two PCB subsystems is conducted together with the final iteration of the Relay PCB, which, as mentioned above, will be discussed in the next section.
 
 ## 13. Overall System Integration and Testing
 After separate testing of the individual subsystems, the next step is to integrate them on the power backplane and conduct comprehensive testing to validate the overall functionality and performance of the new PDS against the performance criteria defined in [Section 6.5](#65-performance-criteria).
 
-However, due to time constraint, this project will only cover the initial integration testing phases, which include in lab functionality testing and thermal testing with 5 operating Relay PCB channels and the MCU PCB on the Power Backplane. Further testing phases will be carried out by the ST Engineering USV team after the completion of this project.
+However, due to time constraint, this project will only cover the initial integration testing phases, which include an in lab functionality testing and a thermal testing with 5 operating Relay PCB channels and the MCU PCB on the Power Backplane. Further testing phases will be carried out by the ST Engineering USV team after the completion of this project.
 
 ### 13.1 Functionality Testing
 Functionality testing was conducted to verify whether that the new PDS meets all technical specifications and functional requirements outlined in [Section 5](#5-Design-Requirments). This will involve testing the power switching capabilities, fault protection features, and power monitoring functionalities under various load conditions and fault scenarios. The testing will be performed in a controlled laboratory environment using power supply and electronic load tester. Below is a summary of the functionality testing procedures and their results:
