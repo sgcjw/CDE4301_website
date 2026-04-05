@@ -331,49 +331,77 @@ Other considerations regarding the design of the power backplane such as current
 
 ## 11. Firmware Development
 
-### 11.1 Relay PCB Firmware
-For developing the firmware for the Relay PCB, the main focus is on implementing the fault protection and reporting features. The firmware is designed to interface the MCU and the current shunt monitor INA228AIDGSR to achieve these functionalities.
+Other than the hardware design mentioned above, the firmware development for the Relay PCB and the MCU PCB is also a critical part of this project. This section will provide an overview of the firmware design for both PCBs.
 
-Key considerations of the design involves:
+### 11.1 Relay PCB Firmware
+The firmware on Relay PCB is designed to interface the MCU and the current shunt monitor INA228AIDGSR to adjust the various settings of the power monitoring system.
+
+Key features of the design involves:
  - Configuring the conversion time of INA228 to response to transient faults 
  - Setting the sensor sampling rate to ensure accuracy in continuous power monitoring
- - Allocating the I2C static address for multiple channels.
+ - Allocating the I2C static address for multiple channels to allow the MCU to identify the data source of each channel
 
 ### 11.2 MCU Firmware
-The firmware for the MCU PCB is responsible for collecting data from the Relay PCB and communicating with the USV’s power PLC via CAN bus. Detail tasks of the MCU firmware include:
+The firmware for the MCU PCB is responsible for collecting data from the Relay PCB and communicating with the USV’s power PLC via CAN bus. Detailed tasks of the MCU firmware include:
 
 - Reading the PG status, fault status, and power consumption data from the Relay PCB.
 - Processing the collected data to determine the fault types if any faults are detected.
 - Sending the processed data to the USV’s power PLC via CAN communication.
 
+The design considerations of the above mentioned firmware tasks will be illustrated in the appendix section of this report.
+
 ## 12. Subsystem Prototyping and Testing 
 
-Before integrating the MOSFET PCB, MCU PCB, and power backplane into a complete PDS, each subsystem will be prototyped and tested separately to validate their functionality and performance against the technical specifications outlined in [Section 5.2](#52-technical-specifications) and the design requirements in [Section 5.3](#53-functional-sub-goals).
+Before integrating the MOSFET PCB, MCU PCB, and Power backplane into a complete PDS, each subsystem were prototyped and tested separately to validate their functionality and performance. The below sections outline these processes and summarize the results which proven the functionality of each subsystem based on the performance criteria defined in [Section 6.5](#65-performance-criteria).
 
 ### 12.1 Relay PCB Prototyping and Testing
-In this project, the relay PCB has gone through 3 major iterations, which was designed to be tested alone, with T&C PCB and with the power backplane resepctively.This report will go through briefly the first 2 iterations and focus on discussing the test result of the final iteration, which reflects the best performance of this series of PCB prototypes.
+In this project, the Relay PCB has gone through 3 major iterations, which was designed to be tested alone, with T&C PCB and with the power backplane resepctively.This report will go through briefly the design achievments in all 3 iterations and focus on discussing the test result of the final iteration, which best reflects the performance of this series of PCB prototypes.
 
-#### 12.1.1 1<sup>st</sup> Iteration Relay PCB Testing
+#### 12.1.1 1<sup>st</sup> Iteration Relay PCB
 
-The 1<sup>st</sup> iteration of the relay PCB is designed with Wago 221-412 terminal blocks as power input and output connectors, which allow it to be tested seperately through cable connections. The testing of this iteration involves basic power channel switching, protection features testing and power monitoring testing. The testing results of this iteration are used to validate the basic functionalities of the relay PCB and identify areas for improvement in the subsequent iterations. 
+The 1<sup>st</sup> iteration of the Relay PCB is designed with **Wago 221-412** terminal blocks as power input and output connectors, which allow it to be tested seperately through cable connections. The testing of this iteration includes basic power channel switching testing, power protection testing and power monitoring testing. The results has validated the functionalities of MOSFET gate driver IC TPS4800 selected and the latching circuit designed. However, it is also identified from this iteration that the initial power monitoring IC choice AMC1301DWVR was not suitable for this application due to it having a common mode input voltage limit smaller than required, which led to the change of the dedicated IC to INA228 in the later iterations. 
 
-#### 12.1.2 Testing and Commissioning (T&C) PCB Prototyping and Testing
+**This iteration of the PCB is also discussed in the Interim Report, refer to it if more detailed design information is needed.*
 
-Before carrying out the design of a full power distribution system. a single channel T&C PCB was designed and tested to validate the core functionalities, including power switching, fault protection, and power monitoring when the relay PCB is integrated with the MCU. This prototype will serve as a proof of concept for the overall system design and allow for iterative improvements before scaling up to the full 26-channel implementation. The schematic and layout of the T&C PCB is shown below.
+![1st Iteration Relay PCB](1st_Relay_PCB.png)
+##### Figure 15: 1<sup>st</sup> Iteration of the Relay PCB
 
-![Testing and Commissioning PCB Schematic and Layout](Testing_PCB.png)
-##### Figure 16: Testing and Commissioning PCB Schematic and Layout
+![Test Setup for 1st Iteration](1st_test_setup.png)
+##### Figure 16: Test Setup for 1<sup>st</sup> Iteration of the Relay PCB
 
-Besides serving as a preliminary testing platform for the relay PCB, the T&C PCB is also used to conduct a commissioning test for the relay PCB produced. This test involves connecting the relay PCB to the T&C PCB and verifying that all functionalities are working as intended. The test will also validate overcurrent threshold and static I2C ID set by the DIP switch, which are important features for the final system. Below is a figure showing the commissioning test procedures and intended outcomes:
+#### 12.1.2 Testing and Commissioning (T&C) PCB
+
+Before carrying out the design of a full Power Backplane. a single channel T&C PCB was designed and tested to validate the integration of the relay PCB with the MCU PCB. This prototype will serve as a proof of concept for the overall PCB subsystem design and allow for iterative improvements before scaling up to the full 26-channel implementation. Below is the designed T&C PCB:
+
+![Testing and Commissioning PCB](Testing_PCB.png)
+##### Figure 16: Testing and Commissioning PCB
+
+Besides, the T&C PCB is also used to conduct a commissioning check on the Relay PCB produced and configured before their actual deployment. The check involves verifying all intended functionalities of the connected Relay PCB as well as validating the correct setting of the overcurrent threshold and static I2C ID for communication with the MCU, which are important preventive measures to reduce production errors. Below is a figure showing the commissioning test procedures and their intended outcomes:
 
 ![Relay PCB Commissioning Test Procedures](commissioning.png)
 ##### Figure 17: Relay PCB Commissioning Test Procedures and Intended Outcomes
 
-#### 12.1.3 2<sup>nd</sup> Iteration Relay PCB & T&C PCB Integrated Testing
-Developing upon the 1st iteration, the 2nd iteration of the relay PCB is designed with the high-current PCB board to board connectors mentioned above. This means that it cannot be tested alone with cable connections. A T&C PCB is thus developed (mentioned with greater detail in [Section 12.4](#124-testing-and-commissioning-tc-pcb-prototyping-and-testing)) and used for the testing of this iteration. Other than what is conducted in the previous iteration, extra testing is also performed on board start-up procedures, MCU interaction  as well as data collection and reporting.
+<video width="800" controls>
+  <source src="/videos/demo.mp4" type="video/mp4">
+</video>
 
-#### 12.1.4 Final Iteration Relay PCB Testing
-This iteration of the PCB mainly focus on improving some issues on the previous iteration such as addition of signal regulators for PLC control signals. After the fabrication and assembly of this iteration, a throughout testing and evaluation is conducted on the prototype, which is summaried in the table below:
+##### Figure 18: Video Demonstration of the Relay PCB Commissioning Test Procedures
+
+**More detailed information about the design of the T&C PCB and the commissioning test procedures can be found in the appendix section of this report*.
+
+#### 12.1.3 2<sup>nd</sup> Iteration Relay PCB and its Integration with T&C PCB
+Developing upon the 1st iteration, the 2nd iteration of the relay PCB has replaced the terminal blocks with the high-current PCB board to board **MULTI-BEAM Connector 6450120-2** to examine its functionality. This means that the PCB cannot be powered using cable connections. Instead, the T&C PCB is used for its testing. Other than what is conducted in the previous iteration, additional tests performed on this iteration includes board commissioning procedure testing and the testing on the interaction of MCU with Relay PCB for power monitoring data collection and reporting.
+
+The results of these tests have shown the capability of the chosen PCB connectors in handling the maximum continuous current of 20A as well as the transient current of 30A. Besides, the new power monitoring IC choice INA228 is also first introduced in this iteration and validated through these test results. The integration of the Relay PCB with the T&C PCB has further served as a platform for developing the firmware for the various PCB subsystem as mentioned in [Section 11](#11-firmware-development)
+
+![2nd Iteration Relay PCB Integrated with T&C PCB](2nd_Relay_PCB.png)
+##### Figure 18: 2<sup>nd</sup> Iteration of the Relay PCB Integrated with T&C PCB
+
+![Test Setup for 2nd Iteration](2nd_test_setup.png)
+##### Figure 20: Test Setup for 2<sup>nd</sup> Iteration of the Relay PCB
+
+#### 12.1.4 Final Iteration Relay PCB
+This iteration of the PCB mainly focus on improving issues identified in the previous iteration mentioned above. After the fabrication and assembly of this iteration, a throughout testing and evaluation with the Power Backplane and MCU Board is conducted on this iteration, which is summaried in the table below:
 
 | **Tested Functionality** | **Test Procedures** |**Expected Outcome**|**Actual Outcome** | **Pass/Fail** |
 |-------------------------|---------------------|----------------|-------------------|---------------|
@@ -386,23 +414,30 @@ This iteration of the PCB mainly focus on improving some issues on the previous 
 | Power Channel Monitoring at 20A continuous current drawn     |                      |                    |        |      PASS         |
 | Power Channel Monitoring at 12V Voltage Input     |                      |                    |       |      PASS         |
 
-##### Table 16: Final Iteration Testing Results Summary
+##### Table 16: Final Iteration Testing Results
+
+! [Final Iteration Relay PCB](final_relay_PCB.png)
+##### Figure 19: Final Iteration of the Relay PCB
 
 ![Test Setup for Final Iteration](final_test_setup.png)
-##### Figure 18: Test Setup for Final Iteration of the Relay PCB
+##### Figure 20: Test Setup for Final Iteration of the Relay PCB
 
 ### 12.2 MCU PCB Prototyping and Testing
 
-The MCU PCB is prototyped with reference to the MCU section of the T&C PCB. The testing of the MCU PCB focuses on validating its data collection and reporting functionalities, especially under multi-channel operation. 
+The MCU PCB is prototyped with reference to the MCU section of the T&C PCB. The testing of the MCU PCB focuses on validating its data collection and reporting functionalities, especially its measuremnet accuracy and resolution under multi-channel operation. 
+
+**Due to delay in the PCB production, the result of this testing will be updated after the final presentation of this project, Thank you for your understanding.* 
 
 ### 12.3 Power Backplane Prototyping and Testing
 
 The power backplane is prototyped by expanding the single channel Relay PCB Connector section of the T&C PCB to a full 26 channels backplane design. The testing of the power backplane focuses on validating its power transmission capabilities. 
 
-## 13. Overall System Integration and Testing
-After the separate testing of the cards and backplane, the next step is to integrate the subsystems and conduct comprehensive testing to validate the overall functionality and performance of the new PDS.
+**Due to delay in the PCB production, the result of this testing will be updated after the final presentation of this project, Thank you for your understanding.*
 
-However, due to time constraint, this project will only cover the initial integration phases, which include in lab functionality testing and thermal testing. The final on-boat testing phase will be carried out by the ST Engineering USV team after the completion of this project.
+## 13. Overall System Integration and Testing
+After the separate testing of the individual subsystems, the next step is to integrate them on the power backplane and conduct comprehensive testing to validate the overall functionality and performance of the new PDS.
+
+However, due to time constraint, this project will only cover the initial integration phases, which include in lab functionality testing and thermal testing with 5 operating Relay PCB channels and the MCU PCB. Further testing phases will be carried out by the ST Engineering USV team after the completion of this project.
 
 ### 13.1 Functionality Testing
 Functionality testing will be conducted to verify that the new PDS meets all technical specifications and functional requirements outlined in [Section 5](#5-Design-Requirments). This will involve testing the power switching capabilities, fault protection features, and power monitoring functionalities under various load conditions and fault scenarios. The testing will be performed in a controlled laboratory environment using power supply and electronic load tester. The tests conducted is similar to the ones performed during the final iteration testing of the relay PCB, but on a full 26 channel power backplane with 10 operating channel.
@@ -467,8 +502,6 @@ The fault-response requirement is selected to match the operating characteristic
 | Undervoltage Protection Threshold | Adjustable between 6V to 54V DC                                                   |
 | Overcurrent Protection Threshold | Adjustable between 5A to 50A                                                      |
 | Overcurrent Protection Response Time | <1ms (adjustable)                                                                          |
-
-
 ##### Key Features of TPS4800 MOSFET Gate Driver IC
 
 ## Appendix C: Design MOSFET PCB to Meet Technical and Protection Specifications
