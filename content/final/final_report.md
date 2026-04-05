@@ -272,7 +272,7 @@ Accurate power consumption monitoring is essential for identifying abnormal powe
 
 | **Parameter**           | **Requirement**                                                                 |
 |-------------------------|---------------------------------------------------------------------------------|
-| Current/Voltage Measurement Accuracy     | ±1% of the actual value or better                                           |
+| Current/Voltage Measurement Accuracy     | ±10% of the actual value or better                                           |
 | Voltage Measurement Resolution   | 100mV or better                                                                 |
 | Voltage Measurement Range        | 0V to 30V (to cover both 12V and 24V systems)                                  |
 | Current Measurement Resolution   | 0.01A or better                                                                 |
@@ -400,65 +400,79 @@ The results of these tests have shown the capability of the chosen PCB connector
 ##### Figure 18: 2<sup>nd</sup> Iteration of the Relay PCB Integrated with T&C PCB
 
 ![Test Setup for 2nd Iteration](2nd_test_setup.png)
-##### Figure 20: Test Setup for 2<sup>nd</sup> Iteration of the Relay PCB
+##### Figure 20: Test Setup for the Integrated PCBs
 
 #### 12.1.4 Final Iteration Relay PCB
-This iteration of the PCB mainly focus on improving issues identified in the previous iteration mentioned above. After the fabrication and assembly of this iteration, a throughout testing and evaluation with the Power Backplane and MCU Board is conducted on this iteration, which will be discussed in the "Overall System Integration and Testing" section of this report ([Section 13](#13-overall-system-integration-and-testing)). The results of the testing on this iteration has validated the functionality of the final design of the Relay PCB, which is ready for deployment in the new PDS.
+This iteration of the PCB mainly focus on improving issues identified in the previous iteration mentioned above. After the fabrication and assembly of this iteration, a throughout testing and evaluation with the Power Backplane and MCU Board is conducted on this iteration, which will be discussed in the "Overall System Integration and Testing" section of this report ([Section 13](#13-overall-system-integration-and-testing)).
 
 ![Final Iteration Relay PCB](final_relay_PCB.png)
 ##### Figure 19: Final Iteration of the Relay PCB
 
-![Test Setup for Final Iteration](final_test_setup.png)
-##### Figure 20: Test Setup for Final Iteration of the Relay PCB
-
 ### 12.2 Other PCB Subsystem Prototyping and Testing
 
-Other than the Relay PCBs, two more PCB subsystems are prototyped in this project: the MCU PCB and the Power Backplane. 
+Other than the Relay PCBs, two more PCB subsystems are prototyped in this project: the MCU PCB and the Power Backplane PCB. 
 
 The MCU PCB is prototyped with reference to the MCU section of the T&C PCB. The testing of the MCU PCB focuses on validating its data collection and reporting functionalities, especially its measuremnet accuracy and resolution under multi-channel operation. 
 
 Similar to the MCU PCB, the power backplane is prototyped by expanding the single channel Relay PCB connector section of the T&C PCB to a full 26 channels backplane design. The testing of the power backplane focuses on validating its power transmission capabilities. 
 
-Due to the nature of these PCBs, it is not feasible to test them separately without the integration of the whole system. As a result, the testing of these two PCB subsystems is conducted together with the final iteration of the Relay PCB, which is discussed in the next section.
+Due to the nature of these PCBs, it is not feasible to test them separately without the integration of the whole system. As a result, the testing of these two PCB subsystems is conducted together with the final iteration of the Relay PCB, which, as mentioned above, will be discussed in the next section.
 
 ## 13. Overall System Integration and Testing
-After the separate testing of the individual subsystems, the next step is to integrate them on the power backplane and conduct comprehensive testing to validate the overall functionality and performance of the new PDS.
+After separate testing of the individual subsystems, the next step is to integrate them on the power backplane and conduct comprehensive testing to validate the overall functionality and performance of the new PDS against the performance criteria defined in [Section 6.5](#65-performance-criteria).
 
-However, due to time constraint, this project will only cover the initial integration phases, which include in lab functionality testing and thermal testing with 5 operating Relay PCB channels and the MCU PCB. Further testing phases will be carried out by the ST Engineering USV team after the completion of this project.
+However, due to time constraint, this project will only cover the initial integration testing phases, which include in lab functionality testing and thermal testing with 5 operating Relay PCB channels and the MCU PCB on the Power Backplane. Further testing phases will be carried out by the ST Engineering USV team after the completion of this project.
 
 ### 13.1 Functionality Testing
-Functionality testing will be conducted to verify that the new PDS meets all technical specifications and functional requirements outlined in [Section 5](#5-Design-Requirments). This will involve testing the power switching capabilities, fault protection features, and power monitoring functionalities under various load conditions and fault scenarios. The testing will be performed in a controlled laboratory environment using power supply and electronic load tester. The tests conducted is similar to the ones performed during the final iteration testing of the relay PCB, but on a full 26 channel power backplane with 10 operating channel.
+Functionality testing was conducted to verify whether that the new PDS meets all technical specifications and functional requirements outlined in [Section 5](#5-Design-Requirments). This will involve testing the power switching capabilities, fault protection features, and power monitoring functionalities under various load conditions and fault scenarios. The testing will be performed in a controlled laboratory environment using power supply and electronic load tester. Below is a summary of the functionality testing procedures and their results:
 
 | **Tested Functionality** | **Test Procedures** |**Expected Outcome**|**Actual Outcome** | **Pass/Fail** |
 |-------------------------|---------------------|----------------|-------------------|---------------|
-| Power Channel Switching at no load         |                      |                    |      |      PASS         |
-| Power Channel Switching at 20A continuous current drawn     |                      |                    |     |      PASS         |
-| Power Channel Protection at 30A transient current drawn     |                      |                    |     |      PASS         |
-| Power Channel Protection at 9V voltage input     |                      |                    |        |      PASS         |
-| Power Channel Protection at 32V voltage input     |                      |                    |       |   PASS         |
-| Power Channel Protection at 0.06A continuous current drawn (smallest load in ST Engineering USV)     |                      |                    |        |      PASS         |
-| Power Channel Monitoring at 20A continuous current drawn     |                      |                    |        |      PASS         |
-| Power Channel Monitoring at 12V Voltage Input     |                      |                    |       |      PASS         |
+| Power Channel Switching at no load         |      With no current drawn by electronic load tester, turn on each power channel for 30s then turn off the power channel                |        Power ON/OFF on all power channels successfully with a response time <1ms           |   Power ON/OFF on all power channels successfully with a response time of 750us measured on the oscilloscope   |      PASS         |
+| Power Channel Switching at 20A continuous current drawn     |      With a constant current of 20A drawn by the electronic load tester, turn on each power channel for 30s then turn off the power channel                |       Same as above           |   Power ON/OFF on all power channels successfully with a response time of 750us measured on the oscilloscope    |      PASS         |
+| Power Channel Protection at 32A transient current drawn     |      With a transient current of 32A drawn by the electronic load tester at one specific channel, observe the response of all power channels (OC threshold configured to 30A)               |       Only the affected Power channel trips and protects within an acceptable delay (<1ms)                |   Only the affected power channel trips and protects with a delay of approximately 850us measured on the oscilloscope              |      PASS         |
+| Power Channel Protection at 9V undervoltage input     |      Apply a 9V input voltage to all power channel and observe the response                |        All power channel trips and protects against undervoltage within an acceptable delay (<1ms)                 |   All power channel trips and protects against undervoltage with a delay of approximately 850us measured on the oscilloscope               |      PASS         |
+| Power Channel Protection at 32V overvoltage input     |      Apply a 32V input voltage to all power channel and observe the response                |        All power channel trips and protects against overvoltage within an acceptable delay (<1ms)               |   All power channel trips and protects against overvoltage with a delay of approximately 850us measured on the oscilloscope              |   PASS         |
+| Power Channel Monitoring at 24V 0.06A continuous current drawn (smallest load in ST Engineering USV)     |      With a constant current of 0.06A drawn by the electronic load tester, observe the power channel monitoring message on the MCU PCB               |        Power channel monitoring functions as specified in [Section 8.3.3](#833-power-consumption-statistics)           |   Voltage & Current reading accuracy within 10% of the expected value (0.066 - 0.054A)    |      PASS         |
+| Power Channel Monitoring at 24V 20A continuous current drawn     |      With a constant current of 20A drawn by the electronic load tester, monitor the power channel monitoring message on the MCU PCB               |        Same as above           |   Voltage & Current reading accuracy within 10% of the expected value (20.2 - 19.8A)    |      PASS         |
 
 ##### Table 16: Functionality Test Results Summary for 5 Operating Channels
 
 ![Test Setup for Functionality Testing](functionality_test_setup.png)
 ##### Figure 18: Test Setup for functionality testing of 5 Operating Channels
 
+Other than the above mentioned tests, more tests were also conducted to validate features such as the detection of the fault types  and the identification of the overcurrent threshold setting at each power channel. These will be summaries in the appendix section of this report.
+
+**Due to PCB manufacturing delay, the above mentioned test results comes from the testing of only 1 operating relay PCB on the T&C PCB. The final results of the testing with 5 operating relay PCB on the Power Backplane will be updated after the submission of this report but before the completion of this project.*
+
 ### 13.2 Thermal Testing
-Thermal testing is conducted to evaluate the heat dissipation capabilities of the new PDS under various load conditions. This overall system thermal testing will be conducted bymonitoring the temperature of 10 loaded channels. The testing will be performed using thermal imaging cameras and temperature sensors to capture real-time temperature data during the operation of the PDS. Below is a summary of the thermal testing results:
+Thermal testing was conducted to evaluate the heat generation of the new Power Distribution System (PDS) under different load conditions. The objective of this test was to ensure that the system operates within safe temperature limits during continuous operation.
+
+The overall system thermal test was performed by monitoring the temperature of five loaded channels under two conditions and last until a steady state temperature is reached:
+- No-load condition
+- Maximum continuous load of 20 A
+
+The test procedure consisted of two stages:
+
+Hot-spot identification – A thermal imaging camera was used to scan the system and identify components with the highest temperature rise.
+
+Temperature monitoring – Temperature probes were then placed at the identified hot spots to continuously record temperature throughout the test duration.
+
+The following table summarises the thermal testing results.
 
 | **Load Condition** | **Component** || **Hotest Spot Steady State Temperature** | **Within Accepted Range?** |
 |--------------------|---------------|-------------------------------|-----------------------------|---------------|
 | 0A             | MOSFETs       |                               |                             |               |
 | 0A            | Shunt Resistor |                               |                             |               |
-| 30A            | MOSFETs       |                               |                             |               |
-| 30A            | Shunt Resistor |                               |                             |               |
+| 20A            | MOSFETs       |                               |                             |               |
+| 20A            | Shunt Resistor |                               |                             |               |
 
 ##### Table 18: Thermal Testing Results Summary for 5 Loaded Channels
 
 ![Test Setup for Thermal Testing](thermal_test_setup.png)
 ##### Figure 19: Test Setup for thermal testing of 5 Loaded Channels
+
+**Due to PCB manufacturing delay, the above mentioned thermal testing were unable to be conducted until the point of report submission. The final results will be updated here before the completion of this project.*
 
 ## 14. Conclusion
 ### 14.1 Limitations
