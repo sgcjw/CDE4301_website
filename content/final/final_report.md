@@ -348,14 +348,16 @@ The firmware for the MCU PCB is responsible for collecting data from the Relay P
 - Processing the collected data to determine the fault types if any faults are detected.
 - Sending the processed data to the USV’s power PLC via CAN communication.
 
-The design considerations of the above mentioned firmware tasks will be illustrated in the appendix section of this report.
+**The detailed design considerations of the above mentioned firmware tasks will be illustrated in the appendix section of this report*.
 
 ## 12. Subsystem Prototyping and Testing 
 
 Before integrating the MOSFET PCB, MCU PCB, and Power backplane into a complete PDS, each subsystem were prototyped and tested separately to validate their functionality and performance. The below sections outline these processes and summarize the results which proven the functionality of each subsystem based on the performance criteria defined in [Section 6.5](#65-performance-criteria).
 
-### 12.1 Relay PCB Prototyping and Testing
+### 12.1 Relay PCB Subsystem Prototyping and Testing
 In this project, the Relay PCB has gone through 3 major iterations, which was designed to be tested alone, with T&C PCB and with the power backplane resepctively.This report will go through briefly the design achievments in all 3 iterations and focus on discussing the test result of the final iteration, which best reflects the performance of this series of PCB prototypes.
+
+**For more detailed test processes and results of the Relay PCB iterations, please refer to the appendix section of this report*.
 
 #### 12.1.1 1<sup>st</sup> Iteration Relay PCB
 
@@ -401,7 +403,31 @@ The results of these tests have shown the capability of the chosen PCB connector
 ##### Figure 20: Test Setup for 2<sup>nd</sup> Iteration of the Relay PCB
 
 #### 12.1.4 Final Iteration Relay PCB
-This iteration of the PCB mainly focus on improving issues identified in the previous iteration mentioned above. After the fabrication and assembly of this iteration, a throughout testing and evaluation with the Power Backplane and MCU Board is conducted on this iteration, which is summaried in the table below:
+This iteration of the PCB mainly focus on improving issues identified in the previous iteration mentioned above. After the fabrication and assembly of this iteration, a throughout testing and evaluation with the Power Backplane and MCU Board is conducted on this iteration, which will be discussed in the "Overall System Integration and Testing" section of this report ([Section 13](#13-overall-system-integration-and-testing)). The results of the testing on this iteration has validated the functionality of the final design of the Relay PCB, which is ready for deployment in the new PDS.
+
+![Final Iteration Relay PCB](final_relay_PCB.png)
+##### Figure 19: Final Iteration of the Relay PCB
+
+![Test Setup for Final Iteration](final_test_setup.png)
+##### Figure 20: Test Setup for Final Iteration of the Relay PCB
+
+### 12.2 Other PCB Subsystem Prototyping and Testing
+
+Other than the Relay PCBs, two more PCB subsystems are prototyped in this project: the MCU PCB and the Power Backplane. 
+
+The MCU PCB is prototyped with reference to the MCU section of the T&C PCB. The testing of the MCU PCB focuses on validating its data collection and reporting functionalities, especially its measuremnet accuracy and resolution under multi-channel operation. 
+
+Similar to the MCU PCB, the power backplane is prototyped by expanding the single channel Relay PCB connector section of the T&C PCB to a full 26 channels backplane design. The testing of the power backplane focuses on validating its power transmission capabilities. 
+
+Due to the nature of these PCBs, it is not feasible to test them separately without the integration of the whole system. As a result, the testing of these two PCB subsystems is conducted together with the final iteration of the Relay PCB, which is discussed in the next section.
+
+## 13. Overall System Integration and Testing
+After the separate testing of the individual subsystems, the next step is to integrate them on the power backplane and conduct comprehensive testing to validate the overall functionality and performance of the new PDS.
+
+However, due to time constraint, this project will only cover the initial integration phases, which include in lab functionality testing and thermal testing with 5 operating Relay PCB channels and the MCU PCB. Further testing phases will be carried out by the ST Engineering USV team after the completion of this project.
+
+### 13.1 Functionality Testing
+Functionality testing will be conducted to verify that the new PDS meets all technical specifications and functional requirements outlined in [Section 5](#5-Design-Requirments). This will involve testing the power switching capabilities, fault protection features, and power monitoring functionalities under various load conditions and fault scenarios. The testing will be performed in a controlled laboratory environment using power supply and electronic load tester. The tests conducted is similar to the ones performed during the final iteration testing of the relay PCB, but on a full 26 channel power backplane with 10 operating channel.
 
 | **Tested Functionality** | **Test Procedures** |**Expected Outcome**|**Actual Outcome** | **Pass/Fail** |
 |-------------------------|---------------------|----------------|-------------------|---------------|
@@ -414,36 +440,10 @@ This iteration of the PCB mainly focus on improving issues identified in the pre
 | Power Channel Monitoring at 20A continuous current drawn     |                      |                    |        |      PASS         |
 | Power Channel Monitoring at 12V Voltage Input     |                      |                    |       |      PASS         |
 
-##### Table 16: Final Iteration Testing Results
-
-! [Final Iteration Relay PCB](final_relay_PCB.png)
-##### Figure 19: Final Iteration of the Relay PCB
-
-![Test Setup for Final Iteration](final_test_setup.png)
-##### Figure 20: Test Setup for Final Iteration of the Relay PCB
-
-### 12.2 MCU PCB Prototyping and Testing
-
-The MCU PCB is prototyped with reference to the MCU section of the T&C PCB. The testing of the MCU PCB focuses on validating its data collection and reporting functionalities, especially its measuremnet accuracy and resolution under multi-channel operation. 
-
-**Due to delay in the PCB production, the result of this testing will be updated after the final presentation of this project, Thank you for your understanding.* 
-
-### 12.3 Power Backplane Prototyping and Testing
-
-The power backplane is prototyped by expanding the single channel Relay PCB Connector section of the T&C PCB to a full 26 channels backplane design. The testing of the power backplane focuses on validating its power transmission capabilities. 
-
-**Due to delay in the PCB production, the result of this testing will be updated after the final presentation of this project, Thank you for your understanding.*
-
-## 13. Overall System Integration and Testing
-After the separate testing of the individual subsystems, the next step is to integrate them on the power backplane and conduct comprehensive testing to validate the overall functionality and performance of the new PDS.
-
-However, due to time constraint, this project will only cover the initial integration phases, which include in lab functionality testing and thermal testing with 5 operating Relay PCB channels and the MCU PCB. Further testing phases will be carried out by the ST Engineering USV team after the completion of this project.
-
-### 13.1 Functionality Testing
-Functionality testing will be conducted to verify that the new PDS meets all technical specifications and functional requirements outlined in [Section 5](#5-Design-Requirments). This will involve testing the power switching capabilities, fault protection features, and power monitoring functionalities under various load conditions and fault scenarios. The testing will be performed in a controlled laboratory environment using power supply and electronic load tester. The tests conducted is similar to the ones performed during the final iteration testing of the relay PCB, but on a full 26 channel power backplane with 10 operating channel.
+##### Table 16: Functionality Test Results Summary for 5 Operating Channels
 
 ![Test Setup for Functionality Testing](functionality_test_setup.png)
-##### Figure 18: Test Setup for functionality testing of 10 Operating Channels
+##### Figure 18: Test Setup for functionality testing of 5 Operating Channels
 
 ### 13.2 Thermal Testing
 Thermal testing is conducted to evaluate the heat dissipation capabilities of the new PDS under various load conditions. This overall system thermal testing will be conducted bymonitoring the temperature of 10 loaded channels. The testing will be performed using thermal imaging cameras and temperature sensors to capture real-time temperature data during the operation of the PDS. Below is a summary of the thermal testing results:
@@ -455,10 +455,10 @@ Thermal testing is conducted to evaluate the heat dissipation capabilities of th
 | 30A            | MOSFETs       |                               |                             |               |
 | 30A            | Shunt Resistor |                               |                             |               |
 
-##### Table 18: Thermal Testing Results Summary for 10 Loaded Channels
+##### Table 18: Thermal Testing Results Summary for 5 Loaded Channels
 
 ![Test Setup for Thermal Testing](thermal_test_setup.png)
-##### Figure 19: Test Setup for thermal testing of 10 Loaded Channels
+##### Figure 19: Test Setup for thermal testing of 5 Loaded Channels
 
 ## 14. Conclusion
 ### 14.1 Limitations
