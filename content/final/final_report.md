@@ -14,7 +14,7 @@ disableAnchoredHeadings: false
 
 ## Acknowledgements
 
-Firstly, I would like to thank ST Engineering for giving me the opportunity to work on this project. This project would not have been possible without the support of many dedicated ST Engineering members. I am especially grateful to Ang Ming Xiang and Teo Xuen, my ST Engineering supervisors and Nathanel Tan, the Head of ST engineering Unmaned & Integrated System Department for providing the guidance and technical input for this project.
+Firstly, I would like to thank ST Engineering for giving me the opportunity to work on this project. This project would not have been possible without the support of many dedicated ST Engineering members. I am especially grateful to Ang Ming Xiang and Teoh Xuen, my ST Engineering supervisors and Nathanael Tan, the Head of ST engineering Unmaned & Integrated System Department for providing the guidance and technical input for this project.
 
 I also wish to acknowledge the support provided by the NUS College of Engineering, particularly Mr Royston, and Mr Graham from the Engineering Design and Innovation Centre. I would also like to thank Mr Eugene Ee for taking the time to review my project and provide valuable advices.
 
