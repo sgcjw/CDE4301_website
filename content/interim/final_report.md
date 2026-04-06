@@ -3,8 +3,8 @@ title: "Development of a Compact PDS for Unmanned Surface Vehicle (USV)"
 date: 2025-11-14
 lastmod: 2025-11-16
 author: ["Chen Jiawei"]
-description: "This report documents the work done on developing a compact PDS for ST Engineering's Unmanned Surface Vehicle (USV)."
-summary: "This report documents the work done on developing a compact PDS for ST Engineering's Unmanned Surface Vehicle (USV)."
+description: "This report documents the interim work done on developing a compact PDS for ST Engineering's Unmanned Surface Vehicle (USV)."
+summary: "This report documents the interim work done on developing a compact PDS for ST Engineering's Unmanned Surface Vehicle (USV)."
 editPost:
     URL: "https://www.stengg.com/"
     Text: "ST Engineering Company Website"
