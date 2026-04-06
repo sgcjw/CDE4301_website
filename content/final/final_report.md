@@ -278,7 +278,7 @@ As the simplest and most direct power health indicator, a **TPS3711DDCR** voltag
 While PG monitoring provides immediate detection of power loss, it does not provide information about the root cause of the issue (for example, whether the loss is due to input power failure or protection mechanisms being triggered). This limitation motivates the introduction of additional monitoring methods.
 
 #### 8.3.2 Fault Reporting
-Targeting this limitation, the fault signal from MOSFET gate driver IC TPS4800 selected in [Section 8.2.1](#822-choice-of-mosfet-gate-driver-ic---tps4800) is utilised. Whenever any of the built-in protection mechanisms are triggered, the fault pin is asserted LOW to indicate that a protection event has occurred
+Targeting this limitation, the fault signal from MOSFET gate driver IC **TPS4800** selected in [Section 8.2.1](#822-choice-of-mosfet-gate-driver-ic---tps4800) is utilised. Whenever any of the built-in protection mechanisms are triggered, the fault pin is asserted LOW to indicate that a protection event has occurred
 
 However, this fault output is only a binary digital signal and does not identify the specific type or severity of the fault. This is why power consumption monitoring is also introduced in this Relay PCB design. 
 
@@ -287,11 +287,11 @@ In order to perform power consumption monitoring, the **INA228** current shunt m
 
 | **Parameter** | **Requirement** | **Rationale** | **INA228 Features** |
 |---|---|---|---|
-| Current/Voltage Measurement Accuracy | ±10% of the actual value or better | Derivated from design standrad | High-precision measurements using an integrated 20-bit ADC|
-| Voltage Measurement Resolution | 100mV or better | Derivated from design standrad | High-resolution voltage measurement capability| 
-| Voltage Measurement Range | 0V to 30V | Covers the two operating voltages of the designed PDS (12V and 24V) | Wide input voltage sensing range| 
-| Current Measurement Resolution | 0.01A or better | Designed based on the lightest load in current ST Engineering USV's PDS (0.06A)| High-resolution current sensing via shunt measurement|
-| Current Measurement Range | 0A to 30A | Covers the highest allowable transient current level in the designed PDS | Wide current sensing range with programmable gain |
+| Current/Voltage Measurement Accuracy | ±10% of the actual value or better | Derivated from design standrad | Low gain error and high common mode rejection ratio|
+| Voltage Measurement Resolution | 100mV or better | Derivated from design standrad | High-resolution voltage sensing using 20 bit ADC | 
+| Voltage Measurement Range | 0V to 30V | Covers the two operating voltages of the designed PDS (12V and 24V) | Wide input voltage sensing range (0-85V)| 
+| Current Measurement Resolution | 0.01A or better | Designed based on the lightest load in current ST Engineering USV's PDS (0.06A)| High-resolution current sensing using 20 bit ADC|
+| Current Measurement Range | 0A to 30A | Covers the highest allowable transient current level in the designed PDS | Wide current sensing range (with the selection of 4mohm shunt, range from 0-40A) |
 
 ##### Table 8: Power Consumption Monitoring Requirements
 
@@ -312,28 +312,40 @@ The MCU PCB serves as the central processing unit in the new PDS, responsible fo
 ### 9.1 Choice of MCU - STM32G474QET6
 The MCU selected for this PCB is from the STMicroelectronics STM32G4 series, in particular the **STM32G474QET6**, which offers a powerful ARM Cortex-M4 core, ample memory resources, and most importantly, a wide range of peripherals sufficient for the new PDS requirements. 
 
-The MCU contains up to 107 fast GPIOs, 5 ADC Channels, and 5 I2C buses, making it enough for collecting data from the 26 relay PCB channels, which outputs in total 78 digital signals, 26 analog signals, and 26 I2C signals. What is more, the MCU also features a built-in CAN controller, which help to reduces the overall PCB footprint by avoiding the need for a separate CAN controller implementation.
+| **Requirements** | **STM32G474QET6 Features** |
+|---|---|
+| Collect 52 digital signals (PG + Fault) from 26 Relay PCB channels | Up to **107 fast GPIOs** |
+| Collect 26 analog signals (OC thresholds) from 26 Relay PCB channels | **5 ADC channels** available with total 42 inputs|
+| Communicate with 26 channels of INA228 via I²C | **5 I²C buses**, able to support up to 80 I2C devices (estimation using bus capacitance) |
+| Support system CAN communication | **Built-in CAN controller**, eliminating the need for an external CAN controller and reducing PCB footprint |
 
 ### 9.2 Data Reporting Peripheral Design
-The communication of this MCU PCB with the USV’s power PLC is carried out via the **Controller Area Network (CAN)** bus. This communication protocol is chosen here because of its robustness, reliability, and suitability for high-speed data transmission in noisy environments, making it ideal for the maritime environment of this project. This approach also reduces overall wiring complexity, as only two wires are required for CAN communication.
+As discussed previously, the STM32G474QET6 features an integrated Controller Area Network (CAN) controller. CAN is selected as the primary communication protocol between the MCU and the USV's power PLC due to its robustness, high reliability, and strong noise immunity, which make it particularly suitable for maritime environments. In addition, CAN significantly reduces wiring complexity, as the entire network requires only a two-wire bus for communication.
 
 Below is an overall data flow diagram showing how the power monitoring data is collected and reported in the new PDS.
 ![Power Data Flow](PDF.png)
 ##### Figure 13: Power Data Flow in the new PDS
 
 ## 10. Power Backplane
-As mentioned in [Section 8.1.1](#811-moving-towards-pcbs), the power backplane is designed to provide a robust and scalable platform for integrating the Relay PCBs, the MCU PCB and other components in the new PDS (e.g. fuses, terminal blocks). The backplane includes high-current connectors for power delivery, as well as signal connectors for switching signal and CAN communication between the MCU PCB and the USV’s power PLC.
 
-#### 10.1 Vibration Simulation for Board to Board Connectors Selection
+As discussed in [Section 8.1.1](#811-moving-towards-pcbs), the power backplane forms the structural and electrical foundation of the proposed PDS. It provides a robust and scalable platform for integrating the Relay PCBs, the MCU PCB, and other PDS components such as fuses and terminal blocks.
 
-To ensure the mechanical integrity of the board-to-board connectors used in the power backplane, a vibration simulation using SolidWorks was conducted to evaluate the mechanical stress exerted on the connector chosen, which is the TE Connectivity **MULTI-BEAM Connector 6450120-2** (**more detailed on the selection process please refer to the interim report*). The vibration profile used in this simulation is obtained from the on-board IMU data of ST Engineering’s USV during a sea trail happened on March 10th 2026.
+Besides the copper planes and power traces used for power distribution, the backplane primarily hosts two key connector types:
+- **High-current board-to-board connectors** for the Relay PCB–to–Backplane interface  
+- **Signal connectors** that route switching signals from the PLC to the Relay PCBs  
 
-![Vibration Simulation Results](vibration.png)
+### 10.1 Vibration Simulation for Board-to-Board Connector Selection
+
+Among the two connectors, it is introduced in the interim report that the TE Connectivity **MULTI-BEAM Connector 6450120-2** was selected as the Relay PCB–to–Power Backplane interface (**refer to the interim report for the detailed selection process*). To verify the suitability of this connector for the harsh maritime operating environment, a SolidWorks vibration simulation was conducted prior to the PCB layout stage.
+
+The vibration profile used in the simulation was derived from the onboard IMU data collected during an ST Engineering USV sea trial on 10 March 2026, ensuring that the analysis closely reflects real operational conditions.
+
+![Vibration Simulation Results](vibration.png)  
 ##### Figure 15: Vibration Simulation Results
 
-The simulation results showed that the connector can withstand the expected vibration levels without experiencing significant mechanical stress or failure, making it a suitable choice for the PCB connectors.
+The simulation results indicate that the selected connector can withstand the expected vibration levels without experiencing excessive mechanical stress or structural failure, confirming its suitability for the backplane design.
 
-**Other considerations regarding the design of the power backplane such as current carrying capacity, thermal management and mechanical robustness will be provided in the appendix of this report*.
+**Additional design considerations for the power backplane—such as current-carrying capability, thermal management, and mechanical robustness—are provided in the appendix of this report.**
 
 ## 11. Firmware Development
 
