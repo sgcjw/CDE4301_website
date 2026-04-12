@@ -231,7 +231,7 @@ As discussed in [Section 3](#3-literature-review), the current PDS control in ST
 
 Initially, the latching mechanism was planned as a separate, pluggable PCB, as noted in the interim report. However, after further review and consultation with the ST Engineering USV team, the design was revised to integrate the latching circuit directly into the Relay PCB, providing a more **compact and cost-effective** solution. The schematic and layout of the integrated latching circuit are shown below.
 
-![Latching Circuit](latching_circuit.png)
+![Latching Circuit](latchingschem.png)
 ##### Figure 6: Latching Circuit Schematic
 
 **An LTspice simulation has also been conducted with the designed circuit to validate its functionality. The simulation results are included in the appendix section of this report.*
@@ -264,12 +264,12 @@ For this project, the TPS4800 from Texas Instruments (TI) was selected. It meets
 ![TPS4800 MOSFET Gate Driver IC](TPS4800.png)
 ##### Figure 7: TPS4800 MOSFET Gate Driver IC Operation Circuit
 
-**During the design of the circuit associated with this MOSFET gate driver, several design considerations were addressed; these are highlighted in the appendix of this report.*
-
 #### 8.2.3 User Configurable Protection Thresholds
 To enhance the modularity and flexibility of the Relay PCB, the OC protection thresholds are **user-configurable** via a DIP switch interface on the PCB. This allows the design to accommodate different subsystem protection requirements without hardware modifications. The available options are **5A, 10A, 20A, and 30A**, which are selected becasue they are the 4 most common current ratings of the connected devices in PDS.
 
 During operation, the MCU reads the DIP switch settings for each channel to determine the OC threshold. This information is then used to identify OC events, which will be explained further in [Section 8.3.4](#834-fault-analysis-logic).
+
+**The design considerations for other protection features associated with this MOSFET gate driver are highlighted in the appendix section.*
 
 ### 8.3 Power Monitoring
 The power monitoring section of the Relay PCB is responsible for monitoring and reporting power condition of each channel. Three type of messages are transmitted to the MCU:
@@ -341,7 +341,7 @@ Besides the copper planes and power traces used for power distribution, the back
 - **High-current board-to-board connectors** for the Relay PCB–to–Backplane interface  
 - **Signal connectors** that route switching signals from the PLC to the Relay PCBs  
 
-**The deatiled design considerations for the power backplane—such as current-carrying capability, thermal management, and mechanical robustness—are provided in the appendix of this report.*
+**The deatiled design considerations for the PCBs —such as current-carrying capability, thermal management, and mechanical robustness—are provided in the appendix of this report.*
 
 ## 11. Firmware Development
 Other than the hardware design mentioned above, the firmware development for the Relay PCB and the MCU PCB is also a critical part of this project.
@@ -583,49 +583,34 @@ Such capabilities could reduce system downtime, improve reliability, and enhance
 ![LTspice Simulation of the Latching Circuit](latchsim.png)
 ##### Figure A1: LTspice Simulation of the Latching Circuit
 
-## Appendix B: Design MOSFET Gate Driver PCB to Meet Technical Requirements
-Several design considerations were taken during the MOSFET PCB design to ensure that the technical specifications and protection requirements mentioned in [Section 5.2](#52-technical-specifications) and [Section 7.1](#71-protection-requirements) are met:
+## Appendix B: TPS4800 Power Protection Feature Design Considerations 
+In order to achieve the required fast switching response and reliable fault protection, the fault protection thresholds and timers around the MOSFET gate driver IC TPS4800 chosen must be carefully designed. Below are the key design considerations taken for the implementation of the MOSFET gate driver IC in this project:
 
-**Current Tolerance:** To handle the maximum continuous current of 20 A and transient current of 30 A, the MOSFET PCB adopts a 4-layer design, with the middle layers dedicated entirely to power and ground. Additionally, the PCB traces are designed with sufficient width and thickness to minimize resistance and heat generation (Calculation done based on design standrad _IPC-2152_). Thermal vias and copper pours are also incorporated to improve heat dissipation.
-
-![MOSFET PCB Dedicated Power Plane](Players.png)
-![MOSFET PCB Dedicated Ground Plane](Glayers.png)  
-##### Dedicated Power and Ground Plane in the MOSFET PCB
-
-![MOSFET PCB Trace Width Calculation](tracecalc.png)  
-##### Trace Width and Plane Area Calculation for the MOSFET PCB using online IPC-2152 Trace Width Calculator
-
-![MOSFET PCB Thermal Vias and Copper pours](thermalvias.png)
-##### Thermal Vias and Copper Pours in the MOSFET PCB
-
-**Fault Protection Thresholds:** The TPS4800 gate driver IC allows for adjustable fault protection thresholds. Below is a table showing the overvoltage, undervoltage, and overcurrent protection thresholds set for the the most recent prototype, according to the specifications outlined. Resistor dividers and charging capacitors are used to configure these thresholds accurately. 
-
-| **Protection Type**     | **Threshold Setting**                         |
-|------------------------|----------------------------------------------| 
-| Overvoltage Protection    | 30V DC                                       |
-| Undervoltage Protection   | 10V DC                                       |
-| Overcurrent Protection    | 30A/20A/10A/5A                                          |
-| Fault Response Time        |  50μs                                       |
-##### Table 8: Protection Threshold Settings on the MOSFET PCB
-
-![Protection Threshold Configuration Circuit](protectioncircuit.png)
-##### Example of the Protection Threshold Configuration Circuit in the MOSFET PCB
-
-
-## Appendix C: Power Backplane PCB Design Considerations
-The design of the power backplane PCB involves several considerations to ensure that it can effectively integrate the Relay PCBs, MCU PCB, and other components while meeting the technical requirements of the new PDS:
-
-
-**Current Carrying Capacity:** The backplane must be designed to handle a maximum continuous current of 20A per channel and overall continuous current input of 30A (according to the ST Engineering power consumption chart in [Appendix I](#appendix-i-power-consumption-chart)) without overheating or voltage drops. According to these requirements, below table of design considerations are taken:
 | **Design Aspect** | **Considerations** |
 |-------------------|--------------------|
-| Trace Width and Thickness | Traces must be wide and thick enough to handle the current without excessive heating. This may involve using wider traces, thicker copper layers, or both. |
-| Connector Selection | High-current connectors must be chosen to ensure reliable connections and prevent overheating at the connection points. |
-| Power and Ground Planes | Dedicated power and ground planes can help distribute current evenly and reduce voltage drops across the backplane. |
+| **Gate Fault timer** | The TPS4800 features an adjustable fault response timer that can be configured to optimize the switching speed and minimize the risk of false triggering. The timer is set to 330us which is a value that allows for an acceptable response time to transient faults (< 1ms) while avoiding unnecessary trips during device startup transients. |
+| **UV/OV Thresholds** | Other than the OC threshold which is made configurable to the user, the UV and OV threhold are set to 10V and 30V respectively, which are the minimum and maximum allowable operating voltage of the devices connected with the current USV PDS. |
 
 
-**Thermal Management:** Given the high current levels, the backplane design must incorporate features
-such as thermal vias, heat sinks, and adequate spacing between components to dissipate heat effectively and prevent thermal issues.
+## Appendix C: Design Considerations for the PCBs
+Several design considerations were taken during the PCB design to ensure that the technical specifications and protection requirements mentioned in [Section 5.2](#52-technical-specifications) and [Section 7.1](#71-protection-requirements) are met:
+
+**Current and heat Tolerance:** To handle the maximum continuous current of 20 A and transient current of 30 A, the Relay PCB adopts a 4-layer design, with the middle layers dedicated entirely to power and ground. Additionally, the PCB traces are designed with sufficient width and thickness to minimize resistance and heat generation (Calculation done based on design standrad _IPC-2152_). Thermal vias and copper pours are also incorporated to improve heat dissipation.
+
+![Relay PCB Dedicated Power Plane](Players.png)
+![Relay PCB Dedicated Ground Plane](Glayers.png)  
+##### Dedicated Power and Ground Plane in the Relay PCB
+
+![Relay PCB Trace Width Calculation](tracecalc.png)  
+##### Trace Width and Plane Area Calculation for the Relay PCB using online IPC-2152 Trace Width Calculator
+
+![Relay PCB Thermal Vias and Copper pours](thermalvias.png)
+##### Thermal Vias and Copper Pours in the Relay PCB
+
+Similar to Relay PCB, the power backplane must be designed to handle high current levels, in particular a maximum continuous current of 20A per channel and an overall continuous current input of around 40A (according to the ST Engineering power consumption chart in [Appendix I](#appendix-i-power-consumption-chart)) without overheating or voltage drops. As a result, similar design considerations are also taken for the power backplane, such as using a 4-layer design with dedicated power and ground planes and designing wide and thick traces for power
+
+![Backplane PCB Dedicated Power Plane](backplane_power.png)
+##### Backplane PCB Dedicated Power Plane
 
 **Mechanical Robustness:**
 Among the two connectors, it is introduced in the interim report that the TE Connectivity **MULTI-BEAM Connector 6450120-2** was selected as the Relay PCB–to–Power Backplane interface (**refer to the interim report for the detailed selection process*). To verify the suitability of this connector for the harsh maritime operating environment, a SolidWorks vibration simulation was conducted prior to the PCB layout stage.
@@ -637,15 +622,34 @@ The vibration profile used in the simulation was derived from the onboard IMU da
 
 The simulation results indicate that the selected connector can withstand the expected vibration levels without experiencing excessive mechanical stress or structural failure, confirming its suitability for the backplane design.
 
+## Appendix D: Detailed Design of Test & Commissioning PCB
+![Test & Commissioning PCB Layout](TC_layout.png)
+##### Figure D1: Test & Commissioning PCB Layout
 
-**Signal Integrity:** The design must ensure that the signal integrity is maintained for both power and
-communication signals. This involves careful routing of traces, minimizing noise and interference, and using appropriate shielding techniques where necessary.
-## Appendix D: Firmware Development Considerations
+| **Section** | **Design Features** | **Functionality** |
+|-------------|---------------------|-------------------|
+| **Relay PCB Connector Section** | - Contains the same board-to-board connectors as the final Power Backplane design<br> - Designed to accommodate a single Relay PCB channel for testing purposes<br> - Contains a DIP switch for configuration of the Board I2C addresses | - Allows for the testing of the Relay PCB in an integrated manner with the MCU PCB, simulating real operational conditions<br><br> - Allows for the testing of different I2C addresses to prepare for multi-channel communicaation in the same I2C bus |
+| **MCU Peripheral Section** | - Contains the same MCU peripherals as the final MCU PCB<br>- Includes additional components such as an LCD screen for real-time monitoring <br> - USB peripheral presented on the board both as power source and data interface with personal computer | - Enables the development and testing of the MCU firmware, including data collection, processing, and communication functionalities, in a realistic environment that closely mimics the final system setup<br><br> - Allow functioning of the board even without any specific power module (e.g., battery pack)|
+
+## Appendix E: Firmware Development Considerations
 Based on the firmware tasks outlined in [Section 11](#11-firmware-development), the below design processes has been conducted to ensure the development of robust and efficient firmware for both the Relay PCB and the MCU PCB:
 | **Firmware Task** | **Design Considerations** |
 |-------------------|-------------------------|
 | Relay PCB Firmware | - Configuring the conversion time of INA228 to ensure accurate and timely response to transient faults. <br> - Setting the sensor sampling rate to balance between accuracy and power consumption in continuous monitoring. <br> - Allocating unique I2C static addresses for each channel to enable proper communication with the MCU. |
 | MCU PCB Firmware | - Implementing efficient data collection routines to read PG status, fault status, and power consumption data from the Relay PCB. <br> - Developing robust data processing algorithms to accurately determine fault types based on the collected data. <br> - Ensuring reliable CAN communication protocols for sending processed data to the USV’s power PLC. |
-## Appendix E: Power Consumption Chart
+
+**To be completed after the completion of the PCB manufacturing*
+
+## Appendix F: Summaries of Other System Test Results
+| **Tested Functionality** | **Test Procedures** |**Results**|**Pass/Fail** |
+|-------------------------|---------------------|----------------|---------------|
+| Mechanical Dimension | Measure the dimensions of the fabricated PCB and compare with the design specifications | The final board dimensions is 410 x 173 x 65 mm, smaller than the required 445mm x 180 x 89 mm  | PASS |
+| Power Distribution | The channel is able to deliver continuous 20A current without overheating or significant voltage drops | The channel successfully delivered 20A continuous current with a voltage drop of less than 0.1V and a steady-state temperature of around 60°C | PASS |
+| Fault Detection | Simulate different fault conditions (overcurrent, undervoltage, overvoltage) and observe the response of the system | The system successfully identified the correct type of faults and reported them to the MCU | PASS |
+
+## Appendix G: Power Consumption Chart
 ![Power Consumption Chart](powerchart.png)  
 ##### Power Consumption Chart of the USV DC Systems
+
+## Appendix H: Schematics & PCB Layouts of the Final Iteration of the PCBs
+**To be updated after the completion of the PCB manufacturing*
